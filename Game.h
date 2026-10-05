@@ -11,7 +11,7 @@ class Game
 {
 private:
 
-	SceneManager SM(std::make_unique<SceneTitle>());
+	SceneManager SM;
 
 public:
 

@@ -1,6 +1,7 @@
 #include "Game.h"
 
 Game::Game()
+	: SM(std::make_unique<SceneTitle>())
 {
 
 }
