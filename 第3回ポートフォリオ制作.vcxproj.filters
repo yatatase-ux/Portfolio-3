@@ -19,6 +19,9 @@
     <Filter Include="ソース ファイル\Scene">
       <UniqueIdentifier>{139fa984-0a35-47d8-a949-93104550433c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Function">
+      <UniqueIdentifier>{cd68c0c8-0198-44f7-b050-71dd4d270bd0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,6 +36,9 @@
     <ClCompile Include="SceneTitle.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="StringF.cpp">
+      <Filter>ソース ファイル\Function</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -46,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="SceneTitle.h">
       <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="StringF.h">
+      <Filter>ソース ファイル\Function</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
