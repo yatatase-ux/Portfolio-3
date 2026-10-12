@@ -15,7 +15,6 @@ bool Stage::Load(const std::string& name)
 	return false;
 }
 
-
 void Stage::Draw()
 {
 	
