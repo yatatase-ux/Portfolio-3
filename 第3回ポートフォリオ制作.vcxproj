@@ -131,15 +131,29 @@
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SceneEnd.cpp" />
+    <ClCompile Include="SceneInGame.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
+    <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StringF.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="1-SceneInclude.h" />
+    <ClInclude Include="FloatXY.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="IntXY.h" />
+    <ClInclude Include="KeyAction.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="SceneBase.h" />
+    <ClInclude Include="SceneEnd.h" />
+    <ClInclude Include="SceneInGame.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneTitle.h" />
+    <ClInclude Include="Shape.h" />
+    <ClInclude Include="Stage.h" />
     <ClInclude Include="StringF.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -2,7 +2,7 @@
 #include "SceneBase.h"
 
 SceneManager::SceneManager(std::unique_ptr<SceneBase> initialState)
-	: isRunning(true), gameTime(0.0f), currentState(std::move(initialState))
+	:currentState(std::move(initialState)), isRunning(true), gameTime(0.0f)
 {
 	currentState->Enter(this);
 }
@@ -18,5 +18,5 @@ void SceneManager::Update(float deltaTime)
 {
 	gameTime += deltaTime;
 
-	currentState->Update(this, gameTime);
+	currentState->Update(this, deltaTime, &key);
 }

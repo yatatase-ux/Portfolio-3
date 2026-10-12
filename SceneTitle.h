@@ -10,7 +10,7 @@ private:
 
 public:
 
-	STATE_CLASS(SceneTitle);
+	SCENE_CLASS(SceneTitle);
 
 };
 
