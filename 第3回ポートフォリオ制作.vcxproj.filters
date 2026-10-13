@@ -14,15 +14,6 @@
     <Filter Include="ソース ファイル\Function">
       <UniqueIdentifier>{cd68c0c8-0198-44f7-b050-71dd4d270bd0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Scene\Title">
-      <UniqueIdentifier>{fda9479a-dcbf-40f4-9328-800c1c980891}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Scene\InGame">
-      <UniqueIdentifier>{1461c9f9-0815-45e2-ac13-14c339f5223a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Scene\End">
-      <UniqueIdentifier>{bf49a6df-a4a1-4b52-9192-d9b1482bdc8a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Player">
       <UniqueIdentifier>{6b64ed22-e761-479c-9cfd-942a7ba2a82f}</UniqueIdentifier>
     </Filter>
@@ -32,6 +23,18 @@
     <Filter Include="ソース ファイル\Stage">
       <UniqueIdentifier>{d0570321-5d89-4828-915f-0718d6d8ffea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Scene\1-Title">
+      <UniqueIdentifier>{fda9479a-dcbf-40f4-9328-800c1c980891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\2-InGame">
+      <UniqueIdentifier>{1461c9f9-0815-45e2-ac13-14c339f5223a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\3-End">
+      <UniqueIdentifier>{bf49a6df-a4a1-4b52-9192-d9b1482bdc8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\0-Manager&amp;Base">
+      <UniqueIdentifier>{a93dbe0a-70ba-4303-b5bd-b7be0f1a9e1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -40,20 +43,17 @@
     <ClCompile Include="Game.cpp">
       <Filter>ソース ファイル\Main&amp;Game</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="StringF.cpp">
       <Filter>ソース ファイル\Function</Filter>
     </ClCompile>
     <ClCompile Include="SceneEnd.cpp">
-      <Filter>ソース ファイル\Scene\End</Filter>
+      <Filter>ソース ファイル\Scene\3-End</Filter>
     </ClCompile>
     <ClCompile Include="SceneInGame.cpp">
-      <Filter>ソース ファイル\Scene\InGame</Filter>
+      <Filter>ソース ファイル\Scene\2-InGame</Filter>
     </ClCompile>
     <ClCompile Include="SceneTitle.cpp">
-      <Filter>ソース ファイル\Scene\Title</Filter>
+      <Filter>ソース ファイル\Scene\1-Title</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル\Player</Filter>
@@ -64,13 +64,13 @@
     <ClCompile Include="Stage.cpp">
       <Filter>ソース ファイル\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>ソース ファイル\Scene\0-Manager&amp;Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
       <Filter>ソース ファイル\Main&amp;Game</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneBase.h">
-      <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="StringF.h">
       <Filter>ソース ファイル\Function</Filter>
@@ -78,11 +78,8 @@
     <ClInclude Include="1-SceneInclude.h">
       <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="SceneEnd.h">
-      <Filter>ソース ファイル\Scene\End</Filter>
-    </ClInclude>
     <ClInclude Include="SceneInGame.h">
-      <Filter>ソース ファイル\Scene\InGame</Filter>
+      <Filter>ソース ファイル\Scene\2-InGame</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ソース ファイル\Player</Filter>
@@ -103,10 +100,16 @@
       <Filter>ソース ファイル\Stage</Filter>
     </ClInclude>
     <ClInclude Include="SceneTitle.h">
-      <Filter>ソース ファイル\Scene\Title</Filter>
+      <Filter>ソース ファイル\Scene\1-Title</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneEnd.h">
+      <Filter>ソース ファイル\Scene\3-End</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
-      <Filter>ソース ファイル\Scene</Filter>
+      <Filter>ソース ファイル\Scene\0-Manager&amp;Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneBase.h">
+      <Filter>ソース ファイル\Scene\0-Manager&amp;Base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
