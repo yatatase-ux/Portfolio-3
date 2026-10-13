@@ -16,9 +16,6 @@ public:
 	virtual const std::string GetName() const = 0;
 
 	virtual void Draw() = 0;
-	virtual void Sound() = 0;
-
-	virtual void ChangeScene(SceneManager* manager) = 0;
 };
 
 #define SCENE_CLASS(className)\
@@ -27,8 +24,6 @@ public:
 	void Exit(SceneManager*   manager);\
 	const std::string GetName()const { return #className; };\
 	void Draw();\
-	void Sound();\
-	void ChangeScene(SceneManager* manager);
 
 #define SCENE_ENTER(className)\
 void className::Enter(SceneManager*  manager)
@@ -41,9 +36,3 @@ void className::Exit(SceneManager*  manager)
 
 #define SCENE_DRAW(className)\
 void className::Draw()
-
-#define SCENE_SOUND(className)\
-void className::Sound()
-
-#define SCENE_CHANGE(className)\
-void className::ChangeScene(SceneManager* manager)

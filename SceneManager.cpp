@@ -19,4 +19,5 @@ void SceneManager::Update(float deltaTime)
 	gameTime += deltaTime;
 
 	currentState->Update(this, deltaTime, &key);
+	currentState->Draw();
 }

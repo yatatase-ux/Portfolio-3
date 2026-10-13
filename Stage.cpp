@@ -2,6 +2,7 @@
 #include <fstream>   // std::ifstream(ファイル読み込み)
 #include <sstream>   // std::stringstream(文字列の分割)
 #include "DxLib.h"   // printfDx(デバッグ表示)
+#include "Shape.h"
 
 Stage::Stage()
 {
@@ -62,7 +63,7 @@ bool Stage::Load(const std::string& name)
 			}
 
 			// ---- 5. 定義されていない番号を弾く ----
-			// Count は「種類の数」を表す目印(enum の最後に置く)
+			// Max は「種類の数」を表す目印
 			if (number < 0 || number >= static_cast<int>(BlockType::Max))
 			{
 				number = static_cast<int>(BlockType::None);
@@ -81,5 +82,21 @@ bool Stage::Load(const std::string& name)
 
 void Stage::Draw()
 {
-	
+	for (int h = 0; h < sideStage.size(); h++)
+	{
+		for (int w = 0; w < sideStage[h].size(); w++)
+		{
+			FloatXY pos = { (1280.0f / 16.0f) * w + 40.0f, 720.0f / 9.0f * h + 40.0f };
+			FloatXY size = { 80.0f, 80.0f };
+			switch (sideStage[h][w])
+			{
+			case BlockType::None:
+				DrawCenterBox(pos, size, GetColor(185, 255, 255), TRUE);
+				break;
+			case BlockType::Ground:
+				DrawCenterBox(pos, size, GetColor(165, 42, 42), TRUE);
+				break;
+			}
+		}
+	}
 }
