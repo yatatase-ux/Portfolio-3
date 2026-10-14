@@ -19,6 +19,14 @@ Player::~Player()
 void Player::Input()
 {
 	moveDiff = { 0.0f, 0.0f };
+	if(onGround)
+	{
+		if (key.Push(SPACE))
+		{
+			velocityY = -20.0f;
+			onGround = false;
+		}
+	}
 	moveDiff += Move();
 }
 

@@ -120,6 +120,27 @@ bool Stage::IsGround(FloatXY pos, FloatXY boxSize)
 	return false;
 }
 
+bool Stage::HitBlock(FloatXY pos, FloatXY boxSize)
+{
+	float left = pos.x - boxSize.x / 2.0f;
+	float right = pos.x + boxSize.x / 2.0f;
+	float top = pos.y - boxSize.y / 2.0f;
+	float bottom = pos.y + boxSize.y / 2.0f;
+
+	int indexTop = (int)top / 80;
+	int indexBottom = (int)bottom / 80;
+	int indexLeft = (int)left / 80;
+	int indexRight = (int)right / 80;
+
+	if (sideStage[indexTop][indexLeft] == BlockType::Ground ||
+		sideStage[indexTop][indexRight] == BlockType::Ground ||
+		sideStage[indexBottom][indexLeft] == BlockType::Ground ||
+		sideStage[indexBottom][indexRight] == BlockType::Ground)
+	{
+
+	}
+}
+
 FloatXY Stage::GetStageSize()
 {
 	// ステージが読み込まれていないときは、大きさ 0 として返す

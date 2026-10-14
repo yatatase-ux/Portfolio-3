@@ -32,6 +32,7 @@ public:
 	void Draw();
 
 	bool IsGround(FloatXY pos, FloatXY boxSize);
+	bool HitBlock(FloatXY pos, FloatXY boxSize);
 
 	FloatXY GetStageSize();
 };
