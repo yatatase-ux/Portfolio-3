@@ -86,8 +86,8 @@ void Stage::Draw()
 	{
 		for (int w = 0; w < sideStage[h].size(); w++)
 		{
-			FloatXY pos = { (1280.0f / 16.0f) * w + 40.0f, 720.0f / 9.0f * h + 40.0f };
-			FloatXY size = { 80.0f, 80.0f };
+			FloatXY pos = { CELL_SIZE * w + 40.0f, CELL_SIZE * h + 40.0f };
+			FloatXY size = { CELL_SIZE, CELL_SIZE };
 			switch (sideStage[h][w])
 			{
 			case BlockType::None:
@@ -99,4 +99,41 @@ void Stage::Draw()
 			}
 		}
 	}
+}
+
+bool Stage::IsGround(FloatXY pos, FloatXY boxSize)
+{
+	float left = pos.x - boxSize.x / 2.0f;
+	float right = pos.x + boxSize.x / 2.0f;
+	float bottom = pos.y + boxSize.y / 2.0f;
+
+	int indexY = (int)bottom / 80;
+	int indexX_L = (int)left / 80;
+	int indexX_R = (int)right / 80;
+
+	if (sideStage[indexY][indexX_L] == BlockType::Ground ||
+		sideStage[indexY][indexX_R] == BlockType::Ground)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+FloatXY Stage::GetStageSize()
+{
+	// ステージが読み込まれていないときは、大きさ 0 として返す
+	// (sideStage[0] を読むと範囲外になるため)
+	if (sideStage.empty())
+	{
+		return { 0.0f, 0.0f };
+	}
+
+	// 行の数 = 縦のマス数、先頭の行の長さ = 横のマス数
+	// 0 埋めしてあるので、どの行も同じ長さになっている前提
+	const size_t rows = sideStage.size();
+	const size_t cols = sideStage[0].size();
+
+	// 個数 × マスの大きさ = 端の座標
+	return { cols * CELL_SIZE, rows * CELL_SIZE };
 }

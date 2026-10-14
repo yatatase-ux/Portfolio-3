@@ -9,7 +9,7 @@ SCENE_ENTER(SceneEnd)
 
 SCENE_UPDATE(SceneEnd)
 {
-	if (key->Push(SPACE))
+	if (key->Push(TAB))
 	{
 		manager->ChangeState(std::make_unique<SceneTitle>());
 	}

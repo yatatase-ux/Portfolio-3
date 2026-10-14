@@ -9,7 +9,7 @@ SCENE_ENTER(SceneTitle)
 
 SCENE_UPDATE(SceneTitle)
 {
-	if (key->Push(SPACE))
+	if (key->Push(TAB))
 	{
 		manager->ChangeState(std::make_unique<SceneInGame>("Stage0"));
 	}

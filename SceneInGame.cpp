@@ -11,7 +11,7 @@ SceneInGame::SceneInGame(const std::string& arg_stageName)
 
 SCENE_ENTER(SceneInGame)
 {
-	player = std::make_unique<Player>(manager->GetKey());
+	player = std::make_unique<Player>(manager->GetKey(), stage);
 
 	// ステージの読み込み
 	// 失敗したときはデバッグ表示が出るので、まずはそのまま進める
@@ -23,7 +23,9 @@ SCENE_ENTER(SceneInGame)
 
 SCENE_UPDATE(SceneInGame)
 {
-	if (key->Push(SPACE))
+	player->Input();
+	player->Update();
+	if (key->Push(TAB))
 	{
 		manager->ChangeState(std::make_unique<SceneEnd>());
 		return;
