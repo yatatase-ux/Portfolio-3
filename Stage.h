@@ -31,8 +31,11 @@ public:
 
 	void Draw();
 
-	bool IsGround(FloatXY pos, FloatXY boxSize);
-	bool HitBlock(FloatXY pos, FloatXY boxSize);
+	bool IsGround(FloatXY pos, FloatXY boxSize, float yDiff);
+	bool HitBlock(FloatXY pos, FloatXY boxSize, float xDiff);
 
 	FloatXY GetStageSize();
+
+private:
+	bool IsSolid(int row, int col) const;
 };

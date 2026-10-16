@@ -6,9 +6,18 @@
 // ====================================================================
 enum {
 	TAB,
+
 	SPACE,
+
 	LEFT, 
 	RIGHT,
+	UP,
+	DOWN,
+
+	W,
+	A,
+	S,
+	D,
 
 	USE_KEY_MAX
 };
@@ -20,9 +29,18 @@ protected:
 	int key_type[USE_KEY_MAX] =
 	{
 		KEY_INPUT_TAB,
+
 		KEY_INPUT_SPACE,
+
 		KEY_INPUT_LEFT,
-		KEY_INPUT_RIGHT
+		KEY_INPUT_RIGHT,
+		KEY_INPUT_UP, 
+		KEY_INPUT_DOWN,
+
+		KEY_INPUT_W,
+		KEY_INPUT_A,
+		KEY_INPUT_S,
+		KEY_INPUT_D
 	};
 
 	bool key_sw[USE_KEY_MAX] = { false };

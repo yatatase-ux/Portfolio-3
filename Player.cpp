@@ -21,7 +21,7 @@ void Player::Input()
 	moveDiff = { 0.0f, 0.0f };
 	if(onGround)
 	{
-		if (key.Push(SPACE))
+		if (key.Push(SPACE) || key.Push(UP))
 		{
 			velocityY = -20.0f;
 			onGround = false;
@@ -38,19 +38,40 @@ void Player::Update()
 	moveDiff += Gravity();
 	FloatXY nextPos = pos + moveDiff;
 	nextPos.x = std::clamp(nextPos.x, halfW, stageSize.x - halfW);
+	moveDiff.x = nextPos.x - pos.x;	// 収めた位置までの差を、実際の横の移動量にする
 
-	// 収めた位置までの差を、実際の横の移動量にする
-	moveDiff.x = nextPos.x - pos.x;
-
-	bool hitBox = stage.IsGround(nextPos, size);
-	if (hitBox)
+	bool hitBlock = stage.HitBlock({nextPos.x, pos.y}, size, moveDiff.x);
+	if (hitBlock)
 	{
-		onGround = true;
+		bool dir = (moveDiff.x > 0.0f);
+		float side = (dir) ? nextPos.x - 0.01f + size.x / 2.0f : nextPos.x - size.x / 2.0f;
+		int indexX = (int)(side / CELL_SIZE);
+		float blockX = CELL_SIZE * indexX;
+		if(dir)	pos.x = blockX - size.x / 2.0f;
+		else	pos.x = blockX + CELL_SIZE + size.x / 2.0f;
 
-		float bottom = nextPos.y + size.y / 2.0f;
+		moveDiff.x = 0.0f;
+		nextPos = pos + moveDiff;
+		nextPos.x = std::clamp(nextPos.x, halfW, stageSize.x - halfW);
+	}
+
+	bool isGround = stage.IsGround(nextPos, size, moveDiff.y);
+	if (isGround)
+	{
+		bool dir = (moveDiff.y < 0.0f);
+		float bottom = (dir) ? nextPos.y - size.y / 2.0f : nextPos.y + size.y / 2.0f;
 		int indexY = bottom / CELL_SIZE;
 		float floarY = CELL_SIZE * indexY;
-		pos.y = floarY - size.y / 2.0f;
+		if (dir)
+		{
+			pos.y = floarY + CELL_SIZE + size.y / 2.0f;
+			velocityY = 0.0f;
+		}
+		else
+		{
+			onGround = true;
+			pos.y = floarY - size.y / 2.0f;
+		}
 
 		moveDiff.y = 0.0f;
 	}
@@ -72,11 +93,11 @@ void Player::Draw()
 FloatXY Player::Move()
 {
 	FloatXY diff = { 0.0f, 0.0f };
-	if (key.Check(LEFT))
+	if (key.Check(LEFT) || key.Check(A))
 	{
 		diff.x -= MOVE_SPEED;
 	}
-	if (key.Check(RIGHT))
+	if (key.Check(RIGHT) || key.Check(D))
 	{
 		diff.x += MOVE_SPEED;
 	}

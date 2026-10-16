@@ -18,7 +18,7 @@ bool Stage::Load(const std::string& name)
 {
 	// ---- 1. ファイルパスを組み立てる ----
 	// 例: name が "Stage0" なら "StageInfoCSV/Stage0_side.csv" になる
-	const std::string path = "StageInfoCSV/" + name + "_side.csv";
+	const std::string path = "StageInfo/CSV/" + name + "_side.csv";
 
 	// ---- 2. ファイルを開く ----
 	std::ifstream file(path);
@@ -101,18 +101,21 @@ void Stage::Draw()
 	}
 }
 
-bool Stage::IsGround(FloatXY pos, FloatXY boxSize)
+bool Stage::IsGround(FloatXY pos, FloatXY boxSize, float yDiff)
 {
+	bool dir = (yDiff < 0.0f);	// Y変化量がマイナス（上向き）ならTRUE
+
 	float left = pos.x - boxSize.x / 2.0f;
 	float right = pos.x + boxSize.x / 2.0f;
-	float bottom = pos.y + boxSize.y / 2.0f;
+	float y = (dir) ? pos.y - boxSize.y / 2.0f : pos.y + boxSize.y / 2.0f;
 
-	int indexY = (int)bottom / 80;
-	int indexX_L = (int)left / 80;
-	int indexX_R = (int)right / 80;
+	int indexY = (int)(y / CELL_SIZE);
+	int indexX_L = (int)(left / CELL_SIZE);
+	// 右端と下端は「境目ちょうど」なら、内側のマスとして扱う
+	// ほんの少し(0.01)引いてからマスの番号に変える
+	int indexX_R = (int)((right - 0.01f) / CELL_SIZE);
 
-	if (sideStage[indexY][indexX_L] == BlockType::Ground ||
-		sideStage[indexY][indexX_R] == BlockType::Ground)
+	if (IsSolid(indexY, indexX_L) || IsSolid(indexY, indexX_R))
 	{
 		return true;
 	}
@@ -120,25 +123,29 @@ bool Stage::IsGround(FloatXY pos, FloatXY boxSize)
 	return false;
 }
 
-bool Stage::HitBlock(FloatXY pos, FloatXY boxSize)
+bool Stage::HitBlock(FloatXY pos, FloatXY boxSize, float xDiff)
 {
-	float left = pos.x - boxSize.x / 2.0f;
-	float right = pos.x + boxSize.x / 2.0f;
+	if (xDiff == 0.0f) return false;
+
+	bool dir = (xDiff > 0.0f);	// 右向きならTRUE、左向きならFALSE
+
 	float top = pos.y - boxSize.y / 2.0f;
 	float bottom = pos.y + boxSize.y / 2.0f;
+	float side = (dir) ?  pos.x - 0.01f + boxSize.x / 2.0f : pos.x - boxSize.x / 2.0f;
 
-	int indexTop = (int)top / 80;
-	int indexBottom = (int)bottom / 80;
-	int indexLeft = (int)left / 80;
-	int indexRight = (int)right / 80;
+	int indexTop = (int)(top / CELL_SIZE);
+	int indexBottom = (int)((bottom - 0.01f) / CELL_SIZE);
+	int indexSide = (int)(side / CELL_SIZE);
 
-	if (sideStage[indexTop][indexLeft] == BlockType::Ground ||
-		sideStage[indexTop][indexRight] == BlockType::Ground ||
-		sideStage[indexBottom][indexLeft] == BlockType::Ground ||
-		sideStage[indexBottom][indexRight] == BlockType::Ground)
+	for(int i = indexTop; i <= indexBottom; i++)
 	{
-
+		if (IsSolid(i, indexSide))
+		{
+			return true;
+		}
 	}
+
+	return false;
 }
 
 FloatXY Stage::GetStageSize()
@@ -157,4 +164,24 @@ FloatXY Stage::GetStageSize()
 
 	// 個数 × マスの大きさ = 端の座標
 	return { cols * CELL_SIZE, rows * CELL_SIZE };
+}
+
+// 指定した行・列のマスが「固い」かどうかを返す
+// 範囲外は決めておいたルールで答える
+bool Stage::IsSolid(int row, int col) const
+{
+	// 左右の外:見えない壁なので固い
+	if (col < 0 || sideStage.empty() || col >= (int)sideStage[0].size())
+	{
+		return true;
+	}
+
+	// 上下の外:穴(何もない)なので固くない
+	if (row < 0 || row >= (int)sideStage.size())
+	{
+		return false;
+	}
+
+	// 範囲内なら、マスの種類で判断する
+	return sideStage[row][col] == BlockType::Ground;
 }
