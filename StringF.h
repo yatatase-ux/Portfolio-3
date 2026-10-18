@@ -69,3 +69,14 @@ void DrawLeftString(float x, float y, const char* text, unsigned int color, floa
 /// <param name="">変数</param>
 void DrawCenterFormat(float x, float y, unsigned int color, float size, const char* format, ...);
 
+/// <summary>
+/// 左揃えで文字と変数を描画する関数
+/// </summary>
+/// <param name="x">X座標</param>
+/// <param name="y">Y座標</param>
+/// <param name="color"色></param>
+/// <param name="size">文字サイズ</param>
+/// <param name="format">文字列</param>
+/// <param name="">変数</param>
+void DrawLeftFormat(float x, float y, unsigned int color, float size, const char* format, ...);
+

@@ -25,7 +25,9 @@ SCENE_UPDATE(SceneInGame)
 {
 	player->Input();
 	player->Update();
-	if (key->Push(TAB))
+	pState pS = player->GetState();
+
+	if (key->Push(TAB) || pS == pState::Died)
 	{
 		manager->ChangeState(std::make_unique<SceneEnd>());
 		return;

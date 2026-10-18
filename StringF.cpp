@@ -97,3 +97,20 @@ void DrawCenterFormat(float x, float y, unsigned int color, float size, const ch
 	float draw_y = y - size / 2.0f;
 	DrawStringF(draw_x, draw_y, buffer, color);
 }
+
+void DrawLeftFormat(float x, float y, unsigned int color, float size, const char* format, ...)
+{
+	char buffer[256]; // 描画する文字列の一時バッファ
+
+	va_list args;
+	va_start(args, format);
+	vsprintf_s(buffer, sizeof(buffer), format, args); // formatと可変長引数から文字列を組み立てる
+	va_end(args);
+
+	SetFontSize(size);
+	int GT_s = strlen(buffer);
+	int GT_w = GetDrawStringWidth(buffer, GT_s);
+	float draw_x = x;
+	float draw_y = y - size / 2.0f;
+	DrawStringF(draw_x, draw_y, buffer, color);
+}

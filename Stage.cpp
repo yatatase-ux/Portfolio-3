@@ -1,6 +1,7 @@
 #include "Stage.h"
 #include <fstream>   // std::ifstream(ファイル読み込み)
 #include <sstream>   // std::stringstream(文字列の分割)
+#include <cmath>
 #include "DxLib.h"   // printfDx(デバッグ表示)
 #include "Shape.h"
 
@@ -86,7 +87,7 @@ void Stage::Draw()
 	{
 		for (int w = 0; w < sideStage[h].size(); w++)
 		{
-			FloatXY pos = { CELL_SIZE * w + 40.0f, CELL_SIZE * h + 40.0f };
+			FloatXY pos = { CELL_SIZE * w + CELL_SIZE / 2.0f, CELL_SIZE * h + CELL_SIZE / 2.0f };
 			FloatXY size = { CELL_SIZE, CELL_SIZE };
 			switch (sideStage[h][w])
 			{
@@ -101,7 +102,7 @@ void Stage::Draw()
 	}
 }
 
-bool Stage::IsGround(FloatXY pos, FloatXY boxSize, float yDiff)
+bool Stage::HitVertical(FloatXY pos, FloatXY boxSize, float yDiff)
 {
 	bool dir = (yDiff < 0.0f);	// Y変化量がマイナス（上向き）ならTRUE
 
@@ -109,11 +110,11 @@ bool Stage::IsGround(FloatXY pos, FloatXY boxSize, float yDiff)
 	float right = pos.x + boxSize.x / 2.0f;
 	float y = (dir) ? pos.y - boxSize.y / 2.0f : pos.y + boxSize.y / 2.0f;
 
-	int indexY = (int)(y / CELL_SIZE);
-	int indexX_L = (int)(left / CELL_SIZE);
+	int indexY = ToCellIndex(y);
+	int indexX_L = ToCellIndex(left);
 	// 右端と下端は「境目ちょうど」なら、内側のマスとして扱う
 	// ほんの少し(0.01)引いてからマスの番号に変える
-	int indexX_R = (int)((right - 0.01f) / CELL_SIZE);
+	int indexX_R = ToCellIndex(right - 0.01f);
 
 	if (IsSolid(indexY, indexX_L) || IsSolid(indexY, indexX_R))
 	{
@@ -123,7 +124,7 @@ bool Stage::IsGround(FloatXY pos, FloatXY boxSize, float yDiff)
 	return false;
 }
 
-bool Stage::HitBlock(FloatXY pos, FloatXY boxSize, float xDiff)
+bool Stage::HitHorizontal(FloatXY pos, FloatXY boxSize, float xDiff)
 {
 	if (xDiff == 0.0f) return false;
 
@@ -133,9 +134,9 @@ bool Stage::HitBlock(FloatXY pos, FloatXY boxSize, float xDiff)
 	float bottom = pos.y + boxSize.y / 2.0f;
 	float side = (dir) ?  pos.x - 0.01f + boxSize.x / 2.0f : pos.x - boxSize.x / 2.0f;
 
-	int indexTop = (int)(top / CELL_SIZE);
-	int indexBottom = (int)((bottom - 0.01f) / CELL_SIZE);
-	int indexSide = (int)(side / CELL_SIZE);
+	int indexTop = ToCellIndex(top);
+	int indexBottom = ToCellIndex(bottom - 0.01f);
+	int indexSide = ToCellIndex(side);
 
 	for(int i = indexTop; i <= indexBottom; i++)
 	{
@@ -164,6 +165,11 @@ FloatXY Stage::GetStageSize()
 
 	// 個数 × マスの大きさ = 端の座標
 	return { cols * CELL_SIZE, rows * CELL_SIZE };
+}
+
+int Stage::ToCellIndex(float pos)
+{
+	return static_cast<int>(std::floor(pos / CELL_SIZE));
 }
 
 // 指定した行・列のマスが「固い」かどうかを返す
