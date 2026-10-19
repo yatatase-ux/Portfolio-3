@@ -98,7 +98,7 @@ void Player::Draw()
 {
 	DrawCenterBox(pos, size, GetColor(255, 0, 0), TRUE);
 
-	DrawLeftFormat(20, 20, GetColor(255, 255, 255), 20, "%f, %f", pos.x, pos.y);
+//	DrawLeftFormat(20, 20, GetColor(255, 255, 255), 20, "%f, %f", pos.x, pos.y);
 
 	if (isOffScreen)
 	{
