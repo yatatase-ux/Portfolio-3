@@ -35,6 +35,9 @@
     <Filter Include="ソース ファイル\Scene\0-Manager&amp;Base">
       <UniqueIdentifier>{a93dbe0a-70ba-4303-b5bd-b7be0f1a9e1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Gravity">
+      <UniqueIdentifier>{f0caa32e-55c0-42bb-b6ef-0579440d86e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -66,6 +69,9 @@
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>ソース ファイル\Scene\0-Manager&amp;Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityManager.cpp">
+      <Filter>ソース ファイル\Gravity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +116,9 @@
     </ClInclude>
     <ClInclude Include="SceneBase.h">
       <Filter>ソース ファイル\Scene\0-Manager&amp;Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityManager.h">
+      <Filter>ソース ファイル\Gravity</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

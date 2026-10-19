@@ -7,27 +7,20 @@
 SceneInGame::SceneInGame(const std::string& arg_stageName)
 	: stageName(arg_stageName)
 {
+	
 }
 
 SCENE_ENTER(SceneInGame)
 {
-	player = std::make_unique<Player>(manager->GetKey(), stage);
-
-	// ステージの読み込み
-	// 失敗したときはデバッグ表示が出るので、まずはそのまま進める
-	if (!stage.Load(stageName))
-	{
-		// 必要になったら、タイトルに戻すなどの処理をここに書く
-	}
+	mGravity = std::make_unique<GravityManager>(stageName, manager->GetKey());
 }
 
 SCENE_UPDATE(SceneInGame)
 {
-	player->Input();
-	player->Update();
-	pState pS = player->GetState();
+	mGravity->Input();
+	PlayerState pS = mGravity->Update();
 
-	if (key->Push(TAB) || pS == pState::Died)
+	if (key->Push(TAB) || pS == PlayerState::Died)
 	{
 		manager->ChangeState(std::make_unique<SceneEnd>());
 		return;
@@ -41,7 +34,6 @@ SCENE_EXIT(SceneInGame)
 
 SCENE_DRAW(SceneInGame)
 {
-	stage.Draw();
+	mGravity->Draw();
 	DrawCenterString(200, 200, "InGame", GetColor(255, 255, 255), 30);
-	player->Draw();
 }

@@ -106,9 +106,12 @@ bool Stage::HitVertical(FloatXY pos, FloatXY boxSize, float yDiff)
 {
 	bool dir = (yDiff < 0.0f);	// Y変化量がマイナス（上向き）ならTRUE
 
+
 	float left = pos.x - boxSize.x / 2.0f;
 	float right = pos.x + boxSize.x / 2.0f;
-	float y = (dir) ? pos.y - boxSize.y / 2.0f : pos.y + boxSize.y / 2.0f;
+	// 上端は「境目ちょうど」だと下の行に逃げるので、少し引いて接しているマスを拾う
+	// 下端はそのままで、接している床のマスに入る
+	float y = (dir) ? pos.y - boxSize.y / 2.0f - 0.01f : pos.y + boxSize.y / 2.0f;
 
 	int indexY = ToCellIndex(y);
 	int indexX_L = ToCellIndex(left);

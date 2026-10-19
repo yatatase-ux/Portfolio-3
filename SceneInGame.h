@@ -1,20 +1,15 @@
 #pragma once
 #include "SceneBase.h"
-#include "Player.h"
 #include <memory>
-#include "Stage.h"
+#include "GravityManager.h"
 
 class SceneInGame : public SceneBase
 {
-	std::unique_ptr<Player> player;
-
-	// ステージ本体
-	// Stage はコンストラクタに引数がないので、unique_ptr にせずそのまま持てる
-	Stage stage;
-
 	// どのステージを遊ぶか("Stage0" など)
 	// コンストラクタで受け取り、Enter で Load に渡す
 	std::string stageName;
+
+	std::unique_ptr<GravityManager> mGravity;
 
 public:
 
