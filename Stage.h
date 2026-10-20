@@ -21,6 +21,7 @@ enum class BlockType
 class Stage
 {
 	std::vector<std::vector<BlockType>> sideStage;
+	std::vector<std::vector<BlockType>> topStage;
 
 public:
 

@@ -47,7 +47,7 @@ public:
 	void Draw();
 
 	FloatXY Move();
-	FloatXY Gravity();
+	FloatXY Fall();
 
 	void ResolveHorizontal();
 	void ResolveVertical();

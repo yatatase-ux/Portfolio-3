@@ -45,21 +45,19 @@ void Player::Input()
 
 void Player::Update()
 {
-	moveDiff += Gravity();
-	FloatXY nextPos = pos + moveDiff;
-	nextPos.x = std::clamp(nextPos.x, HalfW, stageSize.x - HalfW);
+	moveDiff += Fall();		// 重力による落下処理
+	FloatXY nextPos = pos + moveDiff;	// 移動先の座標を仮で保管しておく
+	nextPos.x = std::clamp(nextPos.x, HalfW, stageSize.x - HalfW); // プレイヤーがステージの外にいかないようにクランプ
 	moveDiff.x = nextPos.x - pos.x;	// 収めた位置までの差を、実際の横の移動量にする
 
-	float stageTop = (gravityDiff > 0) ? stageSize.y + CELL_SIZE / 2.0f : 0.0f;
-	float stageUnder = (gravityDiff > 0) ? 0.0f : stageSize.y + CELL_SIZE / 2.0f;
+	ResolveHorizontal();		// 横方向の当たり判定
+	ResolveVertical();			// 縦方向の当たり判定
 
-	ResolveHorizontal();
-	ResolveVertical();
+	pos += moveDiff;			// 全ての移動処理を終えた上で最終的に pos に合算
 
-	pos += moveDiff;
-
+	// 落下死処理と画面外(上)の処理
 	if (gravityDiff > 0)
-	{
+	{ // 下向き重力
 		if (pos.y - size.y / 2.0f > stageSize.y + CELL_SIZE / 2.0f)
 		{
 			state = PlayerState::Died;
@@ -68,7 +66,7 @@ void Player::Update()
 		isOffScreen = (pos.y + size.y / 2.0f <= 0.0f);
 	} 
 	else if(gravityDiff < 0)
-	{
+	{ // 上向き重力
 		if (pos.y + size.y / 2.0f < 0.0f)
 		{
 			state = PlayerState::Died;
@@ -83,10 +81,11 @@ void Player::Update()
 
 void Player::Draw()
 {
-	DrawCenterBox(pos, size, GetColor(255, 0, 0), TRUE);
+	DrawCenterBox(pos, size, GetColor(255, 0, 0), TRUE);	// プレイヤー本体の描画
 
 //	DrawLeftFormat(20, 20, GetColor(255, 255, 255), 20, "%f, %f", pos.x, pos.y);
 
+	// 画面外(上)に飛び出したときに吹き出しでアイコンを描画させる（スクロール追加したら使わなくなるかも）
 	if (isOffScreen)
 	{
 		float x = pos.x;
@@ -113,7 +112,7 @@ FloatXY Player::Move()
 	return diff;
 }
 
-FloatXY Player::Gravity()
+FloatXY Player::Fall()
 {
 	FloatXY diff = { 0.0f, 0.0f };
 	if (!onGround)
