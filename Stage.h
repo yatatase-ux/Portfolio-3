@@ -5,7 +5,9 @@
 #include <sstream>   // std::stringstream(文字列の分割)
 
 #include "FloatXY.h"
+#include "FloatXYZ.h"
 #include "IntXY.h"
+#include "GravityDir.h"
 
 // 各マスのサイズ。必ず正方形にする
 const float CELL_SIZE = 80.0f;
@@ -23,6 +25,8 @@ class Stage
 	std::vector<std::vector<BlockType>> sideStage;
 	std::vector<std::vector<BlockType>> topStage;
 
+	GravityDir gravityDir;
+
 public:
 
 	Stage();
@@ -34,20 +38,18 @@ public:
 	/// <param name="name">ステージ番号("Stage〇"の形で)</param>
 	/// <returns>正しく読み込めたらTRUE、読み込みに失敗したらFALSE</returns>
 	bool Load(const std::string& name);
+	bool SideLoad(const std::string& name);
+	bool TopLoad(const std::string& name);
 
+	void SetGravityDir(GravityDir g);
+
+	void DrawLayer(const std::vector<std::vector<BlockType>>& layer,
+		BlockType type, unsigned int color, int alpha) const;
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw();
 
-	/// <summary>
-	/// 上下の移動後のマスが地形ブロックかを見る関数
-	/// </summary>
-	/// <param name="pos">座標</param>
-	/// <param name="boxSize">当たり判定のサイズ</param>
-	/// <param name="yDiff">縦方向の移動差分</param>
-	/// <returns>移動先が地形ならTRUE、それ以外ならFALSE</returns>
-	bool HitVertical(FloatXY pos, FloatXY boxSize, float yDiff);
 	/// <summary>
 	/// 左右の移動後のマスが地形ブロックかをみる関数
 	/// </summary>
@@ -55,7 +57,23 @@ public:
 	/// <param name="boxSize">当たり判定のサイズ</param>
 	/// <param name="xDiff">横方向の移動差分</param>
 	/// <returns>移動先が地形ならTRUE、それ以外ならFALSE</returns>
-	bool HitHorizontal(FloatXY pos, FloatXY boxSize, float xDiff);
+	bool HitHorizontal(FloatXYZ pos, FloatXY boxSize, float xDiff);
+	/// <summary>
+	/// 上下の移動後のマスが地形ブロックかを見る関数
+	/// </summary>
+	/// <param name="pos">座標</param>
+	/// <param name="boxSize">当たり判定のサイズ</param>
+	/// <param name="yDiff">縦方向の移動差分</param>
+	/// <returns>移動先が地形ならTRUE、それ以外ならFALSE</returns>
+	bool HitVertical(FloatXYZ pos, FloatXY boxSize, float yDiff);
+	/// <summary>
+	/// 奥の移動後のマスが地形ブロックかをみる関数
+	/// </summary>
+	/// <param name="pos">座標</param>
+	/// <param name="boxSize">当たり判定のサイズ</param>
+	/// <param name="xDiff">横方向の移動差分</param>
+	/// <returns>移動先が地形ならTRUE、それ以外ならFALSE</returns>
+	bool OnFloor(FloatXY pos, FloatXY boxSize) const;
 
 	/// <summary>
 	/// ステージのサイズを受け取る関数
@@ -78,4 +96,6 @@ private:
 	/// <param name="col">横</param>
 	/// <returns></returns>
 	bool IsSolid(int row, int col) const;
+
+	bool IsFloor(int row, int col) const;
 };

@@ -7,7 +7,7 @@
 
 Stage::Stage()
 {
-
+	gravityDir = GravityDir::Down;
 }
 
 Stage::~Stage()
@@ -16,6 +16,13 @@ Stage::~Stage()
 }
 
 bool Stage::Load(const std::string& name)
+{
+	bool s = (SideLoad(name) && TopLoad(name));
+
+	return s;
+}
+
+bool Stage::SideLoad(const std::string& name)
 {
 	// ---- 1. ファイルパスを組み立てる ----
 	// 例: name が "Stage0" なら "StageInfoCSV/Stage0_side.csv" になる
@@ -26,7 +33,7 @@ bool Stage::Load(const std::string& name)
 	if (!file.is_open())
 	{
 		// パス間違い・ファイルがない・Excelで開いたまま、などで失敗する
-		printfDx("ステージ読み込み失敗: %s\n", path.c_str());
+		printfDx("横ステージ読み込み失敗: %s\n", path.c_str());
 		return false;
 	}
 
@@ -81,31 +88,115 @@ bool Stage::Load(const std::string& name)
 	return true; // 読み込み成功
 }
 
-void Stage::Draw()
+bool Stage::TopLoad(const std::string& name)
 {
-	for (int h = 0; h < sideStage.size(); h++)
+	// ---- 1. ファイルパスを組み立てる ----
+	// 例: name が "Stage0" なら "StageInfoCSV/Stage0_top.csv" になる
+	const std::string path = "StageInfo/CSV/" + name + "_top.csv";
+
+	// ---- 2. ファイルを開く ----
+	std::ifstream file(path);
+	if (!file.is_open())
 	{
-		for (int w = 0; w < sideStage[h].size(); w++)
-		{
-			FloatXY pos = { CELL_SIZE * w + CELL_SIZE / 2.0f, CELL_SIZE * h + CELL_SIZE / 2.0f };
-			FloatXY size = { CELL_SIZE, CELL_SIZE };
-			switch (sideStage[h][w])
-			{
-			case BlockType::None:
-				DrawCenterBox(pos, size, GetColor(185, 255, 255), TRUE);
-				break;
-			case BlockType::Ground:
-				DrawCenterBox(pos, size, GetColor(165, 42, 42), TRUE);
-				break;
-			}
-		}
+		// パス間違い・ファイルがない・Excelで開いたまま、などで失敗する
+		printfDx("縦ステージ読み込み失敗: %s\n", path.c_str());
+		return false;
 	}
+
+	// 前に読み込んだステージが残っていたら消しておく(読み直し対策)
+	topStage.clear();
+
+	// ---- 3. 1行ずつ読む ----
+	std::string line;
+	while (std::getline(file, line))
+	{
+		// この行のマス(左から右へ)を入れる配列
+		std::vector<BlockType> row;
+
+		// 行の文字列を、カンマ区切りで取り出せるようにする
+		std::stringstream ss(line);
+		std::string cell;
+
+		// ---- 4. カンマで区切って1マスずつ取り出す ----
+		while (std::getline(ss, cell, ','))
+		{
+			int number = 0; // 空セルは 0(空白)として扱う
+
+			if (!cell.empty())
+			{
+				// 文字列 → 数字に変換
+				// 数字以外(全角文字など)が入っていると例外が出るので try で囲む
+				try
+				{
+					number = std::stoi(cell);
+				}
+				catch (...)
+				{
+					number = 0; // 読めないセルは空白扱い
+				}
+			}
+
+			// ---- 5. 定義されていない番号を弾く ----
+			// Max は「種類の数」を表す目印
+			if (number < 0 || number >= static_cast<int>(BlockType::Max))
+			{
+				number = static_cast<int>(BlockType::None);
+			}
+
+			// ---- 6. int → BlockType に変換して、この行に追加 ----
+			row.push_back(static_cast<BlockType>(number));
+		}
+
+		// 1行分ができたので、ステージに追加
+		topStage.push_back(row);
+	}
+
+	return true; // 読み込み成功
 }
 
-bool Stage::HitVertical(FloatXY pos, FloatXY boxSize, float yDiff)
+void Stage::SetGravityDir(GravityDir g)
+{
+	gravityDir = g;
+}
+
+void Stage::DrawLayer(const std::vector<std::vector<BlockType>>& layer,
+	BlockType type, unsigned int color, int alpha) const
+{
+	// マスの大きさは全マス共通なので、ループの外で1回だけ作る
+	const FloatXY size = { CELL_SIZE, CELL_SIZE };
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	for (size_t h = 0; h < layer.size(); h++)
+	{
+		for (size_t w = 0; w < layer[h].size(); w++)
+		{
+			// 描きたい種類以外は飛ばす
+			if (layer[h][w] != type) continue;
+
+			// マスの中心座標
+			const FloatXY pos = { CELL_SIZE * w + CELL_SIZE / 2.0f,
+								  CELL_SIZE * h + CELL_SIZE / 2.0f };
+			DrawCenterBox(pos, size, color, TRUE);
+		}
+	}
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void Stage::Draw()
+{
+	int alpha = (gravityDir == GravityDir::Back) ? 0 : 128;
+
+	// 下から順に重ねる(あとに描いたものが上に来る)
+	DrawLayer(topStage,  BlockType::None,   GetColor(185, 255, 255), 255 - alpha);	// 1. 見下ろしの穴
+	DrawLayer(sideStage, BlockType::None,   GetColor(185, 255, 255), 128 + alpha);	// 2. 横の空白
+	DrawLayer(topStage,  BlockType::Ground, GetColor(  0,   0,   0), 255 - alpha);	// 3. 見下ろしの床
+	DrawLayer(sideStage, BlockType::Ground, GetColor(165,  42,  42), 128 + alpha);	// 4. 横の地面
+
+}
+
+bool Stage::HitVertical(FloatXYZ pos, FloatXY boxSize, float yDiff)
 {
 	bool dir = (yDiff < 0.0f);	// Y変化量がマイナス（上向き）ならTRUE
-
 
 	float left = pos.x - boxSize.x / 2.0f;
 	float right = pos.x + boxSize.x / 2.0f;
@@ -127,7 +218,7 @@ bool Stage::HitVertical(FloatXY pos, FloatXY boxSize, float yDiff)
 	return false;
 }
 
-bool Stage::HitHorizontal(FloatXY pos, FloatXY boxSize, float xDiff)
+bool Stage::HitHorizontal(FloatXYZ pos, FloatXY boxSize, float xDiff)
 {
 	if (xDiff == 0.0f) return false;
 
@@ -150,6 +241,20 @@ bool Stage::HitHorizontal(FloatXY pos, FloatXY boxSize, float xDiff)
 	}
 
 	return false;
+}
+
+// 足跡(x と y の四角形)の四隅のどれか1つでも床の上なら true
+// 横視点の「左右どちらかの足が乗っていれば着地」と同じ考え方
+bool Stage::OnFloor(FloatXY pos, FloatXY boxSize) const
+{
+	// 右端と下端は、境目ちょうどなら内側のマスとして扱う(少し引く)
+	const int left = ToCellIndex(pos.x - boxSize.x / 2.0f);
+	const int right = ToCellIndex(pos.x + boxSize.x / 2.0f - 0.01f);
+	const int top = ToCellIndex(pos.y - boxSize.y / 2.0f);
+	const int bottom = ToCellIndex(pos.y + boxSize.y / 2.0f - 0.01f);
+
+	return IsFloor(top, left) || IsFloor(top, right) ||
+		IsFloor(bottom, left) || IsFloor(bottom, right);
 }
 
 FloatXY Stage::GetStageSize()
@@ -193,4 +298,11 @@ bool Stage::IsSolid(int row, int col) const
 
 	// 範囲内なら、マスの種類で判断する
 	return sideStage[row][col] == BlockType::Ground;
+}
+
+bool Stage::IsFloor(int row, int col) const
+{
+	if (row < 0 || row >= (int)topStage.size()) return false;
+	if (col < 0 || topStage.empty() || col >= (int)topStage[0].size()) return false;
+	return topStage[row][col] == BlockType::Ground;
 }

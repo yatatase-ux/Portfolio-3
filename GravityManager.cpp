@@ -22,12 +22,20 @@ void GravityManager::Input()
 	if (key.Push(ONE))
 	{
 		gravity = GravityDir::Down;
-		player->GravityChange(static_cast<int>(gravity));
+		player->GravityChange(gravity);
+		stage.SetGravityDir(gravity);
 	}
 	else if (key.Push(TWO))
 	{
 		gravity = GravityDir::Up;
-		player->GravityChange(static_cast<int>(gravity));
+		player->GravityChange(gravity);
+		stage.SetGravityDir(gravity);
+	}
+	else if (key.Push(THREE))
+	{
+		gravity = GravityDir::Back;
+		player->GravityChange(gravity);
+		stage.SetGravityDir(gravity);
 	}
 
 	player->Input();

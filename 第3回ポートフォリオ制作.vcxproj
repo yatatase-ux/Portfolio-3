@@ -145,7 +145,9 @@
   <ItemGroup>
     <ClInclude Include="1-SceneInclude.h" />
     <ClInclude Include="FloatXY.h" />
+    <ClInclude Include="FloatXYZ.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GravityDir.h" />
     <ClInclude Include="GravityManager.h" />
     <ClInclude Include="IntXY.h" />
     <ClInclude Include="KeyAction.h" />

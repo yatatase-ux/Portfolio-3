@@ -120,5 +120,11 @@
     <ClInclude Include="GravityManager.h">
       <Filter>ソース ファイル\Gravity</Filter>
     </ClInclude>
+    <ClInclude Include="GravityDir.h">
+      <Filter>ソース ファイル\Gravity</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatXYZ.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -20,7 +20,7 @@ SCENE_UPDATE(SceneInGame)
 	mGravity->Input();
 	PlayerState pS = mGravity->Update();
 
-	if (key->Push(TAB) || pS == PlayerState::Died)
+	if (key->Push(TAB) || pS == PlayerState::Dead)
 	{
 		manager->ChangeState(std::make_unique<SceneEnd>());
 		return;
