@@ -65,8 +65,6 @@ void Player::Update()
 	moveDiff += Fall();		// 重力による落下処理
 	FloatXYZ nextPos = pos + moveDiff;	// 移動先の座標を仮で保管しておく
 	nextPos.x = std::clamp(nextPos.x, HalfW, stageSize.x - HalfW); // プレイヤーがステージの外にいかないようにクランプ
-	if (currentGravity == GravityDir::Back) 
-		nextPos.y = std::clamp(nextPos.y, HalfW, stageSize.y - HalfW);
 	moveDiff.x = nextPos.x - pos.x;	// 収めた位置までの差を、実際の横の移動量にする
 
 	FloatXY pSize = (currentGravity == GravityDir::Back) ? topSize : sideSize;
