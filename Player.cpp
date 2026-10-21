@@ -35,7 +35,7 @@ void Player::GravityChange(GravityDir gravityDir)
 
 void Player::Input()
 {
-	moveDiff = { 0.0f, 0.0f };
+	moveDiff = { 0.0f, 0.0f, 0.0f };
 
 	if(onGround)
 	{
@@ -58,6 +58,14 @@ void Player::Input()
 	}
 
 	moveDiff += Move();
+
+	if (currentGravity != GravityDir::Back)
+	{
+		if (moveDiff.x != 0 || moveDiff.y != 0)
+		{
+			if (pos.z < START_POS.z)	moveDiff.z += 1.0f;
+		}
+	}
 }
 
 void Player::Update()
@@ -67,7 +75,10 @@ void Player::Update()
 	nextPos.x = std::clamp(nextPos.x, HalfW, stageSize.x - HalfW); // プレイヤーがステージの外にいかないようにクランプ
 	moveDiff.x = nextPos.x - pos.x;	// 収めた位置までの差を、実際の横の移動量にする
 
-	FloatXY pSize = (currentGravity == GravityDir::Back) ? topSize : sideSize;
+	//----------------------------
+	// 当たり判定
+	//----------------------------
+	FloatXY pSize = (currentGravity == GravityDir::Back) ? topSize : sideSize;	// 現在の重力に」応じた当たり判定
 	ResolveHorizontal(pSize);		// 横方向の当たり判定
 	ResolveVertical(pSize);			// 縦方向の当たり判定
 	ResolveDepth(pSize);			// 奥方向の当たり判定
@@ -93,6 +104,13 @@ void Player::Update()
 		}
 
 		isOffScreen = (pos.y - pSize.y / 2.0f >= stageSize.y);
+	}
+	else
+	{ // 奥向き重力
+		if (pos.z < -300.0f)
+		{
+			state = PlayerState::Dead;
+		}
 	}
 
 	// すべてが終わったら移動差分を０にする
@@ -132,7 +150,19 @@ void Player::Draw()
 	}
 	else
 	{
-		DrawCenterBox({ pos.x, pos.y }, sideSize, GetColor(255, 0, 0), TRUE);
+		// ---- z に応じた見た目の倍率 ----
+		// 横視点では z = SIDE_BASE_Z(100)で 1 倍
+		// それより小さい(奥にいる)と小さく、大きい(手前にいる)と大きくなる
+		const float scale = std::clamp(1.0f + (pos.z - START_POS.z) * DEPTH_SCALE_RATE,
+			MIN_DEPTH_SCALE, MAX_DEPTH_SCALE);
+		const FloatXY drawSize = { sideSize.x * scale, sideSize.y * scale };
+
+		// ---- 足元を基準にする ----
+		// 大きさが変わった分を頭の側へ伸ばす(縮むときは頭の側から縮む)
+		const float grow = (drawSize.y - sideSize.y) / 2.0f;
+		const float drawY = (currentGravity == GravityDir::Down) ? pos.y - grow : pos.y + grow;
+
+		DrawCenterBox({ pos.x, drawY }, drawSize, GetColor(255, 0, 0), TRUE);
 	}
 
 
