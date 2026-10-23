@@ -38,6 +38,9 @@
     <Filter Include="ソース ファイル\Gravity">
       <UniqueIdentifier>{f0caa32e-55c0-42bb-b6ef-0579440d86e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Camera">
+      <UniqueIdentifier>{7d84572c-7633-40d5-bf35-52be9a49dd08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -72,6 +75,9 @@
     </ClCompile>
     <ClCompile Include="GravityManager.cpp">
       <Filter>ソース ファイル\Gravity</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>ソース ファイル\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="FloatXYZ.h">
       <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>ソース ファイル\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

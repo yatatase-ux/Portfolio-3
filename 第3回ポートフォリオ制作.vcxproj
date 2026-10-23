@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GravityManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -144,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="1-SceneInclude.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="FloatXY.h" />
     <ClInclude Include="FloatXYZ.h" />
     <ClInclude Include="Game.h" />
