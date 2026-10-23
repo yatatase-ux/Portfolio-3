@@ -21,8 +21,8 @@ class Player
 	const FloatXYZ START_POS = { 120.0f, 570.0f , 100.0f};
 	FloatXYZ pos;
 
-	const FloatXY sideSize = { 60.0f, 140.0f };
-	const FloatXY topSize = { 60.0f, 60.0f };
+	const FloatXY sideSize = { 30.0f, 70.0f };
+	const FloatXY topSize = { 30.0f, 30.0f };
 	const float HalfW = sideSize.x / 2.0f;
 
 	const float JUMP_SPEED = -20.0f;

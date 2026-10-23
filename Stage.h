@@ -10,7 +10,7 @@
 #include "GravityDir.h"
 
 // 各マスのサイズ。必ず正方形にする
-const float CELL_SIZE = 80.0f;
+const float CELL_SIZE = 40.0f;
 
 enum class BlockType
 {
