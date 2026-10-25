@@ -177,6 +177,7 @@ void Player::Draw(const Camera& camera)
 	{
 		FloatXY pos = camera.WorldToScreen({ worldPos.x, 50.0f });
 		pos.x = std::clamp(pos.x, 50.0f, 1280 - 50.0f);
+		pos.y = (currentGravity == GravityDir::Down) ? 50.0f : 720.0f - 50.0f;
 		DrawCircle(pos.x, pos.y, 50.0f, GetColor(255, 0, 0), TRUE);
 		DrawCircle(pos.x, pos.y, 45.0f, GetColor(255, 255, 0), TRUE);
 		DrawCenterBox( pos , {sideSize.x / 2.0f, sideSize.y / 2.0f}, GetColor(255, 0, 0), TRUE);
