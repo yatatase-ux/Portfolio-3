@@ -22,13 +22,13 @@ SCENE_UPDATE(SceneInGame)
 
 	if (key->Push(TAB) || pS == PlayerState::Dead)
 	{
-		manager->ChangeState(std::make_unique<SceneEnd>());
+		manager->ChangeState(std::make_unique<SceneEnd>(pS));
 		return;
 	}
 
 	if (pS == PlayerState::Clear)
 	{
-		manager->ChangeState(std::make_unique<SceneEnd>());
+		manager->ChangeState(std::make_unique<SceneEnd>(pS));
 		return;
 	}
 }

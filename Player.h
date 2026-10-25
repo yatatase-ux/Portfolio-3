@@ -5,15 +5,9 @@
 #include "Stage.h"
 #include "GravityDir.h"
 #include "ScreenSize.h"
+#include "PlayerState.h"
 
 class Camera;
-
-enum class PlayerState
-{
-	Alive,
-	Dead,
-	Clear
-};
 
 class Player
 {

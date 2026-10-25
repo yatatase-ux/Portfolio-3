@@ -154,6 +154,7 @@
     <ClInclude Include="IntXY.h" />
     <ClInclude Include="KeyAction.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerState.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneEnd.h" />
     <ClInclude Include="SceneInGame.h" />
