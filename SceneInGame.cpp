@@ -25,6 +25,12 @@ SCENE_UPDATE(SceneInGame)
 		manager->ChangeState(std::make_unique<SceneEnd>());
 		return;
 	}
+
+	if (pS == PlayerState::Clear)
+	{
+		manager->ChangeState(std::make_unique<SceneEnd>());
+		return;
+	}
 }
 
 SCENE_EXIT(SceneInGame)

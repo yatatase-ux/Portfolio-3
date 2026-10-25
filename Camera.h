@@ -2,6 +2,7 @@
 #include "Stage.h"
 #include "FloatXY.h"
 #include "FloatXYZ.h"
+#include "ScreenSize.h"
 
 class Player;
 

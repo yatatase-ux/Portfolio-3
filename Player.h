@@ -4,13 +4,15 @@
 #include "FloatXYZ.h"
 #include "Stage.h"
 #include "GravityDir.h"
+#include "ScreenSize.h"
 
 class Camera;
 
 enum class PlayerState
 {
 	Alive,
-	Dead
+	Dead,
+	Clear
 };
 
 class Player
@@ -62,5 +64,6 @@ private:
 	void ResolveHorizontal(FloatXY size);
 	void ResolveVertical(FloatXY size);
 	void ResolveDepth(FloatXY size);
+	void CheckOutOfStage(FloatXY size);
 };
 

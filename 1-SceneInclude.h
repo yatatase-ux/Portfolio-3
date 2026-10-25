@@ -5,3 +5,4 @@
 #include "SceneManager.h"
 #include "StringF.h"
 #include "KeyAction.h"
+#include "ScreenSize.h"

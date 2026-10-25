@@ -228,9 +228,12 @@ void Stage::Draw(const Camera& camera)
 	DrawLayer(topStage,  BlockType::None,   GetColor(185, 255, 255), 255 - alpha, camera);	// 1. 見下ろしの穴
 	DrawLayer(sideStage, BlockType::None,   GetColor(185, 255, 255), 128 + alpha, camera);	// 2. 横の空白
 	DrawLayer(topStage,  BlockType::Ground, GetColor(  0,   0,   0), 255 - alpha, camera);	// 3. 見下ろしの床
+	
+	// ゴールライン
 	FloatXY g_sPos = camera.WorldToScreen({ goalPos.x, 0.0f });
-	FloatXY g_ePos = camera.WorldToScreen({ goalPos.x + CELL_SIZE / 2.0f, 720.0f });
+	FloatXY g_ePos = camera.WorldToScreen({ goalPos.x + CELL_SIZE / 2.0f, GetStageSize().y });
 	DrawCheckered(g_sPos, g_ePos, GetColor(255, 255, 255), GetColor(0, 0, 0), CELL_SIZE / 4.0f);
+
 	DrawLayer(sideStage, BlockType::Ground, GetColor(165,  42,  42), 128 + alpha, camera);	// 4. 横の地面
 
 
@@ -299,7 +302,12 @@ bool Stage::OnFloor(FloatXY pos, FloatXY boxSize) const
 		IsFloor(bottom, left) || IsFloor(bottom, right);
 }
 
-FloatXY Stage::GetStageSize()
+bool Stage::ArriveGoal(float wPos_x) const
+{
+	return (wPos_x > goalPos.x);
+}
+
+FloatXY Stage::GetStageSize() const
 {
 	// ステージが読み込まれていないときは、大きさ 0 として返す
 	// (sideStage[0] を読むと範囲外になるため)

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "ScreenSize.h"
 
 #include "FloatXY.h"
 #include "FloatXYZ.h"
@@ -44,6 +45,10 @@ public:
 	/// <returns>正しく読み込めたらTRUE、読み込みに失敗したらFALSE</returns>
 	bool Load(const std::string& name);
 
+	/// <summary>
+	/// ステージを重力に対応させる
+	/// </summary>
+	/// <param name="g">現在の重力</param>
 	void SetGravityDir(GravityDir g);
 
 	/// <summary>
@@ -76,11 +81,13 @@ public:
 	/// <returns>移動先が地形ならTRUE、それ以外ならFALSE</returns>
 	bool OnFloor(FloatXY pos, FloatXY boxSize) const;
 
+	bool ArriveGoal(float wPos_x) const;
+
 	/// <summary>
 	/// ステージのサイズを受け取る関数
 	/// </summary>
 	/// <returns>ステージサイズ</returns>
-	FloatXY GetStageSize();
+	FloatXY GetStageSize() const;
 
 	/// <summary>
 	/// 座標を基にマスの番号を得る関数

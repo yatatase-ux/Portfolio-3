@@ -72,50 +72,28 @@ void Player::Input()
 
 void Player::Update()
 {
-	moveDiff += Fall();		// 重力による落下処理
-	FloatXYZ nextPos = worldPos + moveDiff;	// 移動先の座標を仮で保管しておく
-	nextPos.x = std::clamp(nextPos.x, HalfW, stageSize.x - HalfW); // プレイヤーがステージの外にいかないようにクランプ
-	moveDiff.x = nextPos.x - worldPos.x;	// 収めた位置までの差を、実際の横の移動量にする
+	moveDiff += Fall();												// 重力による落下処理
+	FloatXYZ nextPos = worldPos + moveDiff;							// 移動先の座標を仮で保管しておく
+	nextPos.x = std::clamp(nextPos.x, HalfW, stageSize.x - HalfW);	// プレイヤーがステージの外にいかないようにクランプ
+	moveDiff.x = nextPos.x - worldPos.x;							// 収めた位置までの差を、実際の横の移動量にする
 
-	//----------------------------
-	// 当たり判定
-	//----------------------------
-	FloatXY pSize = (currentGravity == GravityDir::Back) ? topSize : sideSize;	// 現在の重力に」応じた当たり判定
+	//---- 当たり判定 ----
+	FloatXY pSize = (currentGravity == GravityDir::Back) ? topSize : sideSize;	// 現在の重力に応じた当たり判定
 	ResolveHorizontal(pSize);		// 横方向の当たり判定
 	ResolveVertical(pSize);			// 縦方向の当たり判定
 	ResolveDepth(pSize);			// 奥方向の当たり判定
 
-	worldPos += moveDiff;			// 全ての移動処理を終えた上で最終的に pos に合算
+	worldPos += moveDiff;			// 当たり判定など全ての移動処理を終えた上で最終的に worldPos に合算
 
-	isOffScreen = false;
-	// 落下死処理と画面外(上)の処理
-	if (currentGravity == GravityDir::Down)
-	{ // 下向き重力
-		if (worldPos.y - pSize.y / 2.0f > stageSize.y + CELL_SIZE / 2.0f)
-		{
-			state = PlayerState::Dead;
-		}
+	// ---- 画面外処理 ----
+	CheckOutOfStage(pSize);
 
-		isOffScreen = (worldPos.y + pSize.y / 2.0f <= 0.0f);
-	} 
-	else if(currentGravity == GravityDir::Up)
-	{ // 上向き重力
-		if (worldPos.y + pSize.y / 2.0f < 0.0f)
-		{
-			state = PlayerState::Dead;
-		}
-
-		isOffScreen = (worldPos.y - pSize.y / 2.0f >= stageSize.y);
-	}
-	else
-	{ // 奥向き重力
-		if (worldPos.z < -300.0f)
-		{
-			state = PlayerState::Dead;
-		}
+	// ---- ゴール処理(クリア) ----
+	if (stage.ArriveGoal(worldPos.x + pSize.x / 2.0f)) {
+		state = PlayerState::Clear;
 	}
 
-	// すべてが終わったら移動差分を０にする
+	// すべてが終わったら移動差分を０にしておく
 	moveDiff = { 0.0f, 0.0f };
 }
 
@@ -129,13 +107,16 @@ void Player::Draw(const Camera& camera)
 			MIN_DEPTH_SCALE, MAX_DEPTH_SCALE);
 		const FloatXY drawSize = { topSize.x * scale, topSize.y * scale };
 
+		// ワールド座標からスクリーン座標に変換
+		FloatXY sPos = camera.WorldToScreen({ worldPos.x, worldPos.y });
+
 		// ---- 影(浮いているときだけ、床の上に元の大きさで描く) ----
 		// どこに着地するかが分かるように、足元の位置に半透明の黒を置く
 		// 穴の上では床がないので影は描かない
 		if (worldPos.z > 0.0f && stage.OnFloor({ worldPos.x, worldPos.y }, topSize))
 		{
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
-			DrawCenterBox({ worldPos.x, worldPos.y }, topSize, GetColor(0, 0, 0), TRUE);
+			DrawCenterBox( sPos, topSize, GetColor(0, 0, 0), TRUE);
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 
@@ -146,7 +127,6 @@ void Player::Draw(const Camera& camera)
 			? std::clamp(static_cast<int>(255 + worldPos.z * 1.2f), 0, 255)
 			: 255;
 
-		FloatXY sPos = camera.WorldToScreen({ worldPos.x, worldPos.y });
 
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		DrawCenterBox(sPos, drawSize, GetColor(255, 0, 0), TRUE);
@@ -165,6 +145,7 @@ void Player::Draw(const Camera& camera)
 		// 大きさが変わった分を頭の側へ伸ばす(縮むときは頭の側から縮む)
 		const float grow = (drawSize.y - sideSize.y) / 2.0f;
 		const float drawY = (currentGravity == GravityDir::Down) ? worldPos.y - grow : worldPos.y + grow;
+		// ワールド座標からスクリーン座標に変換
 		FloatXY sPos = camera.WorldToScreen({ worldPos.x, drawY });
 		DrawCenterBox( sPos, drawSize, GetColor(255, 0, 0), TRUE);
 	}
@@ -172,7 +153,7 @@ void Player::Draw(const Camera& camera)
 
 //	DrawLeftFormat(20, 20, GetColor(255, 255, 255), 20, "%f, %f", pos.x, pos.y);
 
-	// 画面外(上)に飛び出したときに吹き出しでアイコンを描画させる（スクロール追加したら使わなくなるかも）
+	// 画面外(上)に飛び出したときに吹き出しでアイコンを描画させる
 	if (isOffScreen)
 	{
 		FloatXY pos = camera.WorldToScreen({ worldPos.x, 50.0f });
@@ -333,4 +314,35 @@ void Player::ResolveDepth(FloatXY size)
 
 	// 床がない(穴の上)、または空中 → 落ち続ける
 	onGround = false;
+}
+
+void Player::CheckOutOfStage(FloatXY size)
+{
+	isOffScreen = false;
+	// 落下死処理と画面外(上)の処理
+	if (currentGravity == GravityDir::Down)
+	{ // 下向き重力
+		if (worldPos.y - size.y / 2.0f > stageSize.y + CELL_SIZE / 2.0f)
+		{
+			state = PlayerState::Dead;
+		}
+
+		isOffScreen = (worldPos.y + size.y / 2.0f <= 0.0f);
+	}
+	else if (currentGravity == GravityDir::Up)
+	{ // 上向き重力
+		if (worldPos.y + size.y / 2.0f < 0.0f)
+		{
+			state = PlayerState::Dead;
+		}
+
+		isOffScreen = (worldPos.y - size.y / 2.0f >= stageSize.y);
+	}
+	else
+	{ // 奥向き重力
+		if (worldPos.z < -300.0f)
+		{
+			state = PlayerState::Dead;
+		}
+	}
 }
