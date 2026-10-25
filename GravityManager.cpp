@@ -1,4 +1,5 @@
 #include "GravityManager.h"
+#include "Shape.h"
 
 GravityManager::GravityManager(const std::string stageNum, KeyAction& arg_key)
 	:key(arg_key)
@@ -55,4 +56,5 @@ void GravityManager::Draw()
 	player->Draw(camera);
 
 	DrawFormatString(20, 20, GetColor(244, 255, 255), "%d", static_cast<int>(gravity));
+
 }

@@ -159,6 +159,7 @@
     <ClInclude Include="SceneInGame.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneTitle.h" />
+    <ClInclude Include="ScreenSize.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StringF.h" />

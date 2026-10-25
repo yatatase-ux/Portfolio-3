@@ -22,10 +22,15 @@ enum class BlockType
 
 class Stage
 {
+	const int GOAL_GROUND_ROWS = 1;
+	const int GOAL_MARGIN_COLS = 10;
+
 	std::vector<std::vector<BlockType>> sideStage;
 	std::vector<std::vector<BlockType>> topStage;
 
 	GravityDir gravityDir;
+
+	FloatXY goalPos;
 
 public:
 
@@ -88,6 +93,7 @@ private:
 
 	bool SideLoad(const std::string& name);
 	bool TopLoad(const std::string& name);
+	void CreateGoal();
 
 	/// <summary>
 	/// 指定したマスのブロックが固い(通れない)ブロックかを見る関数

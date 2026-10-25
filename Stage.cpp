@@ -10,6 +10,7 @@
 Stage::Stage()
 {
 	gravityDir = GravityDir::Down;
+	goalPos = { 0.0f, 0.0f };
 }
 
 Stage::~Stage()
@@ -19,9 +20,14 @@ Stage::~Stage()
 
 bool Stage::Load(const std::string& name)
 {
-	bool s = (SideLoad(name) && TopLoad(name));
+	// 両方読み込めたときだけ、ゴールと余白を付け足す
+	if (!SideLoad(name) || !TopLoad(name))
+	{
+		return false;
+	}
 
-	return s;
+	CreateGoal();
+	return true;
 }
 
 bool Stage::SideLoad(const std::string& name)
@@ -156,6 +162,33 @@ bool Stage::TopLoad(const std::string& name)
 	return true; // 読み込み成功
 }
 
+void Stage::CreateGoal()
+{
+	// ---- 1. ゴール線の位置(本編の右端 = 本編と余白の境目) ----
+	// 付け足す前に計算しておく(付け足すとステージの幅が変わるため)
+	goalPos.x = GetStageSize().x;
+
+	const int rows = static_cast<int>(sideStage.size()); // 縦のマス数
+
+	// ---- 2. 横用:上下の地面だけ、間は空白 ----
+	for (int r = 0; r < rows; r++)
+	{
+		// 上から GOAL_GROUND_ROWS 行、または下から GOAL_GROUND_ROWS 行なら地面
+		const bool isGroundRow = (r < GOAL_GROUND_ROWS) || (r >= rows - GOAL_GROUND_ROWS);
+		const BlockType type = isGroundRow ? BlockType::Ground : BlockType::None;
+
+		// この行の末尾に、余白の幅(GOAL_MARGIN_COLS)の分だけ足す
+		sideStage[r].insert(sideStage[r].end(), GOAL_MARGIN_COLS, type);
+	}
+
+	// ---- 3. 見下ろし用:全部床 ----
+	// auto& の「&」を忘れると、行のコピーに足すだけになり、元の配列は変わらない
+	for (auto& row : topStage)
+	{
+		row.insert(row.end(), GOAL_MARGIN_COLS, BlockType::Ground);
+	}
+}
+
 void Stage::SetGravityDir(GravityDir g)
 {
 	gravityDir = g;
@@ -195,7 +228,11 @@ void Stage::Draw(const Camera& camera)
 	DrawLayer(topStage,  BlockType::None,   GetColor(185, 255, 255), 255 - alpha, camera);	// 1. 見下ろしの穴
 	DrawLayer(sideStage, BlockType::None,   GetColor(185, 255, 255), 128 + alpha, camera);	// 2. 横の空白
 	DrawLayer(topStage,  BlockType::Ground, GetColor(  0,   0,   0), 255 - alpha, camera);	// 3. 見下ろしの床
+	FloatXY g_sPos = camera.WorldToScreen({ goalPos.x, 0.0f });
+	FloatXY g_ePos = camera.WorldToScreen({ goalPos.x + CELL_SIZE / 2.0f, 720.0f });
+	DrawCheckered(g_sPos, g_ePos, GetColor(255, 255, 255), GetColor(0, 0, 0), CELL_SIZE / 4.0f);
 	DrawLayer(sideStage, BlockType::Ground, GetColor(165,  42,  42), 128 + alpha, camera);	// 4. 横の地面
+
 
 }
 
