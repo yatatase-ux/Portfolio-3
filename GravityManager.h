@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include "Stage.h"
+#include "Camera.h"
 #include <memory>
 #include <string>
 #include "KeyAction.h"
@@ -10,10 +11,11 @@
 class GravityManager
 {
 	GravityDir gravity;
+	KeyAction& key;
 
 	Stage stage;
 	std::unique_ptr<Player> player;
-	KeyAction& key;
+	Camera camera;
 
 public:
 

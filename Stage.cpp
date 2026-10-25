@@ -5,6 +5,8 @@
 #include "DxLib.h"   // printfDx(デバッグ表示)
 #include "Shape.h"
 
+#include "Camera.h"
+
 Stage::Stage()
 {
 	gravityDir = GravityDir::Down;
@@ -160,7 +162,7 @@ void Stage::SetGravityDir(GravityDir g)
 }
 
 void Stage::DrawLayer(const std::vector<std::vector<BlockType>>& layer,
-	BlockType type, unsigned int color, int alpha) const
+	BlockType type, unsigned int color, int alpha, const Camera& camera) const
 {
 	// マスの大きさは全マス共通なので、ループの外で1回だけ作る
 	const FloatXY size = { CELL_SIZE, CELL_SIZE };
@@ -174,23 +176,26 @@ void Stage::DrawLayer(const std::vector<std::vector<BlockType>>& layer,
 			if (layer[h][w] != type) continue;
 
 			// マスの中心座標
-			const FloatXY pos = { CELL_SIZE * w + CELL_SIZE / 2.0f,
+			const FloatXY worldPos = { CELL_SIZE * w + CELL_SIZE / 2.0f,
 								  CELL_SIZE * h + CELL_SIZE / 2.0f };
-			DrawCenterBox(pos, size, color, TRUE);
+
+			FloatXY screenPos = camera.WorldToScreen( worldPos );
+
+			DrawCenterBox(screenPos, size, color, TRUE);
 		}
 	}
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
-void Stage::Draw()
+void Stage::Draw(const Camera& camera)
 {
 	int alpha = (gravityDir == GravityDir::Back) ? 0 : 128;
 
 	// 下から順に重ねる(あとに描いたものが上に来る)
-	DrawLayer(topStage,  BlockType::None,   GetColor(185, 255, 255), 255 - alpha);	// 1. 見下ろしの穴
-	DrawLayer(sideStage, BlockType::None,   GetColor(185, 255, 255), 128 + alpha);	// 2. 横の空白
-	DrawLayer(topStage,  BlockType::Ground, GetColor(  0,   0,   0), 255 - alpha);	// 3. 見下ろしの床
-	DrawLayer(sideStage, BlockType::Ground, GetColor(165,  42,  42), 128 + alpha);	// 4. 横の地面
+	DrawLayer(topStage,  BlockType::None,   GetColor(185, 255, 255), 255 - alpha, camera);	// 1. 見下ろしの穴
+	DrawLayer(sideStage, BlockType::None,   GetColor(185, 255, 255), 128 + alpha, camera);	// 2. 横の空白
+	DrawLayer(topStage,  BlockType::Ground, GetColor(  0,   0,   0), 255 - alpha, camera);	// 3. 見下ろしの床
+	DrawLayer(sideStage, BlockType::Ground, GetColor(165,  42,  42), 128 + alpha, camera);	// 4. 横の地面
 
 }
 

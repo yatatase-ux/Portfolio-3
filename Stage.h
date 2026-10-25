@@ -1,13 +1,13 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <fstream>   // std::ifstream(ファイル読み込み)
-#include <sstream>   // std::stringstream(文字列の分割)
 
 #include "FloatXY.h"
 #include "FloatXYZ.h"
 #include "IntXY.h"
 #include "GravityDir.h"
+
+class Camera;
 
 // 各マスのサイズ。必ず正方形にする
 const float CELL_SIZE = 40.0f;
@@ -38,17 +38,13 @@ public:
 	/// <param name="name">ステージ番号("Stage〇"の形で)</param>
 	/// <returns>正しく読み込めたらTRUE、読み込みに失敗したらFALSE</returns>
 	bool Load(const std::string& name);
-	bool SideLoad(const std::string& name);
-	bool TopLoad(const std::string& name);
 
 	void SetGravityDir(GravityDir g);
 
-	void DrawLayer(const std::vector<std::vector<BlockType>>& layer,
-		BlockType type, unsigned int color, int alpha) const;
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
+	void Draw(const Camera& camera);
 
 	/// <summary>
 	/// 左右の移動後のマスが地形ブロックかをみる関数
@@ -89,6 +85,10 @@ public:
 	static int ToCellIndex(float pos);
 
 private:
+
+	bool SideLoad(const std::string& name);
+	bool TopLoad(const std::string& name);
+
 	/// <summary>
 	/// 指定したマスのブロックが固い(通れない)ブロックかを見る関数
 	/// </summary>
@@ -98,4 +98,7 @@ private:
 	bool IsSolid(int row, int col) const;
 
 	bool IsFloor(int row, int col) const;
+
+	void DrawLayer(const std::vector<std::vector<BlockType>>& layer,
+		BlockType type, unsigned int color, int alpha, const Camera& camera) const;
 };

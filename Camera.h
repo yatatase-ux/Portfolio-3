@@ -1,5 +1,6 @@
 #pragma once
 #include "Stage.h"
+#include "FloatXY.h"
 #include "FloatXYZ.h"
 
 class Player;
@@ -7,10 +8,14 @@ class Player;
 class Camera
 {
 
+	float offsetX;
+
 public:
 	Camera();
 	~Camera();
 
-	void Update(FloatXYZ playerPos);
+	FloatXY WorldToScreen(FloatXY worldPos) const;
+
+	void Follow(FloatXYZ p_wPos, FloatXY stageSize);
 };
 

@@ -44,14 +44,15 @@ void GravityManager::Input()
 PlayerState GravityManager::Update()
 {
 	player->Update();
+	camera.Follow(player->GetPos(), stage.GetStageSize());
 
 	return  player->GetState();
 }
 
 void GravityManager::Draw()
 {
-	stage.Draw();
-	player->Draw();
+	stage.Draw(camera);
+	player->Draw(camera);
 
 	DrawFormatString(20, 20, GetColor(244, 255, 255), "%d", static_cast<int>(gravity));
 }

@@ -5,6 +5,8 @@
 #include "Stage.h"
 #include "GravityDir.h"
 
+class Camera;
+
 enum class PlayerState
 {
 	Alive,
@@ -19,7 +21,7 @@ class Player
 	GravityDir currentGravity;
 
 	const FloatXYZ START_POS = { 120.0f, 570.0f , 100.0f};
-	FloatXYZ pos;
+	FloatXYZ worldPos;
 
 	const FloatXY sideSize = { 30.0f, 70.0f };
 	const FloatXY topSize = { 30.0f, 30.0f };
@@ -49,8 +51,9 @@ public:
 
 	void Input();
 	void Update();
-	void Draw();
+	void Draw(const Camera& camera);
 	PlayerState GetState() { return state; };
+	FloatXYZ GetPos() { return worldPos; };
 
 private:
 	FloatXYZ Move();
