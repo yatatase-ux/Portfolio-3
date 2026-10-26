@@ -16,7 +16,7 @@ class Player
 
 	GravityDir currentGravity;
 
-	const FloatXYZ START_POS = { 120.0f, 570.0f , 100.0f};
+	const FloatXYZ START_POS = { 120.0f, 570.0f , 200.0f};
 	FloatXYZ worldPos;
 
 	const FloatXY sideSize = { 30.0f, 70.0f };

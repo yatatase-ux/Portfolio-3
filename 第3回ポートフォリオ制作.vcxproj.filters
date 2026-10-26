@@ -135,5 +135,11 @@
     <ClInclude Include="Camera.h">
       <Filter>ソース ファイル\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="ScreenSize.h">
+      <Filter>ソース ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
