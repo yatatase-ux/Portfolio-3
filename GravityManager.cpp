@@ -10,10 +10,13 @@ GravityManager::GravityManager(const std::string stageNum, KeyAction& arg_key)
 	{
 		// 必要になったら、タイトルに戻すなどの処理をここに書く
 	}
+	gravity = stage.GetStartGravity();
+	stage.SetGravityDir(gravity);
 
-	player = std::make_unique<Player>(key, stage);
+	player = std::make_unique<Player>(key, stage, gravity);
 	switchCooldown = 0;
 	remainingSwitches = 0;
+	comboTimer = 0;
 }
 
 GravityManager::~GravityManager()

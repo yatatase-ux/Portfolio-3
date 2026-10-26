@@ -9,8 +9,12 @@
 
 Stage::Stage()
 {
-	gravityDir = GravityDir::Down;
+	startGravity = GravityDir::Down;
+	currentGravity = GravityDir::Down;
 	goalPos = { 0.0f, 0.0f };
+	startIndex = { -1, -1 };
+	hasStart = false;
+	BG = -1;
 }
 
 Stage::~Stage()
@@ -21,7 +25,7 @@ Stage::~Stage()
 bool Stage::Load(const std::string& name)
 {
 	// 両方読み込めたときだけ、ゴールと余白を付け足す
-	if (!SideLoad(name) || !TopLoad(name))
+	if (!SideLoad(name) || !TopLoad(name) || !BGLoad(name))
 	{
 		return false;
 	}
@@ -30,8 +34,29 @@ bool Stage::Load(const std::string& name)
 	return true;
 }
 
+FloatXYZ Stage::GetStartPos() const
+{
+	FloatXYZ pos;
+	pos.x = CELL_SIZE * startIndex.x + CELL_SIZE / 2.0f;
+	float yDir = (startGravity == GravityDir::Down) ? CELL_SIZE :
+				 (startGravity == GravityDir::Up)   ? 0.0f : 
+													  CELL_SIZE / 2.0f;
+	pos.y = CELL_SIZE * startIndex.y + yDir;
+	pos.z = (startGravity == GravityDir::Back) ? 0.0f : 200.0f;
+
+	return pos;
+}
+
+GravityDir Stage::GetStartGravity() const
+{
+	return startGravity;
+}
+
 bool Stage::SideLoad(const std::string& name)
 {
+	startIndex = { -1, -1 };
+	hasStart = false;
+
 	// ---- 1. ファイルパスを組み立てる ----
 	// 例: name が "Stage0" なら "StageInfoCSV/Stage0_side.csv" になる
 	const std::string path = "StageInfo/CSV/" + name + "_side.csv";
@@ -78,12 +103,40 @@ bool Stage::SideLoad(const std::string& name)
 				}
 			}
 
+			// ---- スタート地点(マイナスの値)を見つけたら ----
+			if (number < 0)
+			{
+				// このマスの番号(push_back する前に数えるのがポイント)
+				// 行:これまでに追加し終わった行の数
+				// 列:この行に、これまでに追加したマスの数
+				startIndex = { static_cast<int>(row.size()),        // x = 列
+							   static_cast<int>(sideStage.size()) }; // y = 行
+
+				// (ここで startGravity を -1～-3 から決める)
+				// -1～-3 を重力の向きに対応させる
+				// (enum の値の並びに頼らないよう、static_cast ではなく1つずつ対応させる)
+				switch (number)
+				{
+				case -1: startGravity = GravityDir::Down; hasStart = true; break;
+				case -2: startGravity = GravityDir::Up;   hasStart = true; break;
+				case -3: startGravity = GravityDir::Back; hasStart = true; break;
+				default:
+					// 決めていないマイナス(-4 以下)は、スタート地点として扱わない
+					printfDx("不明なスタート番号: %d\n", number);
+					break;
+				}
+
+				// スタート地点のマスは、地形としては空白にする
+				number = static_cast<int>(BlockType::None);
+			}
+
 			// ---- 5. 定義されていない番号を弾く ----
 			// Max は「種類の数」を表す目印
 			if (number < 0 || number >= static_cast<int>(BlockType::Max))
 			{
 				number = static_cast<int>(BlockType::None);
 			}
+
 
 			// ---- 6. int → BlockType に変換して、この行に追加 ----
 			row.push_back(static_cast<BlockType>(number));
@@ -162,6 +215,22 @@ bool Stage::TopLoad(const std::string& name)
 	return true; // 読み込み成功
 }
 
+bool Stage::BGLoad(const std::string& name)
+{
+	// ---- 1. ファイルパスを組み立てる ----
+	const std::string path = "Data/image/BG/" + name + "_BG.jpg";
+
+	// ---- 2. ファイルを開く ----
+	// 画像を読み込む(失敗すると -1 が返る)
+	BG = LoadGraph(path.c_str());
+	if (BG == -1)
+	{
+		printfDx("背景画像読み込み失敗: %s\n", path.c_str());
+		return false;
+	}
+	return true;
+}
+
 void Stage::CreateGoal()
 {
 	// ---- 1. ゴール線の位置(本編の右端 = 本編と余白の境目) ----
@@ -191,7 +260,7 @@ void Stage::CreateGoal()
 
 void Stage::SetGravityDir(GravityDir g)
 {
-	gravityDir = g;
+	currentGravity = g;
 }
 
 void Stage::DrawLayer(const std::vector<std::vector<BlockType>>& layer,
@@ -222,11 +291,12 @@ void Stage::DrawLayer(const std::vector<std::vector<BlockType>>& layer,
 
 void Stage::Draw(const Camera& camera)
 {
-	int alpha = (gravityDir == GravityDir::Back) ? 0 : 128;
+	DrawExtendGraphF(0.0f, 0.0f, SCREEN_W, SCREEN_H, BG, TRUE);
 
+	int alpha = (currentGravity == GravityDir::Back) ? 0 : 128;
 	// 下から順に重ねる(あとに描いたものが上に来る)
-	DrawLayer(topStage,  BlockType::None,   GetColor(185, 255, 255), 255 - alpha, camera);	// 1. 見下ろしの穴
-	DrawLayer(sideStage, BlockType::None,   GetColor(185, 255, 255), 128 + alpha, camera);	// 2. 横の空白
+//	DrawLayer(topStage,  BlockType::None,   GetColor(185, 255, 255), 255 - alpha, camera);	// 1. 見下ろしの穴
+//	DrawLayer(sideStage, BlockType::None,   GetColor(185, 255, 255), 128 + alpha, camera);	// 2. 横の空白
 	DrawLayer(topStage,  BlockType::Ground, GetColor(  0,   0,   0), 255 - alpha, camera);	// 3. 見下ろしの床
 	
 	// ゴールライン

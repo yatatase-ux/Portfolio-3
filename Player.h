@@ -40,7 +40,7 @@ class Player
 
 public:
 
-	Player(KeyAction& arg_key, Stage& arg_stage);
+	Player(KeyAction& arg_key, Stage& arg_stage, GravityDir gra);
 	~Player();
 
 	void GravityChange(GravityDir gravityDir);

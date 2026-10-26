@@ -15,6 +15,9 @@ const float CELL_SIZE = 40.0f;
 
 enum class BlockType
 {
+	BStart = -3,
+	UStart = -2,
+	DStart = -1,
 	None = 0,		// 空白
 	Ground = 1,		// 地面
 
@@ -28,10 +31,15 @@ class Stage
 
 	std::vector<std::vector<BlockType>> sideStage;
 	std::vector<std::vector<BlockType>> topStage;
+	IntXY startIndex;
+	bool hasStart;
 
-	GravityDir gravityDir;
+	GravityDir startGravity;
+	GravityDir currentGravity;
 
 	FloatXY goalPos;
+
+	int BG;
 
 public:
 
@@ -44,6 +52,8 @@ public:
 	/// <param name="name">ステージ番号("Stage〇"の形で)</param>
 	/// <returns>正しく読み込めたらTRUE、読み込みに失敗したらFALSE</returns>
 	bool Load(const std::string& name);
+	FloatXYZ GetStartPos() const;
+	GravityDir GetStartGravity() const;
 
 	/// <summary>
 	/// ステージを重力に対応させる
@@ -100,6 +110,7 @@ private:
 
 	bool SideLoad(const std::string& name);
 	bool TopLoad(const std::string& name);
+	bool BGLoad(const std::string& name);
 	void CreateGoal();
 
 	/// <summary>

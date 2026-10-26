@@ -9,12 +9,14 @@ static constexpr float DEPTH_SCALE_RATE = 0.002f;
 static constexpr float MIN_DEPTH_SCALE = 0.1f;  // åäÇÃíÍÇÃÇŸÇ§Ç≈è¨Ç≥Ç≠Ç»ÇËÇ∑Ç¨Ç»Ç¢ÇÊÇ§Ç…
 static constexpr float MAX_DEPTH_SCALE = 1.5f;  // éËëOÇ…ëÂÇ´Ç≠èoÇ∑Ç¨Ç»Ç¢ÇÊÇ§Ç…
 
-Player::Player(KeyAction& arg_key, Stage& arg_stage)
-	:key(arg_key), stage(arg_stage), stageSize(stage.GetStageSize())
+Player::Player(KeyAction& arg_key, Stage& arg_stage, GravityDir gra)
+	:key(arg_key), stage(arg_stage), stageSize(stage.GetStageSize()), currentGravity(gra)
 {
-	currentGravity = GravityDir::Down;
-
-	worldPos = START_POS;
+	worldPos = stage.GetStartPos();
+	worldPos.y -= (currentGravity == GravityDir::Down) ? sideSize.y / 2.0f :
+				  (currentGravity == GravityDir::Up)   ?(sideSize.y / 2.0f) * -1 :
+															0.0f;
+	worldPos.z = (currentGravity == GravityDir::Back) ? 0.0f : 200.0f;
 	moveDiff = { 0.0f, 0.0f };
 	onGround = false;
 	velocityY = 0.0f;
