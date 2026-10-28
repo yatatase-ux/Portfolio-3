@@ -106,6 +106,8 @@ public:
 	/// <returns></returns>
 	static int ToCellIndex(float pos);
 
+	bool IsBoxFree(FloatXY pos, FloatXY boxSize) const;
+
 private:
 
 	bool SideLoad(const std::string& name);

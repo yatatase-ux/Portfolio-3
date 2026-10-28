@@ -19,6 +19,7 @@ Player::Player(KeyAction& arg_key, Stage& arg_stage, GravityDir gra)
 	worldPos.z = (currentGravity == GravityDir::Back) ? 0.0f : 200.0f;
 	moveDiff = { 0.0f, 0.0f };
 	onGround = false;
+	isCrouched = false;
 	velocityY = 0.0f;
 
 	state = PlayerState::Alive;
@@ -32,9 +33,44 @@ Player::~Player()
 
 void Player::GravityChange(GravityDir gravityDir)
 {
+	const GravityDir prev = currentGravity; // 切り替える前の重力
+
 	currentGravity = gravityDir;
 	velocityY = 0.0f;
 	onGround = false;
+
+	// ---- 見下ろしから横に戻るとき:立てるか、しゃがむかを決める ----
+	if (prev == GravityDir::Back && gravityDir != GravityDir::Back)
+	{
+		// 見下ろしの大きさ(30×30)と、しゃがみの大きさ(30×30)は同じなので、
+		// しゃがみ状態なら、今の中心のままで必ず収まる
+		// → まず「立てるか」を確かめて、立てなければしゃがみで戻す
+
+		// 足元の側の向き(下重力なら +1:下、上重力なら -1:上)
+		const float footDir = (gravityDir == GravityDir::Down) ? 1.0f : -1.0f;
+
+		// 今の四角形の足元はそのままで、頭の側へ伸ばして立ったときの中心
+		const float shift = (sideSize.y - crouchSize.y) / 2.0f;
+		const FloatXY standPos = { worldPos.x, worldPos.y - shift * footDir };
+
+		if (stage.IsBoxFree(standPos, sideSize))
+		{
+			// 立てる空きがある → 立った状態で戻す
+			worldPos.y = standPos.y;
+			isCrouched = false;
+		}
+		else
+		{
+			// 空きがない → しゃがんだ状態で戻す(位置はそのまま)
+			isCrouched = true;
+		}
+	}
+
+	// ---- 横から見下ろしにするとき:しゃがみは解除する ----
+	if (gravityDir == GravityDir::Back)
+	{
+		isCrouched = false;
+	}
 }
 
 void Player::Input()
@@ -58,6 +94,7 @@ void Player::Input()
 				velocityY = JUMP_SPEED;
 				onGround = false;
 			}
+
 		}
 	}
 
@@ -69,6 +106,8 @@ void Player::Input()
 		{
 			if (worldPos.z < START_POS.z)	moveDiff.z += 1.0f;
 		}
+
+		SetCrouch(key.Check(S) || key.Check(DOWN));
 	}
 }
 
@@ -80,7 +119,8 @@ void Player::Update()
 	moveDiff.x = nextPos.x - worldPos.x;							// 収めた位置までの差を、実際の横の移動量にする
 
 	//---- 当たり判定 ----
-	FloatXY pSize = (currentGravity == GravityDir::Back) ? topSize : sideSize;	// 現在の重力に応じた当たり判定
+	FloatXY pSize = (currentGravity == GravityDir::Back) ? topSize : 
+					(isCrouched) ? crouchSize : sideSize;	// 現在の重力としゃがみ状態に応じた当たり判定の設定
 	ResolveHorizontal(pSize);		// 横方向の当たり判定
 	ResolveVertical(pSize);			// 縦方向の当たり判定
 	ResolveDepth(pSize);			// 奥方向の当たり判定
@@ -136,16 +176,17 @@ void Player::Draw(const Camera& camera)
 	}
 	else
 	{
+		FloatXY pSize = (isCrouched) ? crouchSize : sideSize;
 		// ---- z に応じた見た目の倍率 ----
 		// 横視点では z = SIDE_BASE_Z(100)で 1 倍
 		// それより小さい(奥にいる)と小さく、大きい(手前にいる)と大きくなる
 		const float scale = std::clamp(1.0f + (worldPos.z - START_POS.z) * DEPTH_SCALE_RATE,
 			MIN_DEPTH_SCALE, MAX_DEPTH_SCALE);
-		const FloatXY drawSize = { sideSize.x * scale, sideSize.y * scale };
+		const FloatXY drawSize = { pSize.x * scale, pSize.y * scale };
 
 		// ---- 足元を基準にする ----
 		// 大きさが変わった分を頭の側へ伸ばす(縮むときは頭の側から縮む)
-		const float grow = (drawSize.y - sideSize.y) / 2.0f;
+		const float grow = (drawSize.y - pSize.y) / 2.0f;
 		const float drawY = (currentGravity == GravityDir::Down) ? worldPos.y - grow : worldPos.y + grow;
 		// ワールド座標からスクリーン座標に変換
 		FloatXY sPos = camera.WorldToScreen({ worldPos.x, drawY });
@@ -346,5 +387,39 @@ void Player::CheckOutOfStage(FloatXY size)
 		{
 			state = PlayerState::Dead;
 		}
+	}
+}
+
+// Player:しゃがむ・立つを切り替える(足元を基準にする)
+void Player::SetCrouch(bool wantCrouch)
+{
+	// 見下ろしではしゃがまない
+	if (currentGravity == GravityDir::Back) { isCrouched = false; return; }
+
+	// 状態が変わらないなら何もしない
+	if (wantCrouch == isCrouched) return;
+
+	// 足元の側の向き(下重力なら +1:下、上重力なら -1:上)
+	const float footDir = (currentGravity == GravityDir::Down) ? 1.0f : -1.0f;
+
+	// 立っているときと、しゃがんだときの、中心の差(高さの差の半分)
+	const float shift = (sideSize.y - crouchSize.y) / 2.0f;
+
+	if (wantCrouch)
+	{
+		// しゃがむ:中心を足元の側へずらす(足元はそのまま、頭の側だけ縮む)
+		worldPos.y += shift * footDir;
+		isCrouched = true;
+	}
+	else
+	{
+		// 立つ:立ったときの中心を仮に計算して、そこに空きがあるか確かめる
+		const FloatXY standPos = { worldPos.x, worldPos.y - shift * footDir };
+		if (stage.IsBoxFree(standPos, sideSize))
+		{
+			worldPos.y = standPos.y; // 空いていれば立ち上がる
+			isCrouched = false;
+		}
+		// 空いていなければ、しゃがんだまま(低い通路の中など)
 	}
 }

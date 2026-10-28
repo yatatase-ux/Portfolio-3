@@ -426,3 +426,23 @@ bool Stage::IsFloor(int row, int col) const
 	if (col < 0 || topStage.empty() || col >= (int)topStage[0].size()) return false;
 	return topStage[row][col] == BlockType::Ground;
 }
+
+// Stage:指定した四角形が重なるマスに、固いマスが1つもなければ true
+bool Stage::IsBoxFree(FloatXY pos, FloatXY boxSize) const
+{
+	// 四角形が重なるマスの範囲(右端と下端は境目ちょうどなら内側のマス)
+	const int left = ToCellIndex(pos.x - boxSize.x / 2.0f);
+	const int right = ToCellIndex(pos.x + boxSize.x / 2.0f - 0.01f);
+	const int top = ToCellIndex(pos.y - boxSize.y / 2.0f);
+	const int bottom = ToCellIndex(pos.y + boxSize.y / 2.0f - 0.01f);
+
+	// 範囲の中のマスを全部調べる(間の行・列も見落とさない)
+	for (int r = top; r <= bottom; r++)
+	{
+		for (int c = left; c <= right; c++)
+		{
+			if (IsSolid(r, c)) return false; // 1つでも固いマスがあれば空いていない
+		}
+	}
+	return true;
+}
