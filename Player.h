@@ -25,6 +25,10 @@ class Player
 	const float HalfW = sideSize.x / 2.0f;			// プレイヤーの横幅の半分
 
 	const float JUMP_SPEED = -20.0f;	// ジャンプのスピード
+	float jumpHeight;
+	bool downJumpKey;
+
+
 	const float GRAVITY = 1.0f;			// 重力のかかり方
 	const float MAX_FALL_SPEED = 50.0f;	// 落下スピードの上限
 

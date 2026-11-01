@@ -9,6 +9,7 @@ static constexpr float DEPTH_SCALE_RATE = 0.002f;
 static constexpr float MIN_DEPTH_SCALE = 0.1f;  // 穴の底のほうで小さくなりすぎないように
 static constexpr float MAX_DEPTH_SCALE = 1.5f;  // 手前に大きく出すぎないように
 
+
 Player::Player(KeyAction& arg_key, Stage& arg_stage, GravityDir gra)
 	:key(arg_key), stage(arg_stage), stageSize(stage.GetStageSize()), currentGravity(gra)
 {
@@ -18,6 +19,10 @@ Player::Player(KeyAction& arg_key, Stage& arg_stage, GravityDir gra)
 															0.0f;
 	worldPos.z = (currentGravity == GravityDir::Back) ? 0.0f : 200.0f;
 	moveDiff = { 0.0f, 0.0f };
+
+	jumpHeight = 0.0f;
+	downJumpKey = false;
+
 	onGround = false;
 	isCrouched = false;
 	velocityY = 0.0f;
@@ -77,26 +82,22 @@ void Player::Input()
 {
 	moveDiff = { 0.0f, 0.0f, 0.0f };
 
-	if(onGround)
+	// 開始は「押した瞬間」、高さの調整は「押している間」で判定する
+	// Push は毎フレーム呼ぶ必要があるので、onGround より先に呼んで変数に入れておく
+	const bool jumpPushed = key.Push(SPACE) ||
+		(currentGravity != GravityDir::Back && key.Push(UP));
+	const bool jumpHeld = key.Check(SPACE) ||
+		(currentGravity != GravityDir::Back && key.Check(UP));
+	if (jumpPushed && onGround)
 	{
-		if (currentGravity == GravityDir::Back)
-		{
-			if (key.Push(SPACE))
-			{
-				velocityY = JUMP_SPEED;
-				onGround = false;
-			}
-		}
-		else
-		{
-			if (key.Push(SPACE) || key.Push(UP))
-			{
-				velocityY = JUMP_SPEED;
-				onGround = false;
-			}
-
-		}
+		velocityY = JUMP_SPEED;
+		onGround = false;
 	}
+	else if (!jumpHeld && velocityY < 0.0f)
+	{
+		velocityY = 0.0f; // 上昇中に離したら上昇を止める
+	}
+
 
 	moveDiff += Move();
 
