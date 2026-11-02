@@ -108,7 +108,7 @@ void Player::Input()
 			if (worldPos.z < START_POS.z)	moveDiff.z += 1.0f;
 		}
 
-		SetCrouch(key.Check(S) || key.Check(DOWN));
+		SetCrouch(key.Check(DOWN));
 	}
 }
 
@@ -216,30 +216,30 @@ FloatXYZ Player::Move()
 	FloatXYZ diff = { 0.0f, 0.0f , 0.0f};
 	if (currentGravity == GravityDir::Back)
 	{
-		if (key.Check(UP) || key.Check(W))
+		if (key.Check(UP))
 		{
 			diff.y -= MOVE_SPEED;
 		}
-		if (key.Check(DOWN) || key.Check(S))
+		if (key.Check(DOWN))
 		{
 			diff.y += MOVE_SPEED;
 		}
-		if (key.Check(RIGHT) || key.Check(D))
+		if (key.Check(RIGHT))
 		{
 			diff.x += MOVE_SPEED;
 		}
-		if (key.Check(LEFT) || key.Check(A))
+		if (key.Check(LEFT))
 		{
 			diff.x -= MOVE_SPEED;
 		}
 	}
 	else
 	{
-		if (key.Check(LEFT) || key.Check(A))
+		if (key.Check(LEFT))
 		{
 			diff.x -= MOVE_SPEED;
 		}
-		if (key.Check(RIGHT) || key.Check(D))
+		if (key.Check(RIGHT))
 		{
 			diff.x += MOVE_SPEED;
 		}

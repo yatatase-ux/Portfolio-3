@@ -14,11 +14,6 @@ enum {
 	UP,
 	DOWN,
 
-	W,
-	A,
-	S,
-	D,
-
 	ONE,
 	TWO,
 	THREE,
@@ -42,15 +37,10 @@ protected:
 
 		{ KEY_INPUT_SPACE,  -1 },					// SPACE
 
-		{ KEY_INPUT_LEFT,   -1 },					// LEFT
-		{ KEY_INPUT_RIGHT,  -1 },					// RIGHT
-		{ KEY_INPUT_UP,     -1 },					// UP
-		{ KEY_INPUT_DOWN,   -1 },					// DOWN
-
-		{ KEY_INPUT_W,      -1 },					// W
-		{ KEY_INPUT_A,      -1 },					// A
-		{ KEY_INPUT_S,      -1 },					// S
-		{ KEY_INPUT_D,      -1 },					// D
+		{ KEY_INPUT_LEFT,   KEY_INPUT_A },			// LEFT
+		{ KEY_INPUT_RIGHT,  KEY_INPUT_D },			// RIGHT
+		{ KEY_INPUT_UP,     KEY_INPUT_W },			// UP
+		{ KEY_INPUT_DOWN,   KEY_INPUT_S },			// DOWN
 
 		{ KEY_INPUT_1,		-1 },					// 1
 		{ KEY_INPUT_2,		-1 },					// 2
