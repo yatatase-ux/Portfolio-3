@@ -21,11 +21,6 @@ SCENE_UPDATE(SceneEnd)
 	}
 }
 
-SCENE_EXIT(SceneEnd)
-{
-
-}
-
 SCENE_DRAW(SceneEnd)
 {
 	switch (result)
@@ -37,5 +32,12 @@ SCENE_DRAW(SceneEnd)
 	case PlayerState::Dead:
 		DrawCenterString(SCREEN_CENTER_W, SCREEN_CENTER_H, "FAILED...", GetColor(0, 0, 255), 100);
 		break;
+	default:
+		DrawCenterString(SCREEN_CENTER_W, SCREEN_CENTER_H, "END", GetColor(255,255,255), 100);
 	}
+}
+
+SCENE_EXIT(SceneEnd)
+{
+
 }

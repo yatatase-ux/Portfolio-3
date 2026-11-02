@@ -1,6 +1,6 @@
 #include "SceneTitle.h"
 #include "1-SceneInclude.h"
-#include "SceneInGame.h"
+#include "SceneMainMenu.h"
 
 SCENE_ENTER(SceneTitle)
 {
@@ -11,16 +11,16 @@ SCENE_UPDATE(SceneTitle)
 {
 	if (key->Push(TAB))
 	{
-		manager->ChangeState(std::make_unique<SceneInGame>("Stage0"));
+		manager->ChangeState(std::make_unique<SceneMainMenu>());
 	}
-}
-
-SCENE_EXIT(SceneTitle)
-{
-
 }
 
 SCENE_DRAW(SceneTitle)
 {
 	DrawCenterString(200, 200, "Title", GetColor(255, 255, 255), 30);
+}
+
+SCENE_EXIT(SceneTitle)
+{
+
 }

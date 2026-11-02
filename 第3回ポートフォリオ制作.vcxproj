@@ -137,6 +137,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneEnd.cpp" />
     <ClCompile Include="SceneInGame.cpp" />
+    <ClCompile Include="SceneMainMenu.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="Shape.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneEnd.h" />
     <ClInclude Include="SceneInGame.h" />
+    <ClInclude Include="SceneMainMenu.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="ScreenSize.h" />

@@ -26,12 +26,6 @@
     <Filter Include="ソース ファイル\Scene\1-Title">
       <UniqueIdentifier>{fda9479a-dcbf-40f4-9328-800c1c980891}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Scene\2-InGame">
-      <UniqueIdentifier>{1461c9f9-0815-45e2-ac13-14c339f5223a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Scene\3-End">
-      <UniqueIdentifier>{bf49a6df-a4a1-4b52-9192-d9b1482bdc8a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Scene\0-Manager&amp;Base">
       <UniqueIdentifier>{a93dbe0a-70ba-4303-b5bd-b7be0f1a9e1d}</UniqueIdentifier>
     </Filter>
@@ -40,6 +34,15 @@
     </Filter>
     <Filter Include="ソース ファイル\Camera">
       <UniqueIdentifier>{7d84572c-7633-40d5-bf35-52be9a49dd08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\2-MainMenu">
+      <UniqueIdentifier>{479b0a9b-44f8-4394-bce6-21ccda887a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\3-InGame">
+      <UniqueIdentifier>{1461c9f9-0815-45e2-ac13-14c339f5223a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\4-End">
+      <UniqueIdentifier>{bf49a6df-a4a1-4b52-9192-d9b1482bdc8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -53,10 +56,10 @@
       <Filter>ソース ファイル\Function</Filter>
     </ClCompile>
     <ClCompile Include="SceneEnd.cpp">
-      <Filter>ソース ファイル\Scene\3-End</Filter>
+      <Filter>ソース ファイル\Scene\4-End</Filter>
     </ClCompile>
     <ClCompile Include="SceneInGame.cpp">
-      <Filter>ソース ファイル\Scene\2-InGame</Filter>
+      <Filter>ソース ファイル\Scene\3-InGame</Filter>
     </ClCompile>
     <ClCompile Include="SceneTitle.cpp">
       <Filter>ソース ファイル\Scene\1-Title</Filter>
@@ -79,6 +82,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>ソース ファイル\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="SceneMainMenu.cpp">
+      <Filter>ソース ファイル\Scene\2-MainMenu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -91,7 +97,7 @@
       <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="SceneInGame.h">
-      <Filter>ソース ファイル\Scene\2-InGame</Filter>
+      <Filter>ソース ファイル\Scene\3-InGame</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>ソース ファイル\Player</Filter>
@@ -115,7 +121,7 @@
       <Filter>ソース ファイル\Scene\1-Title</Filter>
     </ClInclude>
     <ClInclude Include="SceneEnd.h">
-      <Filter>ソース ファイル\Scene\3-End</Filter>
+      <Filter>ソース ファイル\Scene\4-End</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>ソース ファイル\Scene\0-Manager&amp;Base</Filter>
@@ -140,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="PlayerState.h">
       <Filter>ソース ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMainMenu.h">
+      <Filter>ソース ファイル\Scene\2-MainMenu</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
