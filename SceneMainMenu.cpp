@@ -67,24 +67,27 @@ SCENE_ENTER(SceneMainMenu)
 SCENE_UPDATE(SceneMainMenu)
 {
 	int beforeSelect = currentSelectStage;
-	if (key->Push(RIGHT))
+	if(!isMove)
 	{
-		currentSelectStage++;
-		isMove = true;
-	}
-	if (key->Push(LEFT))
-	{
-		currentSelectStage--;
-		isMove = true;
+		if (key->Check(RIGHT))
+		{
+			currentSelectStage++;
+			isMove = true;
+		}
+		if (key->Check(LEFT))
+		{
+			currentSelectStage--;
+			isMove = true;
+		}
 	}
 	currentSelectStage = std::clamp(currentSelectStage, 0, stageMax - 1);
 	// 目標の位置(選んでいるステージが画面の中央に来る baseX)
-	const float targetX = SCREEN_W / 2.0f - 300.0f * currentSelectStage;
+	const float targetX = SCREEN_W / 2.0f - ICON_INTERVAL * currentSelectStage;
 
 	// 目標までの差を、1フレームで動ける量(±20)に収めてから足す
 	// → 遠くても近くても同じ速さで動き、目標でぴったり止まる
 	const float diffX = targetX - baseX;
-	baseX += std::clamp(diffX, -20.0f, 20.0f);
+	baseX += std::clamp(diffX, -ICON_MOVE_SPEED, ICON_MOVE_SPEED);
 
 	// 目標に着いていなければ「移動中」
 	isMove = (baseX != targetX);
@@ -105,11 +108,12 @@ SCENE_DRAW(SceneMainMenu)
 
 	for (int i = 0; i < stageMax; i++)
 	{
-		float x = baseX + 300 * i;
+		float x = baseX + ICON_INTERVAL * i;
 		float y = SCREEN_H / 2.0f;
-		float dis = abs(SCREEN_W / 2.0f - x) / 500.0f;
-		float rate = 1.0f - dis;
-		rate = std::clamp(rate, 0.5f, 1.0f);
+		// 中央からの距離を「アイコン何個分か」に直す(中央 0、隣 1)
+		const float dis = std::abs(SCREEN_W / 2.0f - x) / 300.0f;
+		// 中央で 1 倍、隣(1個分)で 0.5 倍、それより遠くても 0.5 倍
+		const float rate = std::clamp(1.0f - dis * 0.5f, 0.5f, 1.0f);
 		DrawRotaGraph(x, y, rate, 0, stageIcon[i], TRUE);
 	}
 }

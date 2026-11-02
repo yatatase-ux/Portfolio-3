@@ -12,6 +12,8 @@ class SceneMainMenu : public SceneBase
 
 	int noImage;
 	std::vector<int> stageIcon;
+	const float ICON_INTERVAL = 300.0f;
+	const float ICON_MOVE_SPEED = 10.0f;
 
 	bool isMove;
 
