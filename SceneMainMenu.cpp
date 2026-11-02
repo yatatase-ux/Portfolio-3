@@ -32,7 +32,7 @@ SCENE_UPDATE(SceneMainMenu)
 {
 	if (key->Push(TAB))
 	{
-		manager->ChangeState(std::make_unique<SceneInGame>("Stage0"));
+		manager->ChangeState(std::make_unique<SceneInGame>("Stage1"));
 	}
 }
 
