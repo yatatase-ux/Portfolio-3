@@ -60,6 +60,7 @@ public:
 
 private:
 	FloatXYZ Move();
+	void Jump();
 	FloatXYZ Fall();
 
 	void ResolveHorizontal(FloatXY size);

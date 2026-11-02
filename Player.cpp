@@ -82,22 +82,7 @@ void Player::Input()
 {
 	moveDiff = { 0.0f, 0.0f, 0.0f };
 
-	// 開始は「押した瞬間」、高さの調整は「押している間」で判定する
-	// Push は毎フレーム呼ぶ必要があるので、onGround より先に呼んで変数に入れておく
-	const bool jumpPushed = key.Push(SPACE) ||
-		(currentGravity != GravityDir::Back && key.Push(UP));
-	const bool jumpHeld = key.Check(SPACE) ||
-		(currentGravity != GravityDir::Back && key.Check(UP));
-	if (jumpPushed && onGround)
-	{
-		velocityY = JUMP_SPEED;
-		onGround = false;
-	}
-	else if (!jumpHeld && velocityY < 0.0f)
-	{
-		velocityY = 0.0f; // 上昇中に離したら上昇を止める
-	}
-
+	Jump();
 
 	moveDiff += Move();
 
@@ -112,108 +97,9 @@ void Player::Input()
 	}
 }
 
-void Player::Update()
-{
-	moveDiff += Fall();												// 重力による落下処理
-	FloatXYZ nextPos = worldPos + moveDiff;							// 移動先の座標を仮で保管しておく
-	nextPos.x = std::clamp(nextPos.x, HalfW, stageSize.x - HalfW);	// プレイヤーがステージの外にいかないようにクランプ
-	moveDiff.x = nextPos.x - worldPos.x;							// 収めた位置までの差を、実際の横の移動量にする
-
-	//---- 当たり判定 ----
-	FloatXY pSize = (currentGravity == GravityDir::Back) ? topSize : 
-					(isCrouched) ? crouchSize : sideSize;	// 現在の重力としゃがみ状態に応じた当たり判定の設定
-	ResolveHorizontal(pSize);		// 横方向の当たり判定
-	ResolveVertical(pSize);			// 縦方向の当たり判定
-	ResolveDepth(pSize);			// 奥方向の当たり判定
-
-	worldPos += moveDiff;			// 当たり判定など全ての移動処理を終えた上で最終的に worldPos に合算
-
-	// ---- 画面外処理 ----
-	CheckOutOfStage(pSize);
-
-	// ---- ゴール処理(クリア) ----
-	if (stage.ArriveGoal(worldPos.x + pSize.x / 2.0f)) {
-		state = PlayerState::Clear;
-	}
-
-	// すべてが終わったら移動差分を０にしておく
-	moveDiff = { 0.0f, 0.0f };
-}
-
-void Player::Draw(const Camera& camera)
-{
-	if (currentGravity == GravityDir::Back)
-	{
-		// ---- z に応じた見た目の倍率 ----
-		// z = 0(床の上)で 1 倍、手前(z > 0)ほど大きく、奥(z < 0)ほど小さく
-		const float scale = std::clamp(1.0f + worldPos.z * DEPTH_SCALE_RATE,
-			MIN_DEPTH_SCALE, MAX_DEPTH_SCALE);
-		const FloatXY drawSize = { topSize.x * scale, topSize.y * scale };
-
-		// ワールド座標からスクリーン座標に変換
-		FloatXY sPos = camera.WorldToScreen({ worldPos.x, worldPos.y });
-
-		// ---- 影(浮いているときだけ、床の上に元の大きさで描く) ----
-		// どこに着地するかが分かるように、足元の位置に半透明の黒を置く
-		// 穴の上では床がないので影は描かない
-		if (worldPos.z > 0.0f && stage.OnFloor({ worldPos.x, worldPos.y }, topSize))
-		{
-			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
-			DrawCenterBox( sPos, topSize, GetColor(0, 0, 0), TRUE);
-			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		}
-
-		// ---- 本体 ----
-		// 穴に落ちているとき(z < 0)は、深くなるほど薄くして「奥へ消えていく」感じにする
-		// z = 0 で不透明(255)、z = -200 あたりでほぼ見えなくなる
-		const int alpha = (worldPos.z < 0.0f)
-			? std::clamp(static_cast<int>(255 + worldPos.z * 1.2f), 0, 255)
-			: 255;
-
-
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-		DrawCenterBox(sPos, drawSize, GetColor(255, 0, 0), TRUE);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}
-	else
-	{
-		FloatXY pSize = (isCrouched) ? crouchSize : sideSize;
-		// ---- z に応じた見た目の倍率 ----
-		// 横視点では z = SIDE_BASE_Z(100)で 1 倍
-		// それより小さい(奥にいる)と小さく、大きい(手前にいる)と大きくなる
-		const float scale = std::clamp(1.0f + (worldPos.z - START_POS.z) * DEPTH_SCALE_RATE,
-			MIN_DEPTH_SCALE, MAX_DEPTH_SCALE);
-		const FloatXY drawSize = { pSize.x * scale, pSize.y * scale };
-
-		// ---- 足元を基準にする ----
-		// 大きさが変わった分を頭の側へ伸ばす(縮むときは頭の側から縮む)
-		const float grow = (drawSize.y - pSize.y) / 2.0f;
-		const float drawY = (currentGravity == GravityDir::Down) ? worldPos.y - grow : worldPos.y + grow;
-		// ワールド座標からスクリーン座標に変換
-		FloatXY sPos = camera.WorldToScreen({ worldPos.x, drawY });
-		DrawCenterBox( sPos, drawSize, GetColor(255, 0, 0), TRUE);
-	}
-
-
-//	DrawLeftFormat(20, 20, GetColor(255, 255, 255), 20, "%f, %f", pos.x, pos.y);
-
-	// 画面外(上)に飛び出したときに吹き出しでアイコンを描画させる
-	if (isOffScreen)
-	{
-		FloatXY pos = camera.WorldToScreen({ worldPos.x, 50.0f });
-		pos.x = std::clamp(pos.x, 50.0f, 1280 - 50.0f);
-		pos.y = (currentGravity == GravityDir::Down) ? 50.0f : 720.0f - 50.0f;
-		DrawCircle(pos.x, pos.y, 50.0f, GetColor(255, 0, 0), TRUE);
-		DrawCircle(pos.x, pos.y, 45.0f, GetColor(255, 255, 0), TRUE);
-		DrawCenterBox( pos , {sideSize.x / 2.0f, sideSize.y / 2.0f}, GetColor(255, 0, 0), TRUE);
-	}
-
-	DrawFormatString(20, 45, GetColor(255, 255, 255), "%f", worldPos.z);
-}
-
 FloatXYZ Player::Move()
 {
-	FloatXYZ diff = { 0.0f, 0.0f , 0.0f};
+	FloatXYZ diff = { 0.0f, 0.0f , 0.0f };
 	if (currentGravity == GravityDir::Back)
 	{
 		if (key.Check(UP))
@@ -246,6 +132,53 @@ FloatXYZ Player::Move()
 	}
 
 	return diff;
+}
+
+void Player::Jump()
+{
+	// 開始は「押した瞬間」、高さの調整は「押している間」で判定する
+	// Push は毎フレーム呼ぶ必要があるので、onGround より先に呼んで変数に入れておく
+	const bool jumpPushed = key.Push(SPACE) ||
+		(currentGravity != GravityDir::Back && key.Push(UP));
+	const bool jumpHeld = key.Check(SPACE) ||
+		(currentGravity != GravityDir::Back && key.Check(UP));
+	if (jumpPushed && onGround)
+	{
+		velocityY = JUMP_SPEED;
+		onGround = false;
+	}
+	else if (!jumpHeld && velocityY < 0.0f)
+	{
+		velocityY = 0.0f; // 上昇中に離したら上昇を止める
+	}
+}
+
+void Player::Update()
+{
+	moveDiff += Fall();												// 重力による落下処理
+	FloatXYZ nextPos = worldPos + moveDiff;							// 移動先の座標を仮で保管しておく
+	nextPos.x = std::clamp(nextPos.x, HalfW, stageSize.x - HalfW);	// プレイヤーがステージの外にいかないようにクランプ
+	moveDiff.x = nextPos.x - worldPos.x;							// 収めた位置までの差を、実際の横の移動量にする
+
+	//---- 当たり判定 ----
+	FloatXY pSize = (currentGravity == GravityDir::Back) ? topSize : 
+					(isCrouched) ? crouchSize : sideSize;	// 現在の重力としゃがみ状態に応じた当たり判定の設定
+	ResolveHorizontal(pSize);		// 横方向の当たり判定
+	ResolveVertical(pSize);			// 縦方向の当たり判定
+	ResolveDepth(pSize);			// 奥方向の当たり判定
+
+	worldPos += moveDiff;			// 当たり判定など全ての移動処理を終えた上で最終的に worldPos に合算
+
+	// ---- 画面外処理 ----
+	CheckOutOfStage(pSize);
+
+	// ---- ゴール処理(クリア) ----
+	if (stage.ArriveGoal(worldPos.x + pSize.x / 2.0f)) {
+		state = PlayerState::Clear;
+	}
+
+	// すべてが終わったら移動差分を０にしておく
+	moveDiff = { 0.0f, 0.0f };
 }
 
 FloatXYZ Player::Fall()
@@ -423,4 +356,75 @@ void Player::SetCrouch(bool wantCrouch)
 		}
 		// 空いていなければ、しゃがんだまま(低い通路の中など)
 	}
+}
+
+void Player::Draw(const Camera& camera)
+{
+	if (currentGravity == GravityDir::Back)
+	{
+		// ---- z に応じた見た目の倍率 ----
+		// z = 0(床の上)で 1 倍、手前(z > 0)ほど大きく、奥(z < 0)ほど小さく
+		const float scale = std::clamp(1.0f + worldPos.z * DEPTH_SCALE_RATE,
+			MIN_DEPTH_SCALE, MAX_DEPTH_SCALE);
+		const FloatXY drawSize = { topSize.x * scale, topSize.y * scale };
+
+		// ワールド座標からスクリーン座標に変換
+		FloatXY sPos = camera.WorldToScreen({ worldPos.x, worldPos.y });
+
+		// ---- 影(浮いているときだけ、床の上に元の大きさで描く) ----
+		// どこに着地するかが分かるように、足元の位置に半透明の黒を置く
+		// 穴の上では床がないので影は描かない
+		if (worldPos.z > 0.0f && stage.OnFloor({ worldPos.x, worldPos.y }, topSize))
+		{
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
+			DrawCenterBox(sPos, topSize, GetColor(0, 0, 0), TRUE);
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+
+		// ---- 本体 ----
+		// 穴に落ちているとき(z < 0)は、深くなるほど薄くして「奥へ消えていく」感じにする
+		// z = 0 で不透明(255)、z = -200 あたりでほぼ見えなくなる
+		const int alpha = (worldPos.z < 0.0f)
+			? std::clamp(static_cast<int>(255 + worldPos.z * 1.2f), 0, 255)
+			: 255;
+
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+		DrawCenterBox(sPos, drawSize, GetColor(255, 0, 0), TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+	else
+	{
+		FloatXY pSize = (isCrouched) ? crouchSize : sideSize;
+		// ---- z に応じた見た目の倍率 ----
+		// 横視点では z = SIDE_BASE_Z(100)で 1 倍
+		// それより小さい(奥にいる)と小さく、大きい(手前にいる)と大きくなる
+		const float scale = std::clamp(1.0f + (worldPos.z - START_POS.z) * DEPTH_SCALE_RATE,
+			MIN_DEPTH_SCALE, MAX_DEPTH_SCALE);
+		const FloatXY drawSize = { pSize.x * scale, pSize.y * scale };
+
+		// ---- 足元を基準にする ----
+		// 大きさが変わった分を頭の側へ伸ばす(縮むときは頭の側から縮む)
+		const float grow = (drawSize.y - pSize.y) / 2.0f;
+		const float drawY = (currentGravity == GravityDir::Down) ? worldPos.y - grow : worldPos.y + grow;
+		// ワールド座標からスクリーン座標に変換
+		FloatXY sPos = camera.WorldToScreen({ worldPos.x, drawY });
+		DrawCenterBox(sPos, drawSize, GetColor(255, 0, 0), TRUE);
+	}
+
+
+	//	DrawLeftFormat(20, 20, GetColor(255, 255, 255), 20, "%f, %f", pos.x, pos.y);
+
+		// 画面外(上)に飛び出したときに吹き出しでアイコンを描画させる
+	if (isOffScreen)
+	{
+		FloatXY pos = camera.WorldToScreen({ worldPos.x, 50.0f });
+		pos.x = std::clamp(pos.x, 50.0f, 1280 - 50.0f);
+		pos.y = (currentGravity == GravityDir::Down) ? 50.0f : 720.0f - 50.0f;
+		DrawCircle(pos.x, pos.y, 50.0f, GetColor(255, 0, 0), TRUE);
+		DrawCircle(pos.x, pos.y, 45.0f, GetColor(255, 255, 0), TRUE);
+		DrawCenterBox(pos, { sideSize.x / 2.0f, sideSize.y / 2.0f }, GetColor(255, 0, 0), TRUE);
+	}
+
+	DrawFormatString(20, 45, GetColor(255, 255, 255), "%f", worldPos.z);
 }
