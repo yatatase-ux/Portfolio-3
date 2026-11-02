@@ -18,6 +18,6 @@ FloatXY Camera::WorldToScreen(FloatXY worldPos) const
 
 void Camera::Follow(FloatXYZ p_wPos, FloatXY stageSize)
 {
-	offsetX = p_wPos.x - 640;
-	offsetX = std::clamp(offsetX, 0.0f, stageSize.x - 1280);
+	offsetX = p_wPos.x - 640.0f;
+	offsetX = std::clamp(offsetX, 0.0f, stageSize.x - 1280.0f);
 }

@@ -33,7 +33,10 @@ class Player
 	const float MAX_FALL_SPEED = 50.0f;	// 落下スピードの上限
 
 	FloatXYZ moveDiff;				// 移動分の合計
+	FloatXY moveVelo;
 	const float MOVE_SPEED = 5.0f;	// プレイヤーの移動スピード
+	const float sUP = 0.5f;
+	const float sDown = 1.0f;
 
 	bool onGround;		// 地面に乗っているかどうか
 	bool isCrouched;	// しゃがみ状態

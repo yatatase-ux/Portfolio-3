@@ -100,6 +100,7 @@ void Player::Input()
 FloatXYZ Player::Move()
 {
 	FloatXYZ diff = { 0.0f, 0.0f , 0.0f };
+	FloatXY targetSpeed = { 0.0f, 0.0f };
 	if (currentGravity == GravityDir::Back)
 	{
 		if (key.Check(UP))
@@ -121,14 +122,20 @@ FloatXYZ Player::Move()
 	}
 	else
 	{
-		if (key.Check(LEFT))
-		{
-			diff.x -= MOVE_SPEED;
-		}
-		if (key.Check(RIGHT))
-		{
-			diff.x += MOVE_SPEED;
-		}
+		// ---- 目標の速さを決める(入力はこれを決めるだけ) ----
+		// 何も押していなければ 0(止まりたい)
+		float targetSpeedX = 0.0f;
+		if (key.Check(LEFT))  targetSpeedX -= MOVE_SPEED;
+		if (key.Check(RIGHT)) targetSpeedX += MOVE_SPEED;
+
+		// ---- 今の速さを、目標に向かって近づける ----
+		// 押しているなら加速の量、離しているなら減速の量だけ近づく
+		const float step = (targetSpeedX != 0.0f) ? sUP : sDown;
+		const float diffSpeed = targetSpeedX - moveVelo.x;
+		moveVelo.x += std::clamp(diffSpeed, -step, step);
+
+		// 移動量は速度そのもの(足すのはここの1回だけ)
+		diff.x = moveVelo.x;
 	}
 
 	return diff;
