@@ -27,7 +27,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	SetGraphMode(WINDOW_W, WINDOW_H, 32);
 
 	// ウィンドウのタイトル
-	SetMainWindowText("DxLib Template");
+	SetMainWindowText("2DAction");
 
 	// 背景色の設定
 	SetBackgroundColor(128, 128, 128);
