@@ -3,26 +3,15 @@
 #include <string>
 #include "ScreenSize.h"
 
+#include "BlockType.h"
+#include "StageConst.h"
+
 #include "FloatXY.h"
 #include "FloatXYZ.h"
 #include "IntXY.h"
 #include "GravityDir.h"
 
 class Camera;
-
-// 各マスのサイズ。必ず正方形にする
-const float CELL_SIZE = 40.0f;
-
-enum class BlockType
-{
-	BStart = -3,
-	UStart = -2,
-	DStart = -1,
-	None = 0,		// 空白
-	Ground = 1,		// 地面
-
-	Max				// ブロックの種類の最大数
-};
 
 class Stage
 {
