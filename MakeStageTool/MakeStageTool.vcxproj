@@ -25,11 +25,6 @@
     <RootNamespace>MakeStageTool</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-	<!-- デバッグ実行時の作業ディレクトリを、ソリューションのフォルダにする -->
-	<!-- .vcxproj.user ではなくここに書くので、Git にも保存される -->
-	<PropertyGroup>
-		<LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
-	</PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -75,6 +70,11 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+	<!-- デバッグ実行時の作業ディレクトリを、ソリューションのフォルダにする -->
+	<!-- .vcxproj.user ではなくここに書くので、Git にも保存される -->
+	<PropertyGroup>
+		<LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
+	</PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
