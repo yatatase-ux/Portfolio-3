@@ -12,7 +12,8 @@ void GameLoop::Loop()
 	// =======================================
 	//  ‰Šú‰»ˆ—
 	// =======================================
-	GameLoop();
+	stage.OpenFile(0);
+	int size = stage.GetStageSize();
 
 	// ------------------------------
 	//  ƒQ[ƒ€ƒ‹[ƒv
@@ -39,6 +40,14 @@ void GameLoop::Loop()
 		// =======================================
 		//  ‰æ–Ê•`‰æˆ—
 		// =======================================
+		for (int y = 0; y < 18; y++)
+		{
+			for (int x = 0; x < size; x++)
+			{
+				BlockType b = stage.GetBlockType(Layer::Side, x, y);
+				DrawFormatString(x * 20, y * 20, GetColor(255, 255, 255), "%d, ", static_cast<int>(b));
+			}
+		}
 
 
 		// =======================================

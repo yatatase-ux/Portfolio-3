@@ -6,7 +6,7 @@
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Common">
-      <UniqueIdentifier>{83005f4f-0748-4b93-8c6c-fa3aeba68999}</UniqueIdentifier>
+      <UniqueIdentifier>{82da0bab-6223-4d8b-8332-540d5dcbf33b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -16,15 +16,21 @@
     <ClCompile Include="GameLoop.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\StageData.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\BlockType.h">
+    <ClInclude Include="..\Common\StageData.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\StageConst.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\BlockType.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
