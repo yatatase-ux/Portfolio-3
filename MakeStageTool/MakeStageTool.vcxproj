@@ -134,12 +134,17 @@
     <ClCompile Include="..\Common\StageData.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="StageDraw.cpp" />
+    <ClCompile Include="TabDraw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\BlockType.h" />
     <ClInclude Include="..\Common\StageConst.h" />
     <ClInclude Include="..\Common\StageData.h" />
     <ClInclude Include="GameLoop.h" />
+    <ClInclude Include="ScreenSize.h" />
+    <ClInclude Include="StageDraw.h" />
+    <ClInclude Include="TabDraw.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

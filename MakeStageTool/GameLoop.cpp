@@ -4,7 +4,7 @@
 #include <iostream>
 GameLoop::GameLoop()
 {
-
+	
 }
 
 void GameLoop::Loop()
@@ -14,6 +14,8 @@ void GameLoop::Loop()
 	// =======================================
 	stage.OpenFile(0);
 	int size = stage.GetStageSize();
+	sd = std::make_unique<StageDraw>(stage);
+	currentLayer = Layer::Side;
 
 	// ------------------------------
 	//  ゲームループ
@@ -32,7 +34,9 @@ void GameLoop::Loop()
 		// =======================================
 		//  入力処理
 		// =======================================
-
+		if (CheckHitKey(KEY_INPUT_3)) currentLayer = Layer::Top;
+		if (CheckHitKey(KEY_INPUT_1)) currentLayer = Layer::Side;
+		
 		// =======================================
 		//  更新処理
 		// =======================================
@@ -40,15 +44,8 @@ void GameLoop::Loop()
 		// =======================================
 		//  画面描画処理
 		// =======================================
-		for (int y = 0; y < 18; y++)
-		{
-			for (int x = 0; x < size; x++)
-			{
-				BlockType b = stage.GetBlockType(Layer::Side, x, y);
-				DrawFormatString(x * 20, y * 20, GetColor(255, 255, 255), "%d, ", static_cast<int>(b));
-			}
-		}
-
+		sd->Draw(currentLayer);
+		td.Draw();
 
 		// =======================================
 		//  音声再生処理

@@ -3,10 +3,8 @@
 // =======================================
 #include "DxLib.h"
 #include "GameLoop.h"
+#include "ScreenSize.h"
 
-//	定数の宣言
-#define WINDOW_W 1280	// 画面サイズ　横
-#define WINDOW_H 720	// 画面サイズ　縦
 
 // ------------------------------
 // WinMain
@@ -24,7 +22,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	ChangeWindowMode(TRUE);					// ウインドウモードを有効化
 
 	// ウィンドウサイズとカラービットの設定
-	SetGraphMode(WINDOW_W, WINDOW_H, 32);
+	SetGraphMode(MAIN_SCREEN_W, MAIN_SCREEN_H, 32);
 
 	// ウィンドウのタイトル
 	SetMainWindowText("MakeStageTool");

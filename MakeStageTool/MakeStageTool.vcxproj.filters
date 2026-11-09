@@ -8,6 +8,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{82da0bab-6223-4d8b-8332-540d5dcbf33b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Draw">
+      <UniqueIdentifier>{2f8ac2e6-f6e4-4da9-9b24-af79f8c59f71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -18,6 +21,12 @@
     </ClCompile>
     <ClCompile Include="..\Common\StageData.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="StageDraw.cpp">
+      <Filter>ソース ファイル\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="TabDraw.cpp">
+      <Filter>ソース ファイル\Draw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +41,15 @@
     </ClInclude>
     <ClInclude Include="..\Common\BlockType.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenSize.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="StageDraw.h">
+      <Filter>ソース ファイル\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="TabDraw.h">
+      <Filter>ソース ファイル\Draw</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
