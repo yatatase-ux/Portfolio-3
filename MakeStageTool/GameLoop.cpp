@@ -40,6 +40,10 @@ void GameLoop::Loop()
 		// =======================================
 		//  XVˆ—
 		// =======================================
+		int mouseX;
+		int mouseY;
+		GetMousePoint(&mouseX, &mouseY);
+		sd->Input(mouseX, mouseY);
 
 		// =======================================
 		//  ‰æ–Ê•`‰æˆ—

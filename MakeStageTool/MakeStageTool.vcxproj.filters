@@ -11,6 +11,9 @@
     <Filter Include="ソース ファイル\Draw">
       <UniqueIdentifier>{2f8ac2e6-f6e4-4da9-9b24-af79f8c59f71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Input">
+      <UniqueIdentifier>{a6e46251-4add-45ee-a797-84be5f473f85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,6 +30,9 @@
     </ClCompile>
     <ClCompile Include="TabDraw.cpp">
       <Filter>ソース ファイル\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>ソース ファイル\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="TabDraw.h">
       <Filter>ソース ファイル\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>ソース ファイル\Input</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
