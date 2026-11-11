@@ -62,8 +62,8 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
- # DXライブラリは外部のライブラリなので、言語の割合の計算から外す
-   DxLib/** linguist-vendored
+# DXライブラリは外部のライブラリなので、言語の割合の計算から外す
+  DxLib/** linguist-vendored
 
-   # .h ファイルは C ではなく C++ として数える
-   *.h linguist-language=C++
+# .h ファイルは C ではなく C++ として数える
+  *.h linguist-language=C++
