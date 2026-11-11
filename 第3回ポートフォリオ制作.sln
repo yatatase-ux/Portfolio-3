@@ -10,9 +10,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}"
 	ProjectSection(SolutionItems) = preProject
 		Common\BlockType.h = Common\BlockType.h
+		Common\FloatXY.h = Common\FloatXY.h
+		Common\FloatXYZ.h = Common\FloatXYZ.h
+		Common\IntXY.h = Common\IntXY.h
+		Common\KeyAction.h = Common\KeyAction.h
+		Common\Shape.cpp = Common\Shape.cpp
+		Common\Shape.h = Common\Shape.h
 		Common\StageConst.h = Common\StageConst.h
 		Common\StageData.cpp = Common\StageData.cpp
 		Common\StageData.h = Common\StageData.h
+		Common\StringF.cpp = Common\StringF.cpp
+		Common\StringF.h = Common\StringF.h
 	EndProjectSection
 EndProject
 Global

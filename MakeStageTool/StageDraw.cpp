@@ -2,6 +2,7 @@
 #include "DxLib.h"
 #include "StageConst.h"
 #include "ScreenSize.h"
+#include "Shape.h"
 #include <algorithm>   // std::clamp, std::min, std::max
 
 StageDraw::StageDraw(StageData& s)
@@ -10,6 +11,10 @@ StageDraw::StageDraw(StageData& s)
 	size = stage.GetStageSize();
 	color[0] = GetColor(165, 42, 42);
 	color[1] = GetColor(0, 0, 0);
+
+	selectX = -1;
+	selectY = -1;
+	isInScreen = false;
 }
 
 void StageDraw::Input(float mouseX, float mouseY)
@@ -70,7 +75,7 @@ void StageDraw::ClampOffset()
 	// スクロールできる一番右(ステージの幅 − 表示領域の幅)
 	// ステージが表示領域より狭いときはマイナスになるので、0 で止める
 	// (下限 > 上限 で clamp を呼ぶとエラーになるのを防ぐ)
-	const int maxOffset = (std::max)(0, size * cell - STAGE_SCREEN_W);
+	const int maxOffset = (std::max)(0, (size + 1) * cell - STAGE_SCREEN_W);
 
 	offsetX = std::clamp(offsetX, 0, maxOffset);
 }
@@ -85,6 +90,7 @@ void StageDraw::Draw(Layer layer)
 	// 端の列が半分だけ映ることがあるので +1 する。ステージの幅を超えないようにする
 	const int endX = (std::min)(size, (offsetX + STAGE_SCREEN_W) / (int)CELL_SIZE + 1);
 
+	float finalX;
 	for (int y = 0; y < STAGE_HEIGHT; y++)
 	{
 		for (int x = startX; x < endX; x++)
@@ -112,8 +118,13 @@ void StageDraw::Draw(Layer layer)
 			{
 				DrawBox(dX, dY, dX + CELL_SIZE, dY + CELL_SIZE, GetColor(255, 0, 0), TRUE);
 			}
+
+			finalX = dX + CELL_SIZE;
 		}
 	}
+
+	DrawCheckered({ finalX, 0 }, { finalX + CELL_SIZE / 2.0f, STAGE_SCREEN_H },
+		GetColor(255, 255, 255), GetColor(0, 0, 0), CELL_SIZE / 4.0f);
 
 	// ---- 選択中のマスの枠 ----
 	if (isInScreen)

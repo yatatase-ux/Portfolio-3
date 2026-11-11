@@ -94,3 +94,9 @@ BlockType StageData::GetBlockType(Layer layer, int x, int y) const
 
 	return stage[y][x];
 }
+
+void StageData::SetBlockType(Layer layer, int x, int y, BlockType block)
+{
+	auto& stage = (layer == Layer::Side) ? sideStage : topStage;
+	stage[y][x] = block;
+}

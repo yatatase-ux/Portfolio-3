@@ -70,11 +70,11 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-	<!-- デバッグ実行時の作業ディレクトリを、ソリューションのフォルダにする -->
-	<!-- .vcxproj.user ではなくここに書くので、Git にも保存される -->
-	<PropertyGroup>
-		<LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
-	</PropertyGroup>
+  <!-- デバッグ実行時の作業ディレクトリを、ソリューションのフォルダにする -->
+  <!-- .vcxproj.user ではなくここに書くので、Git にも保存される -->
+  <PropertyGroup>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -136,7 +136,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Common\Shape.cpp" />
     <ClCompile Include="..\Common\StageData.cpp" />
+    <ClCompile Include="..\Common\StringF.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />

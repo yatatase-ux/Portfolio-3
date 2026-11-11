@@ -15,7 +15,7 @@ class StageData
 
 	std::vector<std::vector<BlockType>> sideStage;
 	std::vector<std::vector<BlockType>> topStage;
-
+	
 public:
 
 	bool OpenFile(int arg_stageNum);
@@ -26,6 +26,4 @@ public:
 
 private:
 	bool LoadCSV(const std::string& path, std::vector<std::vector<BlockType>>& out);
-	bool SideStageLoad();
-	bool TopStageLoad();
 };

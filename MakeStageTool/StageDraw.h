@@ -36,4 +36,3 @@ private:
 	int WorldToScreenX(int worldX) const { return worldX - offsetX; }
 	int ScreenToWorldX(int screenX) const { return screenX + offsetX; }
 };
-
