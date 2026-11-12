@@ -14,6 +14,12 @@
     <Filter Include="ソース ファイル\Input">
       <UniqueIdentifier>{a6e46251-4add-45ee-a797-84be5f473f85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\StageScreen">
+      <UniqueIdentifier>{c871400c-33c9-42cb-ad79-6971be27e5ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\StageScreen\Goal">
+      <UniqueIdentifier>{d180b1c9-7079-49f1-97bb-165ee53a5a7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,9 +30,6 @@
     </ClCompile>
     <ClCompile Include="..\Common\StageData.cpp">
       <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="StageDraw.cpp">
-      <Filter>ソース ファイル\Draw</Filter>
     </ClCompile>
     <ClCompile Include="TabDraw.cpp">
       <Filter>ソース ファイル\Draw</Filter>
@@ -39,6 +42,15 @@
     </ClCompile>
     <ClCompile Include="..\Common\StringF.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawGoal.cpp">
+      <Filter>ソース ファイル\StageScreen\Goal</Filter>
+    </ClCompile>
+    <ClCompile Include="StageDraw.cpp">
+      <Filter>ソース ファイル\StageScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalLine.cpp">
+      <Filter>ソース ファイル\StageScreen\Goal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,14 +69,20 @@
     <ClInclude Include="ScreenSize.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="StageDraw.h">
-      <Filter>ソース ファイル\Draw</Filter>
-    </ClInclude>
     <ClInclude Include="TabDraw.h">
       <Filter>ソース ファイル\Draw</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>ソース ファイル\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="StageDraw.h">
+      <Filter>ソース ファイル\StageScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawGoal.h">
+      <Filter>ソース ファイル\StageScreen\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalLine.h">
+      <Filter>ソース ファイル\StageScreen\Goal</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
