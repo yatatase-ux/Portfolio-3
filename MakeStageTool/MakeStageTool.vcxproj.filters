@@ -20,6 +20,9 @@
     <Filter Include="ソース ファイル\StageScreen\Goal">
       <UniqueIdentifier>{d180b1c9-7079-49f1-97bb-165ee53a5a7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Panel">
+      <UniqueIdentifier>{67562ae4-0a64-43a4-98e6-a8f3fe54bb50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
