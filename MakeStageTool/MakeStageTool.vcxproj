@@ -139,24 +139,24 @@
     <ClCompile Include="..\Common\Shape.cpp" />
     <ClCompile Include="..\Common\StageData.cpp" />
     <ClCompile Include="..\Common\StringF.cpp" />
-    <ClCompile Include="DrawGoal.cpp" />
+    <ClCompile Include="VGoalLine.cpp" />
     <ClCompile Include="GameLoop.cpp" />
-    <ClCompile Include="GoalLine.cpp" />
+    <ClCompile Include="CGoalLine.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="StageDraw.cpp" />
+    <ClCompile Include="StageScreen.cpp" />
     <ClCompile Include="TabDraw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\BlockType.h" />
     <ClInclude Include="..\Common\StageConst.h" />
     <ClInclude Include="..\Common\StageData.h" />
-    <ClInclude Include="DrawGoal.h" />
+    <ClInclude Include="VGoalLine.h" />
     <ClInclude Include="GameLoop.h" />
-    <ClInclude Include="GoalLine.h" />
+    <ClInclude Include="CGoalLine.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="ScreenSize.h" />
-    <ClInclude Include="StageDraw.h" />
+    <ClInclude Include="StageScreen.h" />
     <ClInclude Include="TabDraw.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

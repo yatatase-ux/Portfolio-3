@@ -43,13 +43,13 @@
     <ClCompile Include="..\Common\StringF.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="DrawGoal.cpp">
+    <ClCompile Include="VGoalLine.cpp">
       <Filter>ソース ファイル\StageScreen\Goal</Filter>
     </ClCompile>
-    <ClCompile Include="StageDraw.cpp">
+    <ClCompile Include="StageScreen.cpp">
       <Filter>ソース ファイル\StageScreen</Filter>
     </ClCompile>
-    <ClCompile Include="GoalLine.cpp">
+    <ClCompile Include="CGoalLine.cpp">
       <Filter>ソース ファイル\StageScreen\Goal</Filter>
     </ClCompile>
   </ItemGroup>
@@ -75,13 +75,13 @@
     <ClInclude Include="Input.h">
       <Filter>ソース ファイル\Input</Filter>
     </ClInclude>
-    <ClInclude Include="StageDraw.h">
+    <ClInclude Include="StageScreen.h">
       <Filter>ソース ファイル\StageScreen</Filter>
     </ClInclude>
-    <ClInclude Include="DrawGoal.h">
+    <ClInclude Include="VGoalLine.h">
       <Filter>ソース ファイル\StageScreen\Goal</Filter>
     </ClInclude>
-    <ClInclude Include="GoalLine.h">
+    <ClInclude Include="CGoalLine.h">
       <Filter>ソース ファイル\StageScreen\Goal</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,11 +1,11 @@
-﻿#include "StageDraw.h"
+﻿#include "StageScreen.h"
 #include "DxLib.h"
 #include "StageConst.h"
 #include "ScreenSize.h"
 #include "Shape.h"
 #include <algorithm>   // std::clamp, std::min, std::max
 
-StageDraw::StageDraw(StageData& s)
+StageScreen::StageScreen(StageData& s)
 	:stage(s)
 {
 	size = stage.GetStageSize();
@@ -14,10 +14,14 @@ StageDraw::StageDraw(StageData& s)
 
 	selectX = -1;
 	selectY = -1;
+
 	isInScreen = false;
+
+	cGoal = std::make_unique<CGoalLine>(stage);
+	vGoal = std::make_unique<VGoalLine>();
 }
 
-void StageDraw::Input(float mouseX, float mouseY)
+void StageScreen::Input(float mouseX, float mouseY)
 {
 	// マスの大きさ(整数で計算したいので int にしておく)
 	const int cell = static_cast<int>(CELL_SIZE);
@@ -68,7 +72,7 @@ void StageDraw::Input(float mouseX, float mouseY)
 		selectY >= 0 && selectY < STAGE_HEIGHT;
 }
 
-void StageDraw::ClampOffset()
+void StageScreen::ClampOffset()
 {
 	const int cell = static_cast<int>(CELL_SIZE);
 
@@ -80,7 +84,7 @@ void StageDraw::ClampOffset()
 	offsetX = std::clamp(offsetX, 0, maxOffset);
 }
 
-void StageDraw::Draw(Layer layer)
+void StageScreen::Draw(Layer layer)
 {
 	Layer front = (layer == Layer::Side) ? Layer::Top : Layer::Side;
 

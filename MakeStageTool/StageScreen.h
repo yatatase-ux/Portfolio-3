@@ -1,7 +1,11 @@
 #pragma once
+#include <memory>
 #include "StageData.h"
 
-class StageDraw
+#include "CGoalLine.h"
+#include "VGoalLine.h"
+
+class StageScreen
 {
 	StageData& stage;
 	int size;
@@ -22,8 +26,12 @@ class StageDraw
 	int dragStartMouseX = 0;   // ドラッグを始めたときのマウスの x
 	int dragStartOffsetX = 0;  // ドラッグを始めたときの offsetX
 
+	// ---- ゴールライン ----
+	std::unique_ptr<CGoalLine> cGoal;
+	std::unique_ptr<VGoalLine> vGoal;
+
 public:
-	StageDraw(StageData& s);
+	StageScreen(StageData& s);
 
 	void Input(float mouseX, float mouseY);
 	void Draw(Layer layer);

@@ -14,7 +14,7 @@ void GameLoop::Loop()
 	// =======================================
 	stage.OpenFile(0);
 	int size = stage.GetStageSize();
-	sd = std::make_unique<StageDraw>(stage);
+	sd = std::make_unique<StageScreen>(stage);
 	currentLayer = Layer::Side;
 
 	// ------------------------------
