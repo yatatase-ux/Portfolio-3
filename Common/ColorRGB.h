@@ -6,3 +6,4 @@
 #define YELLOW	GetColor(255,255,0)							// â©
 #define PURPLE	GetColor(255,0,255)							// éá
 #define SKYBLUE GetColor(0,255,255)							// êÖ
+#define BROWN   GetColor(165, 42, 42)						// íÉ

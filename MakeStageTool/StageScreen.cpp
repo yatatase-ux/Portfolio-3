@@ -4,13 +4,14 @@
 #include "ScreenSize.h"
 #include "Shape.h"
 #include <algorithm>   // std::clamp, std::min, std::max
+#include "ColorRGB.h"
 
 StageScreen::StageScreen(StageData& s)
 	:stage(s)
 {
 	size = stage.GetStageSize();
-	color[0] = GetColor(165, 42, 42);
-	color[1] = GetColor(0, 0, 0);
+	color[0] = BROWN;
+	color[1] = BLACK;
 
 	selectX = -1;
 	selectY = -1;
@@ -68,7 +69,7 @@ void StageScreen::Input(float mouseX, float mouseY)
 	// ステージの表示領域の中で、かつマスがある場所だけを「選択中」にする
 	// (ドラッグ中は選択の枠を出さない)
 	isInScreen = inStageArea && !isDragging &&
-		selectX >= 0 && selectX < size &&
+		selectX >= 0 && selectX < size + 1 &&
 		selectY >= 0 && selectY < STAGE_HEIGHT;
 }
 
@@ -127,8 +128,9 @@ void StageScreen::Draw(Layer layer)
 		}
 	}
 
-	DrawCheckered({ finalX, 0 }, { finalX + CELL_SIZE / 2.0f, STAGE_SCREEN_H },
-		GetColor(255, 255, 255), GetColor(0, 0, 0), CELL_SIZE / 4.0f);
+	// ---- ゴールライン ----
+	// 描き方は VGoal に任せる。StageScreen は必要な情報を渡すだけ
+	vGoal->Draw(size, offsetX);
 
 	// ---- 選択中のマスの枠 ----
 	if (isInScreen)

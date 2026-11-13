@@ -15,8 +15,6 @@ class Camera;
 
 class Stage
 {
-	const int GOAL_GROUND_ROWS = 1;
-	const int GOAL_MARGIN_COLS = 10;
 
 	std::vector<std::vector<BlockType>> sideStage;
 	std::vector<std::vector<BlockType>> topStage;
