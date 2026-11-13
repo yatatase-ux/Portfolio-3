@@ -22,7 +22,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_  HINSTANCE hPrevInstance, 
 	ChangeWindowMode(TRUE);					// ウインドウモードを有効化
 
 	// ウィンドウサイズとカラービットの設定
-	SetGraphMode(MAIN_SCREEN_W, MAIN_SCREEN_H, 32);
+	SetGraphMode(WINDOW_W, WINDOW_H, 32);
 
 	// ウィンドウのタイトル
 	SetMainWindowText("MakeStageTool");

@@ -10,6 +10,6 @@ TabDraw::TabDraw()
 void TabDraw::Draw()
 {
 
-	DrawBox(STAGE_SCREEN_W, 0, MAIN_SCREEN_W, MAIN_SCREEN_H, tabColor, TRUE);
-	DrawBox(0, STAGE_SCREEN_H, MAIN_SCREEN_W, MAIN_SCREEN_H, tabColor, TRUE);
+	DrawBox(STAGE_SCREEN_W, 0, WINDOW_W, WINDOW_H, tabColor, TRUE);
+	DrawBox(0, STAGE_SCREEN_H, WINDOW_W, WINDOW_H, tabColor, TRUE);
 }
