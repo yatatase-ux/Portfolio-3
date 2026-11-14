@@ -139,6 +139,8 @@
     <ClCompile Include="..\Common\Shape.cpp" />
     <ClCompile Include="..\Common\StageData.cpp" />
     <ClCompile Include="..\Common\StringF.cpp" />
+    <ClCompile Include="ControlPanel.cpp" />
+    <ClCompile Include="CStage.cpp" />
     <ClCompile Include="VGoalLine.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="CGoalLine.cpp" />
@@ -146,18 +148,23 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StageScreen.cpp" />
     <ClCompile Include="TabDraw.cpp" />
+    <ClCompile Include="VStage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\BlockType.h" />
     <ClInclude Include="..\Common\StageConst.h" />
     <ClInclude Include="..\Common\StageData.h" />
+    <ClInclude Include="ControlPanel.h" />
+    <ClInclude Include="CStage.h" />
+    <ClInclude Include="LayerEnum.h" />
     <ClInclude Include="VGoalLine.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="CGoalLine.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="ScreenSize.h" />
     <ClInclude Include="StageScreen.h" />
-    <ClInclude Include="TabDraw.h" />
+    <ClInclude Include="VPanel.h" />
+    <ClInclude Include="VStage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

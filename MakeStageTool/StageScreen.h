@@ -2,6 +2,9 @@
 #include <memory>
 #include "StageData.h"
 
+#include "CStage.h"
+#include "VStage.h"
+
 #include "CGoalLine.h"
 #include "VGoalLine.h"
 
@@ -25,6 +28,10 @@ class StageScreen
 	bool isDragging = false;   // 右ボタンでドラッグ中か
 	int dragStartMouseX = 0;   // ドラッグを始めたときのマウスの x
 	int dragStartOffsetX = 0;  // ドラッグを始めたときの offsetX
+
+	// ---- ステージ ----
+	std::unique_ptr<CStage> cStage;
+	std::unique_ptr<VStage> vStage;
 
 	// ---- ゴールライン ----
 	std::unique_ptr<CGoalLine> cGoal;

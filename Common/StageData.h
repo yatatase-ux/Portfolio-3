@@ -2,12 +2,7 @@
 #include <vector>
 #include <string>
 #include "BlockType.h"
-
-enum class Layer
-{
-	Side,
-	Top
-};
+#include "LayerEnum.h"
 
 class StageData
 {

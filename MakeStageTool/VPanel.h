@@ -1,12 +1,12 @@
 #pragma once
 
-class TabDraw
+class VPanel
 {
 	int tabColor;
 
 public:
 
-	TabDraw();
+	VPanel();
 
 	void Draw();
 };

@@ -8,9 +8,6 @@
     <Filter Include="Common">
       <UniqueIdentifier>{82da0bab-6223-4d8b-8332-540d5dcbf33b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Draw">
-      <UniqueIdentifier>{2f8ac2e6-f6e4-4da9-9b24-af79f8c59f71}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Input">
       <UniqueIdentifier>{a6e46251-4add-45ee-a797-84be5f473f85}</UniqueIdentifier>
     </Filter>
@@ -23,6 +20,9 @@
     <Filter Include="ソース ファイル\Panel">
       <UniqueIdentifier>{67562ae4-0a64-43a4-98e6-a8f3fe54bb50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\StageScreen\Stage">
+      <UniqueIdentifier>{00f76eb0-f647-43e6-b4f7-d782fbfabee5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,9 +33,6 @@
     </ClCompile>
     <ClCompile Include="..\Common\StageData.cpp">
       <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="TabDraw.cpp">
-      <Filter>ソース ファイル\Draw</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>ソース ファイル\Input</Filter>
@@ -55,6 +52,18 @@
     <ClCompile Include="CGoalLine.cpp">
       <Filter>ソース ファイル\StageScreen\Goal</Filter>
     </ClCompile>
+    <ClCompile Include="TabDraw.cpp">
+      <Filter>ソース ファイル\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlPanel.cpp">
+      <Filter>ソース ファイル\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="VStage.cpp">
+      <Filter>ソース ファイル\StageScreen\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="CStage.cpp">
+      <Filter>ソース ファイル\StageScreen\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -72,9 +81,6 @@
     <ClInclude Include="ScreenSize.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="TabDraw.h">
-      <Filter>ソース ファイル\Draw</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>ソース ファイル\Input</Filter>
     </ClInclude>
@@ -86,6 +92,21 @@
     </ClInclude>
     <ClInclude Include="CGoalLine.h">
       <Filter>ソース ファイル\StageScreen\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="VPanel.h">
+      <Filter>ソース ファイル\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlPanel.h">
+      <Filter>ソース ファイル\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="VStage.h">
+      <Filter>ソース ファイル\StageScreen\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="CStage.h">
+      <Filter>ソース ファイル\StageScreen\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="LayerEnum.h">
+      <Filter>ソース ファイル\StageScreen</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

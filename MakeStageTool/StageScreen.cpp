@@ -87,57 +87,18 @@ void StageScreen::ClampOffset()
 
 void StageScreen::Draw(Layer layer)
 {
-	Layer front = (layer == Layer::Side) ? Layer::Top : Layer::Side;
+	// ステージのマス目(描き方は VStage に任せる)
+	vStage->Draw(stage, layer, offsetX);
 
-	// ---- 画面に映っている列だけ描く ----
-	// 一番左に映っている列と、その右に何列映るか
-	const int startX = offsetX / CELL_SIZE;
-	// 端の列が半分だけ映ることがあるので +1 する。ステージの幅を超えないようにする
-	const int endX = (std::min)(size, (offsetX + STAGE_SCREEN_W) / (int)CELL_SIZE + 1);
-
-	float finalX;
-	for (int y = 0; y < STAGE_HEIGHT; y++)
-	{
-		for (int x = startX; x < endX; x++)
-		{
-			// マスのワールド座標 → 画面上の座標
-			const float dX = WorldToScreenX(x * CELL_SIZE);
-			const float dY = y * CELL_SIZE; // 縦はスクロールしないのでそのまま
-
-			BlockType b = stage.GetBlockType(layer, x, y);
-			if (b == BlockType::Ground)
-			{
-				DrawBox(dX, dY, dX + CELL_SIZE, dY + CELL_SIZE, color[static_cast<int>(layer)], TRUE);
-			}
-
-			BlockType f = stage.GetBlockType(front, x, y);
-			if (f == BlockType::Ground)
-			{
-				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
-				DrawBox(dX, dY, dX + CELL_SIZE, dY + CELL_SIZE, color[static_cast<int>(front)], TRUE);
-				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-			}
-
-			const BlockType s = stage.GetBlockType(Layer::Side, x, y);
-			if (s == BlockType::DStart || s == BlockType::UStart || s == BlockType::BStart)
-			{
-				DrawBox(dX, dY, dX + CELL_SIZE, dY + CELL_SIZE, GetColor(255, 0, 0), TRUE);
-			}
-
-			finalX = dX + CELL_SIZE;
-		}
-	}
-
-	// ---- ゴールライン ----
-	// 描き方は VGoal に任せる。StageScreen は必要な情報を渡すだけ
+	// ゴールライン
 	vGoal->Draw(size, offsetX);
 
-	// ---- 選択中のマスの枠 ----
+	// ---- 選択中のマスの枠 ----(今はここに残す)
 	if (isInScreen)
 	{
-		// 選択中のマスもワールド座標なので、画面上の座標に直して描く
-		const int sX = WorldToScreenX(selectX * CELL_SIZE);
-		const int sY = selectY * CELL_SIZE;
-		DrawBox(sX, sY, sX + CELL_SIZE, sY + CELL_SIZE, GetColor(255, 255, 0), FALSE, 5);
+		const int cell = static_cast<int>(CELL_SIZE);
+		const int sX = WorldToScreenX(selectX * cell);
+		const int sY = selectY * cell;
+		DrawBox(sX, sY, sX + cell, sY + cell, GetColor(255, 255, 0), FALSE, 5);
 	}
 }
