@@ -39,13 +39,15 @@ void GameLoop::Loop()
 		if (CheckHitKey(KEY_INPUT_2)) currentLayer = Layer::Side;
 		if (CheckHitKey(KEY_INPUT_3)) currentLayer = Layer::Top;
 		
-		// =======================================
-		//  更新処理
-		// =======================================
 		int mouseX;
 		int mouseY;
 		GetMousePoint(&mouseX, &mouseY);
 		stageScreen->Input(mouseX, mouseY);
+		controlPanel->Input({ (float)mouseX, (float)mouseY }, currentLayer);
+
+		// =======================================
+		//  更新処理
+		// =======================================
 
 		// =======================================
 		//  画面描画処理

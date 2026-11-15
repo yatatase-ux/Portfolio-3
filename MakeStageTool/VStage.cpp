@@ -5,6 +5,7 @@
 #include "ScreenSize.h"
 #include <algorithm>
 #include "StageData.h"
+#include "ColorRGB.h"
 
 VStage::VStage()
 {
@@ -21,6 +22,7 @@ unsigned int VStage::LayerColor(Layer layer) const
 
 void VStage::Draw(const StageData& stage, Layer editing, int offsetX) const
 {
+	DrawFillBox(0, 0, STAGE_SCREEN_W, STAGE_SCREEN_H, WHITE);
 	const int cell = static_cast<int>(CELL_SIZE);
 	const int width = stage.GetStageSize();
 

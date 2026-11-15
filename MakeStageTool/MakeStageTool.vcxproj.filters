@@ -23,6 +23,9 @@
     <Filter Include="ソース ファイル\StageScreen\Stage">
       <UniqueIdentifier>{00f76eb0-f647-43e6-b4f7-d782fbfabee5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Panel\Palete">
+      <UniqueIdentifier>{0be91dbe-ed03-498e-86b3-00fb10f50031}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -64,6 +67,12 @@
     <ClCompile Include="CStage.cpp">
       <Filter>ソース ファイル\StageScreen\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="VPalette.cpp">
+      <Filter>ソース ファイル\Panel\Palete</Filter>
+    </ClCompile>
+    <ClCompile Include="CPalette.cpp">
+      <Filter>ソース ファイル\Panel\Palete</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLoop.h">
@@ -104,6 +113,15 @@
     </ClInclude>
     <ClInclude Include="CStage.h">
       <Filter>ソース ファイル\StageScreen\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="VPalette.h">
+      <Filter>ソース ファイル\Panel\Palete</Filter>
+    </ClInclude>
+    <ClInclude Include="CPalette.h">
+      <Filter>ソース ファイル\Panel\Palete</Filter>
+    </ClInclude>
+    <ClInclude Include="PaletteLayout.h">
+      <Filter>ソース ファイル\Panel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

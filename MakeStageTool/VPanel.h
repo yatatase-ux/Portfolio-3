@@ -1,9 +1,9 @@
 #pragma once
 #include "LayerEnum.h"
+#include "BlockType.h"
 
 class VPanel
 {
-	unsigned int bgColor;
 
 public:
 
@@ -14,5 +14,5 @@ public:
 private:
 
 	void DrawBackGround();
-	
+	void DrawLayer(Layer layer);
 };
