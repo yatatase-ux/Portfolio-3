@@ -21,12 +21,14 @@ StageScreen::StageScreen(StageData& s)
 	isInScreen = false;
 
 	offsetX = 0;
-	isDragging = false;   
+
+	isRightDragging = false;   
+	isRightDown = false;
 	dragStartMouseX = 0.0f;
 	dragStartOffsetX = 0.0f;
 
-
 	vStage = std::make_unique<VStage>();
+	cStage = std::make_unique<CStage>(stage);
 
 	cGoal = std::make_unique<CGoalLine>(stage);
 	vGoal = std::make_unique<VGoalLine>();
@@ -37,7 +39,7 @@ StageScreen::StageScreen(StageData& s)
 /// </summary>
 /// <param name="mouseX">マウスのX座標</param>
 /// <param name="mouseY">マウスのY座標</param>
-void StageScreen::Input(float mouseX, float mouseY)
+void StageScreen::Input(FloatXY mouse, BlockType block, Layer layer)
 {
 	// マスの大きさ(整数で計算したいので int にしておく)
 	const int cell = static_cast<int>(CELL_SIZE);
@@ -47,50 +49,80 @@ void StageScreen::Input(float mouseX, float mouseY)
 
 	// マウスがステージの表示領域の中にあるか
 	// (1280 や 720 ちょうどは帯の側なので、< で比べる)
-	const bool inStageArea = (mouseX >= 0 && mouseY >= 0 &&
-		mouseX < STAGE_SCREEN_W && mouseY < STAGE_SCREEN_H);
+	const bool inStageArea = (mouse.x >= 0 && mouse.y >= 0 &&
+		mouse.x < STAGE_SCREEN_W && mouse.y < STAGE_SCREEN_H);
 
 	// ---- 右ドラッグでスクロール ----
-	const bool rightDown = (GetMouseInput() & MOUSE_INPUT_RIGHT) != 0;
+	ScrollScreen(mouse, inStageArea);
 
-	if (rightDown && !isDragging && inStageArea)
+	// ---- 選択中のマス ----
+	// 画面上の位置 → ワールドの位置 → マスの番号
+	selectX = ScreenToWorldX(mouse.x) / CELL_SIZE;
+	selectY = mouse.y / CELL_SIZE;
+
+	// ステージの表示領域の中で、かつマスがある場所だけを「選択中」にする
+	// (ドラッグ中は選択の枠を出さない)
+	isInScreen = inStageArea && !isRightDragging &&
+		selectX >= 0 && selectX < size + 1 &&
+		selectY >= 0 && selectY < STAGE_HEIGHT;
+
+
+	if (cStage->IsPainting())
+	{
+		// 端から何ピクセル以内でスクロールを始めるか
+		const int EDGE = 40;
+		// 1フレームにスクロールする量(大きいほど速い)
+		const int EDGE_SCROLL_SPEED = 8;
+
+		if (mouse.x > STAGE_SCREEN_W - EDGE)
+		{
+			// 右端に近い → 右へスクロール(映す場所を右へずらす)
+			offsetX += EDGE_SCROLL_SPEED;
+		}
+		else if (mouse.x < EDGE)
+		{
+			// 左端に近い → 左へスクロール
+			offsetX -= EDGE_SCROLL_SPEED;
+		}
+
+		// スクロールしすぎないように収める
+		ClampOffset();
+	}
+
+	cStage->Input(selectX, selectY, isInScreen, inStageArea, block, layer);
+}
+
+void StageScreen::ScrollScreen(FloatXY mouse, bool inStageArea)
+{
+	const bool inputRight = (GetMouseInput() & MOUSE_INPUT_RIGHT) != 0;
+
+	if (inputRight && !isRightDragging)
 	{
 		// 押した瞬間:ドラッグ開始。開始時のマウス位置と offsetX を覚える
-		isDragging = true;
-		dragStartMouseX = mouseX;
-		dragStartOffsetX = offsetX;
+		if(!isRightDown && inStageArea)
+		{
+			isRightDragging = true;
+			dragStartMouseX = mouse.x;
+			dragStartOffsetX = offsetX;
+		}
+		isRightDown = true;
 	}
-	else if (!rightDown)
+	else if (!inputRight)
 	{
 		// 離したら:ドラッグ終了
-		isDragging = false;
+		isRightDragging = false;
+		isRightDown = false;
 	}
 
-	if (isDragging)
+	if (isRightDragging)
 	{
 		// マウスを右に動かすと、ステージをつかんで右に引っぱる感覚にする
 		// → 映す場所(offsetX)は左に戻る、なので「引く」
-		offsetX = dragStartOffsetX - (mouseX - dragStartMouseX);
+		offsetX = dragStartOffsetX - (mouse.x - dragStartMouseX);
 	}
 
 	// ステージの外が映らないように収める
 	ClampOffset();
-
-	// ---- 選択中のマス ----
-	// 画面上の位置 → ワールドの位置 → マスの番号
-	selectX = ScreenToWorldX(mouseX) / CELL_SIZE;
-	selectY = mouseY / CELL_SIZE;
-
-	// ステージの表示領域の中で、かつマスがある場所だけを「選択中」にする
-	// (ドラッグ中は選択の枠を出さない)
-	isInScreen = inStageArea && !isDragging &&
-		selectX >= 0 && selectX < size + 1 &&
-		selectY >= 0 && selectY < STAGE_HEIGHT;
-}
-
-void StageScreen::ScrollScreen(float mouseX, float mouseY)
-{
-
 }
 
 void StageScreen::ClampOffset()
@@ -102,7 +134,7 @@ void StageScreen::ClampOffset()
 	// (下限 > 上限 で clamp を呼ぶとエラーになるのを防ぐ)
 	const int maxOffset = (std::max)(0, (size + 1) * cell - STAGE_SCREEN_W);
 
-	offsetX = std::clamp((int)offsetX, 0, maxOffset);
+	offsetX = std::clamp(offsetX, 0, maxOffset);
 }
 
 void StageScreen::Draw(Layer layer)

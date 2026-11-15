@@ -123,5 +123,8 @@
     <ClInclude Include="PaletteLayout.h">
       <Filter>ソース ファイル\Panel</Filter>
     </ClInclude>
+    <ClInclude Include="PanelLayout.h">
+      <Filter>ソース ファイル\Panel</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

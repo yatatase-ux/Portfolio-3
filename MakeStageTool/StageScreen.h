@@ -2,6 +2,8 @@
 #include <memory>
 #include "StageData.h"
 #include "LayerEnum.h"
+#include "FloatXY.h"
+#include "BlockType.h"
 
 #include "CStage.h"
 #include "VStage.h"
@@ -22,10 +24,11 @@ class StageScreen
 	// ---- スクロール ----
 	// どこを映しているか(ステージの左端から何ピクセル右が、画面の左端に来ているか)
 	// 小数だとブロックの間に隙間が出るので int で持つ
-	float offsetX;
+	int offsetX;
 
 	// 右ドラッグ用
-	bool isDragging;   // 右ボタンでドラッグ中か
+	bool isRightDragging;    // 右ボタンでドラッグ中か
+	bool isRightDown;		 // 右クリックが押されているか
 	float dragStartMouseX;   // ドラッグを始めたときのマウスの x
 	float dragStartOffsetX;  // ドラッグを始めたときの offsetX
 
@@ -40,12 +43,12 @@ class StageScreen
 public:
 	StageScreen(StageData& s);
 
-	void Input(float mouseX, float mouseY);
+	void Input(FloatXY mouse, BlockType selectBlock, Layer layer);
 	void Draw(Layer layer);
 
 private:
 	// 画面スクロール処理
-	void ScrollScreen(float mouseX, float mouseY);
+	void ScrollScreen(FloatXY mouse, bool inStageArea);
 	// offsetX をステージの範囲に収める
 	void ClampOffset();
 

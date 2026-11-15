@@ -160,6 +160,7 @@
     <ClInclude Include="CPalette.h" />
     <ClInclude Include="CStage.h" />
     <ClInclude Include="PaletteLayout.h" />
+    <ClInclude Include="PanelLayout.h" />
     <ClInclude Include="VGoalLine.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="CGoalLine.h" />

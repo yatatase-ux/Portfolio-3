@@ -15,4 +15,6 @@ private:
 
 	void DrawBackGround();
 	void DrawLayer(Layer layer);
+	void DrawSaveButton();
+
 };

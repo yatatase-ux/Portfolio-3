@@ -4,6 +4,13 @@
 #include "BlockType.h"
 #include "LayerEnum.h"
 
+enum class SaveResult
+{
+	OK,
+	NoStart,
+	ManyStart
+};
+
 class StageData
 {
 	int stageNum = -1;
@@ -17,8 +24,13 @@ public:
 	int GetStageSize() const;
 	BlockType GetBlockType(Layer layer, int x, int y) const;
 	void SetBlockType(Layer layer, int x, int y, BlockType block);
-	void OutPutCSV();
+	bool HasStart() const;
+	SaveResult CanSave() const;
+	bool OutPutCSV() const;
 
 private:
 	bool LoadCSV(const std::string& path, std::vector<std::vector<BlockType>>& out);
+	void ExtendWidth(int newWidth);
+	int CountStarts() const;
+	bool SaveCSV(const std::string& path, const std::vector<std::vector<BlockType>>& data) const;
 };
