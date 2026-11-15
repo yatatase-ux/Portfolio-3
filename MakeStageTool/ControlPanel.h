@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "VPanel.h"
+#include "LayerEnum.h"
 
 class ControlPanel
 {
@@ -11,7 +12,7 @@ public:
 	ControlPanel();
 
 	void Update();
-	void Draw();
+	void Draw(Layer layer);
 
 };
 

@@ -6,22 +6,37 @@
 #include <algorithm>   // std::clamp, std::min, std::max
 #include "ColorRGB.h"
 
+/// <summary>
+/// コンストラクタ
+/// </summary>
+/// <param name="s">ステージのデータ</param>
 StageScreen::StageScreen(StageData& s)
 	:stage(s)
 {
 	size = stage.GetStageSize();
-	color[0] = BROWN;
-	color[1] = BLACK;
 
 	selectX = -1;
 	selectY = -1;
 
 	isInScreen = false;
 
+	offsetX = 0;
+	isDragging = false;   
+	dragStartMouseX = 0.0f;
+	dragStartOffsetX = 0.0f;
+
+
+	vStage = std::make_unique<VStage>();
+
 	cGoal = std::make_unique<CGoalLine>(stage);
 	vGoal = std::make_unique<VGoalLine>();
 }
 
+/// <summary>
+/// 入力処理
+/// </summary>
+/// <param name="mouseX">マウスのX座標</param>
+/// <param name="mouseY">マウスのY座標</param>
 void StageScreen::Input(float mouseX, float mouseY)
 {
 	// マスの大きさ(整数で計算したいので int にしておく)
@@ -73,6 +88,11 @@ void StageScreen::Input(float mouseX, float mouseY)
 		selectY >= 0 && selectY < STAGE_HEIGHT;
 }
 
+void StageScreen::ScrollScreen(float mouseX, float mouseY)
+{
+
+}
+
 void StageScreen::ClampOffset()
 {
 	const int cell = static_cast<int>(CELL_SIZE);
@@ -82,7 +102,7 @@ void StageScreen::ClampOffset()
 	// (下限 > 上限 で clamp を呼ぶとエラーになるのを防ぐ)
 	const int maxOffset = (std::max)(0, (size + 1) * cell - STAGE_SCREEN_W);
 
-	offsetX = std::clamp(offsetX, 0, maxOffset);
+	offsetX = std::clamp((int)offsetX, 0, maxOffset);
 }
 
 void StageScreen::Draw(Layer layer)

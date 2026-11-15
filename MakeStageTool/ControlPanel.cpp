@@ -10,7 +10,7 @@ void ControlPanel::Update()
 
 }
 
-void ControlPanel::Draw()
+void ControlPanel::Draw(Layer layer)
 {
-	vPanel->Draw();
+	vPanel->Draw(layer);
 }

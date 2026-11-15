@@ -52,7 +52,7 @@
     <ClCompile Include="CGoalLine.cpp">
       <Filter>ソース ファイル\StageScreen\Goal</Filter>
     </ClCompile>
-    <ClCompile Include="TabDraw.cpp">
+    <ClCompile Include="VPanel.cpp">
       <Filter>ソース ファイル\Panel</Filter>
     </ClCompile>
     <ClCompile Include="ControlPanel.cpp">
@@ -104,9 +104,6 @@
     </ClInclude>
     <ClInclude Include="CStage.h">
       <Filter>ソース ファイル\StageScreen\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="LayerEnum.h">
-      <Filter>ソース ファイル\StageScreen</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

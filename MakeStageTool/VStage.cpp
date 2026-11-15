@@ -6,7 +6,6 @@
 #include <algorithm>
 #include "StageData.h"
 
-
 VStage::VStage()
 {
 	sideColor = GetColor(165, 42, 42);

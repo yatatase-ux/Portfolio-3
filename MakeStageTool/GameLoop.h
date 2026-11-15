@@ -4,13 +4,13 @@
 #include "StageConst.h"
 #include "StageData.h"
 #include "StageScreen.h"
-#include "VPanel.h"
+#include "ControlPanel.h"
 
 class GameLoop
 {
 	StageData stage;
-	std::unique_ptr<StageScreen> sd;
-	VPanel td;
+	std::unique_ptr<StageScreen> stageScreen;
+	std::unique_ptr<ControlPanel> controlPanel;
 
 	Layer currentLayer;
 

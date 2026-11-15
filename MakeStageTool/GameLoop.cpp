@@ -14,7 +14,8 @@ void GameLoop::Loop()
 	// =======================================
 	stage.OpenFile(0);
 	int size = stage.GetStageSize();
-	sd = std::make_unique<StageScreen>(stage);
+	stageScreen = std::make_unique<StageScreen>(stage);
+	controlPanel = std::make_unique<ControlPanel>();
 	currentLayer = Layer::Side;
 
 	// ------------------------------
@@ -34,8 +35,9 @@ void GameLoop::Loop()
 		// =======================================
 		//  “ü—Íˆ—
 		// =======================================
-		if (CheckHitKey(KEY_INPUT_3)) currentLayer = Layer::Top;
 		if (CheckHitKey(KEY_INPUT_1)) currentLayer = Layer::Side;
+		if (CheckHitKey(KEY_INPUT_2)) currentLayer = Layer::Side;
+		if (CheckHitKey(KEY_INPUT_3)) currentLayer = Layer::Top;
 		
 		// =======================================
 		//  XVˆ—
@@ -43,13 +45,13 @@ void GameLoop::Loop()
 		int mouseX;
 		int mouseY;
 		GetMousePoint(&mouseX, &mouseY);
-		sd->Input(mouseX, mouseY);
+		stageScreen->Input(mouseX, mouseY);
 
 		// =======================================
 		//  ‰æ–Ê•`‰æˆ—
 		// =======================================
-		sd->Draw(currentLayer);
-		td.Draw();
+		stageScreen->Draw(currentLayer);
+		controlPanel->Draw(currentLayer);
 
 		// =======================================
 		//  ‰¹ºÄ¶ˆ—

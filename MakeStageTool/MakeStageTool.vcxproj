@@ -147,7 +147,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StageScreen.cpp" />
-    <ClCompile Include="TabDraw.cpp" />
+    <ClCompile Include="VPanel.cpp" />
     <ClCompile Include="VStage.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +156,6 @@
     <ClInclude Include="..\Common\StageData.h" />
     <ClInclude Include="ControlPanel.h" />
     <ClInclude Include="CStage.h" />
-    <ClInclude Include="LayerEnum.h" />
     <ClInclude Include="VGoalLine.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="CGoalLine.h" />

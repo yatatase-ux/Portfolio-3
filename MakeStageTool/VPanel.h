@@ -1,13 +1,18 @@
 #pragma once
+#include "LayerEnum.h"
 
 class VPanel
 {
-	int tabColor;
+	unsigned int bgColor;
 
 public:
 
 	VPanel();
 
-	void Draw();
-};
+	void Draw(Layer layer);
 
+private:
+
+	void DrawBackGround();
+	
+};

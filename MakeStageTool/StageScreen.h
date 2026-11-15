@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "StageData.h"
+#include "LayerEnum.h"
 
 #include "CStage.h"
 #include "VStage.h"
@@ -12,7 +13,6 @@ class StageScreen
 {
 	StageData& stage;
 	int size;
-	int color[2];
 
 	int selectX;
 	int selectY;
@@ -22,12 +22,12 @@ class StageScreen
 	// ---- スクロール ----
 	// どこを映しているか(ステージの左端から何ピクセル右が、画面の左端に来ているか)
 	// 小数だとブロックの間に隙間が出るので int で持つ
-	int offsetX = 0;
+	float offsetX;
 
 	// 右ドラッグ用
-	bool isDragging = false;   // 右ボタンでドラッグ中か
-	int dragStartMouseX = 0;   // ドラッグを始めたときのマウスの x
-	int dragStartOffsetX = 0;  // ドラッグを始めたときの offsetX
+	bool isDragging;   // 右ボタンでドラッグ中か
+	float dragStartMouseX;   // ドラッグを始めたときのマウスの x
+	float dragStartOffsetX;  // ドラッグを始めたときの offsetX
 
 	// ---- ステージ ----
 	std::unique_ptr<CStage> cStage;
@@ -44,6 +44,8 @@ public:
 	void Draw(Layer layer);
 
 private:
+	// 画面スクロール処理
+	void ScrollScreen(float mouseX, float mouseY);
 	// offsetX をステージの範囲に収める
 	void ClampOffset();
 

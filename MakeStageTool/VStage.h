@@ -21,4 +21,5 @@ public:
 	// editing :今編集しているレイヤー(こちらを不透明、もう片方を半透明で手前に描く)
 	// offsetX :スクロールの量
 	void Draw(const StageData& stage, Layer editing, int offsetX) const;
+
 };
