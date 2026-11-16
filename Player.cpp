@@ -13,6 +13,28 @@ static constexpr float MAX_DEPTH_SCALE = 1.5f;  // 手前に大きく出すぎないように
 Player::Player(KeyAction& arg_key, Stage& arg_stage, GravityDir gra)
 	:key(arg_key), stage(arg_stage), stageSize(stage.GetStageSize()), currentGravity(gra)
 {
+
+	LoadDivGraph("Data/image/Player/player_walk_side.png",
+		8,           // 全部で何コマか
+		4, 2,        // 横に何コマ、縦に何コマ並んでいるか
+		384, 512,
+		walkImageSide);       // 分けた画像が、ここに順番に入る
+	LoadDivGraph("Data/image/Player/gravity_change.png",
+		10,           // 全部で何コマか
+		5, 2,        // 横に何コマ、縦に何コマ並んでいるか
+		1983 / 5, 793 / 2,
+		GraChengeImage);       // 分けた画像が、ここに順番に入る
+	LoadDivGraph("Data/image/Player/player_walk_top.png",
+		8,           // 全部で何コマか
+		4, 2,        // 横に何コマ、縦に何コマ並んでいるか
+		1536 / 4, 1024 / 2,
+		walkImageTop);       // 分けた画像が、ここに順番に入る
+	walkAnim = 0;
+	animCount = 0;
+	jumpImageSide = LoadGraph("Data/image/Player/player_jump_side.png");
+	jumpImageTop = LoadGraph("Data/image/Player/player_jump_top.png");
+
+
 	worldPos = stage.GetStartPos();
 	worldPos.y -= (currentGravity == GravityDir::Down) ? sideSize.y / 2.0f :
 				  (currentGravity == GravityDir::Up)   ?(sideSize.y / 2.0f) * -1 :
@@ -33,7 +55,11 @@ Player::Player(KeyAction& arg_key, Stage& arg_stage, GravityDir gra)
 
 Player::~Player()
 {
-
+	for(int i = 0; i < 8; i++)
+	{
+		DeleteGraph(walkImageSide[i]);
+	}
+	DeleteGraph(jumpImageSide);
 }
 
 void Player::GravityChange(GravityDir gravityDir)
@@ -43,6 +69,8 @@ void Player::GravityChange(GravityDir gravityDir)
 	currentGravity = gravityDir;
 	velocityY = 0.0f;
 	onGround = false;
+	graAnim = true;
+	animCount = 0;
 
 	// ---- 見下ろしから横に戻るとき:立てるか、しゃがむかを決める ----
 	if (prev == GravityDir::Back && gravityDir != GravityDir::Back)
@@ -160,6 +188,9 @@ void Player::Jump()
 	}
 }
 
+/// <summary>
+/// 更新処理
+/// </summary>
 void Player::Update()
 {
 	moveDiff += Fall();												// 重力による落下処理
@@ -182,6 +213,33 @@ void Player::Update()
 	// ---- ゴール処理(クリア) ----
 	if (stage.ArriveGoal(worldPos.x + pSize.x / 2.0f)) {
 		state = PlayerState::Clear;
+	}
+
+	if (moveVelo.x < 0.0f) reverseX = true;
+	if (moveVelo.x > 0.0f) reverseX = false;
+	if (moveDiff.x != 0.0f)
+	{
+		animCount++;
+		if (animCount > 10)
+		{
+			animCount = 0;
+			walkAnim++;
+			if (walkAnim > 7) walkAnim = 0;
+		}
+	}
+	else if (graAnim)
+	{
+		animCount++;
+		if (animCount > 9)
+		{
+			graAnim = false;
+			animCount = 0;
+		}
+	}
+	else
+	{
+		animCount = 0;
+		walkAnim = 0;
 	}
 
 	// すべてが終わったら移動差分を０にしておく
@@ -365,6 +423,10 @@ void Player::SetCrouch(bool wantCrouch)
 	}
 }
 
+/// <summary>
+/// 描画処理
+/// </summary>
+/// <param name="camera">カメラ</param>
 void Player::Draw(const Camera& camera)
 {
 	if (currentGravity == GravityDir::Back)
@@ -389,6 +451,10 @@ void Player::Draw(const Camera& camera)
 		}
 
 		// ---- 本体 ----
+		const bool isUpGravity = (currentGravity == GravityDir::Up);
+		int image = (onGround) ? walkImageTop[walkAnim] :
+			(graAnim) ? GraChengeImage[animCount] : jumpImageTop;
+		double size = (onGround) ? 0.16 : 0.20;
 		// 穴に落ちているとき(z < 0)は、深くなるほど薄くして「奥へ消えていく」感じにする
 		// z = 0 で不透明(255)、z = -200 あたりでほぼ見えなくなる
 		const int alpha = (worldPos.z < 0.0f)
@@ -396,27 +462,41 @@ void Player::Draw(const Camera& camera)
 			: 255;
 
 
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-		DrawCenterBox(sPos, drawSize, GetColor(255, 0, 0), TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);		
+		DrawRotaGraphF(sPos.x, sPos.y, size, 0.0f, image, TRUE, reverseX, isUpGravity);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 	else
 	{
-		FloatXY pSize = (isCrouched) ? crouchSize : sideSize;
+		const FloatXY pSize = (isCrouched) ? crouchSize : sideSize;
 		// ---- z に応じた見た目の倍率 ----
-		// 横視点では z = SIDE_BASE_Z(100)で 1 倍
-		// それより小さい(奥にいる)と小さく、大きい(手前にいる)と大きくなる
 		const float scale = std::clamp(1.0f + (worldPos.z - START_POS.z) * DEPTH_SCALE_RATE,
 			MIN_DEPTH_SCALE, MAX_DEPTH_SCALE);
-		const FloatXY drawSize = { pSize.x * scale, pSize.y * scale };
 
-		// ---- 足元を基準にする ----
-		// 大きさが変わった分を頭の側へ伸ばす(縮むときは頭の側から縮む)
-		const float grow = (drawSize.y - pSize.y) / 2.0f;
-		const float drawY = (currentGravity == GravityDir::Down) ? worldPos.y - grow : worldPos.y + grow;
-		// ワールド座標からスクリーン座標に変換
-		FloatXY sPos = camera.WorldToScreen({ worldPos.x, drawY });
-		DrawCenterBox(sPos, drawSize, GetColor(255, 0, 0), TRUE);
+		// ---- 足元の位置(当たり判定の足元) ----
+		// 下重力なら下端、上重力なら上端が足元
+		const bool isUpGravity = (currentGravity == GravityDir::Up);
+		const float footY = isUpGravity ? worldPos.y - pSize.y / 2.0f
+			: worldPos.y + pSize.y / 2.0f;
+		const FloatXY footPos = camera.WorldToScreen({ worldPos.x, footY });
+
+		// ---- 描くキャラクターの高さ ----
+		// 当たり判定の高さ × 奥行きの倍率(足元を基準に大きくなる)
+		const float height = pSize.y * scale;
+
+		// ---- どの画像を描くか ----
+		if (graAnim)
+		{
+			DrawSprite(GraChengeImage[animCount], GRA_CHANGE_INFO, footPos, height, isUpGravity);
+		}
+		else if (onGround)
+		{
+			DrawSprite(walkImageSide[walkAnim], WALK_SIDE_INFO, footPos, height, isUpGravity);
+		}
+		else
+		{
+			DrawSprite(jumpImageSide, JUMP_SIDE_INFO, footPos, height, isUpGravity);
+		}
 	}
 
 
@@ -430,8 +510,45 @@ void Player::Draw(const Camera& camera)
 		pos.y = (currentGravity == GravityDir::Down) ? 50.0f : 720.0f - 50.0f;
 		DrawCircle(pos.x, pos.y, 50.0f, GetColor(255, 0, 0), TRUE);
 		DrawCircle(pos.x, pos.y, 45.0f, GetColor(255, 255, 0), TRUE);
-		DrawCenterBox(pos, { sideSize.x / 2.0f, sideSize.y / 2.0f }, GetColor(255, 0, 0), TRUE);
+		const bool isUpGravity = (currentGravity == GravityDir::Up);
+		int image = (onGround) ? walkImageSide[walkAnim] : jumpImageSide;
+		double size = (onGround) ? 0.16 : 0.20;
+		DrawRotaGraphF(pos.x, pos.y, size, 0.0f, image, TRUE, reverseX, isUpGravity);
 	}
 
 	DrawFormatString(20, 45, GetColor(255, 255, 255), "%f", worldPos.z);
+}
+
+// 画像を、当たり判定の足元に合わせて描く
+// footPos    :足元の位置(画面上の座標)。下重力なら当たり判定の下端の中央、上重力なら上端の中央
+// height     :キャラクターを何ピクセルの高さで描くか
+// upsideDown :上重力(逆さま)で描くか
+void Player::DrawSprite(int handle, const SpriteInfo& info,
+	FloatXY footPos, float height, bool upsideDown) const
+{
+	// 1コマの大きさ
+	int w = 0, h = 0;
+	GetGraphSize(handle, &w, &h);
+
+	// 背丈が height になる拡大率
+	const double rate = height / info.charHeight;
+
+	// 回転の中心 = 画像の中の足元(横は真ん中、縦は下端から余白分だけ上)
+	// ここが footPos にぴったり重なる
+	const float cx = w / 2.0f;
+	const float cy = h - info.footOffset;
+
+	if (!upsideDown)
+	{
+		// 下重力:そのまま描く
+		DrawRotaGraph3F(footPos.x, footPos.y, cx, cy, rate, rate,
+			0.0, handle, TRUE, reverseX, FALSE);
+	}
+	else
+	{
+		// 上重力:足元を中心に 180 度回す → 足元はそのままで逆さまになる
+		// 180 度回すと左右も入れ替わるので、左右反転の指定は逆にする
+		DrawRotaGraph3F(footPos.x, footPos.y, cx, cy, rate, rate,
+			DX_PI, handle, TRUE, !reverseX, FALSE);
+	}
 }

@@ -10,29 +10,25 @@ VGoalLine::VGoalLine()
 
 }
 
-void VGoalLine::Draw(int stageWidth, int offsetX) const
+void VGoalLine::Draw(int stageWidth, int offsetX, bool isGrabbing, int targetX) const
 {
-	// ---- ゴールの位置(ワールド座標) ----
-	// ゴールは「ステージの幅」の列 = ステージ本編のすぐ右
-	const float worldX = stageWidth * CELL_SIZE;
+	// 今のゴールの位置(ワールド座標 → 画面上の座標)
+	const float screenX = stageWidth * CELL_SIZE - offsetX;
 
-	// ---- 画面上の座標に直す ----
-	// ループで最後に描いたマスではなく、幅から直接求めるので、
-	// どこまでスクロールしていても正しい位置に描かれる
-	const float screenX = worldX - offsetX;
-
-	// ---- 線の上端と下端(画面の上から下まで) ----
-	const FloatXY topPos = { screenX, 0.0f };
-	const FloatXY bottomPos = { screenX + CELL_SIZE / 2.0f, static_cast<float>(STAGE_SCREEN_H) };
-
+	// ゴールの列の背景(半透明の黒)
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
-	DrawBox(topPos.x, topPos.y, topPos.x + CELL_SIZE, bottomPos.y, BLACK, TRUE);
+	DrawBox(screenX, 0, screenX + CELL_SIZE, STAGE_SCREEN_H, BLACK, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	DrawCheckered(topPos, bottomPos, BLACK, WHITE, CELL_SIZE / 4.0f);
+	// 今のゴール(不透明)
+	DrawGoalAt(screenX, 255);
 
-	DrawGoalGround(screenX);
-
+	// つかんでいる間は、移動先にも半透明で描く
+	if (isGrabbing)
+	{
+		const float targetScreenX = targetX * CELL_SIZE - offsetX;
+		DrawGoalAt(targetScreenX, 100);
+	}
 }
 
 void VGoalLine::DrawGoalGround(const float screenX) const
@@ -45,4 +41,16 @@ void VGoalLine::DrawGoalGround(const float screenX) const
 	// 下の地面:ステージの下端から、厚さの分だけ上
 	const float stageBottom = STAGE_HEIGHT * CELL_SIZE;
 	DrawBox(screenX, stageBottom - groundH, screenX + CELL_SIZE, stageBottom, BROWN, TRUE);
+}
+
+// 画面上の x の位置に、ゴールを1本描く(alpha:255 で不透明、小さいほど透ける)
+void VGoalLine::DrawGoalAt(float screenX, int alpha) const
+{
+	const FloatXY topPos = { screenX, 0.0f };
+	const FloatXY bottomPos = { screenX + CELL_SIZE / 2.0f, static_cast<float>(STAGE_SCREEN_H) };
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	DrawCheckered(topPos, bottomPos, BLACK, WHITE, CELL_SIZE / 4.0f);
+	DrawGoalGround(screenX);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }

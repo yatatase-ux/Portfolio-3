@@ -9,10 +9,35 @@
 
 class Camera;
 
+// 画像の中で、キャラクターがどこにどれくらいの大きさで描かれているか
+// (画像編集ソフトで1コマを開いて、ピクセル数を測って入れる)
+struct SpriteInfo
+{
+	float footOffset;  // 1コマの下端から、足の裏までの透明な余白(ピクセル)
+	float charHeight;  // 頭のてっぺんから足の裏までの高さ(ピクセル)
+};
+
+// 画像ごとの情報(値は仮。実際の画像で測って置き換える)
+static constexpr SpriteInfo WALK_SIDE_INFO = { 67.0f, 390.0f };
+static constexpr SpriteInfo JUMP_SIDE_INFO = { 20.0f, 254.0f };
+static constexpr SpriteInfo GRA_CHANGE_INFO = { 20.0f, 360.0f };
+
 class Player
 {
 	KeyAction& key;				// キー入力の参照	
 	Stage& stage;				// ステージの参照
+
+	int walkImageSide[8];
+	int walkImageTop[8];
+	int walkAnim;
+	int GraChengeImage[10];
+	bool graAnim = false;
+	int animCount;
+
+	bool reverseX;				// TRUEなら左向き
+	bool reverseY;				// TUREなら上下逆さ
+	int jumpImageSide;
+	int jumpImageTop;
 
 	GravityDir currentGravity;	// 現在の重力状態
 
@@ -72,6 +97,9 @@ private:
 	void CheckOutOfStage(FloatXY size);
 
 	void SetCrouch(bool wantCrouch);
+
+	void DrawSprite(int handle, const SpriteInfo& info,
+		FloatXY footPos, float height, bool upsideDown) const;
 
 };
 

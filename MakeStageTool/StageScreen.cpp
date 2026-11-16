@@ -20,6 +20,9 @@ StageScreen::StageScreen(StageData& s)
 
 	isInScreen = false;
 
+	leftAction = LeftAction::None;
+	prevLeft = false;
+
 	offsetX = 0;
 
 	isRightDragging = false;   
@@ -67,7 +70,7 @@ void StageScreen::Input(FloatXY mouse, BlockType block, Layer layer)
 		selectY >= 0 && selectY < STAGE_HEIGHT;
 
 
-	if (cStage->IsPainting())
+	if (leftAction != LeftAction::None)
 	{
 		// 端から何ピクセル以内でスクロールを始めるか
 		const int EDGE = 40;
@@ -89,7 +92,7 @@ void StageScreen::Input(FloatXY mouse, BlockType block, Layer layer)
 		ClampOffset();
 	}
 
-	cStage->Input(selectX, selectY, isInScreen, inStageArea, block, layer);
+	InputLeft(mouse, block, layer);
 }
 
 void StageScreen::ScrollScreen(FloatXY mouse, bool inStageArea)
@@ -129,12 +132,86 @@ void StageScreen::ClampOffset()
 {
 	const int cell = static_cast<int>(CELL_SIZE);
 
-	// スクロールできる一番右(ステージの幅 − 表示領域の幅)
-	// ステージが表示領域より狭いときはマイナスになるので、0 で止める
-	// (下限 > 上限 で clamp を呼ぶとエラーになるのを防ぐ)
-	const int maxOffset = (std::max)(0, (size + 1) * cell - STAGE_SCREEN_W);
+	// スクロールできる範囲の基準になる幅(ゴールの列まで含める)
+	int viewWidth = size + 1;
+
+	// ゴールをつかんでいる間は、移動先より先まで見えるようにする
+	// (今の幅のままだと、今のゴールより右へスクロールできないため)
+	if (leftAction == LeftAction::Goal)
+	{
+		// 移動先の右に、何列ぶん余裕を持たせるか
+		const int GOAL_SCROLL_MARGIN = 5;
+
+		// 今の幅と移動先の、大きいほう + 余裕
+		viewWidth = (std::max)(size, cGoal->GetTargetX()) + 1 + GOAL_SCROLL_MARGIN;
+	}
+
+	// スクロールできる一番右(基準の幅 − 表示領域の幅)
+	// 表示領域より狭いときはマイナスになるので、0 で止める
+	const int maxOffset = (std::max)(0, viewWidth * cell - STAGE_SCREEN_W);
 
 	offsetX = std::clamp(offsetX, 0, maxOffset);
+}
+void StageScreen::InputLeft(FloatXY mouse, BlockType block, Layer layer)
+{
+	const bool inputLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
+
+	// ---- 押した瞬間:この操作が誰のものかを決める ----
+	// 「今押されていて、前のフレームは押されていなかった」= 押した瞬間
+	if (inputLeft && !prevLeft)
+	{
+		if (isInScreen && selectX == size)
+		{
+			// ゴールの列の上で押した → ゴールをつかむ
+			leftAction = LeftAction::Goal;
+			cGoal->Begin(selectX);
+		}
+		else if (isInScreen)
+		{
+			// ステージの中で押した → ブロックを塗る
+			leftAction = LeftAction::Paint;
+		}
+		else
+		{
+			// パネルの上などで押した → ステージ枠の操作ではない
+			// (押したままステージに入っても、何も始まらない)
+			leftAction = LeftAction::None;
+		}
+	}
+
+	// ---- 押している間:決めた相手にだけ渡し続ける ----
+	if (inputLeft)
+	{
+		switch (leftAction)
+		{
+		case LeftAction::Paint:
+			// 塗る(置いていいマスを指しているときだけ置く、は CStage の中で判断)
+			cStage->Paint(selectX, selectY, isInScreen, block, layer);
+			break;
+
+		case LeftAction::Goal:
+			// ゴールの移動先を更新する(まだデータは変えない)
+			cGoal->Drag(selectX);
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	// ---- 離した瞬間:相手に伝えて、終わる ----
+	if (!inputLeft && prevLeft)
+	{
+		if (leftAction == LeftAction::Goal)
+		{
+			// ここで初めて、ステージの長さを確定する
+			cGoal->End();
+		}
+		leftAction = LeftAction::None;
+	}
+
+	// 次のフレームのために、今の状態を覚えておく
+	prevLeft = inputLeft;
 }
 
 void StageScreen::Draw(Layer layer)
@@ -143,7 +220,7 @@ void StageScreen::Draw(Layer layer)
 	vStage->Draw(stage, layer, offsetX);
 
 	// ゴールライン
-	vGoal->Draw(size, offsetX);
+	vGoal->Draw(size, offsetX, cGoal->IsGrabbing(), cGoal->GetTargetX());
 
 	// ---- 選択中のマスの枠 ----(今はここに残す)
 	if (isInScreen)

@@ -119,6 +119,33 @@ void StageData::ExtendWidth(int newWidth)
 	}
 }
 
+// ステージの横幅を newWidth まで縮める(今より長い値なら何もしない)
+// 横用と見下ろし用を必ず一緒に縮めて、2つの幅をそろえておく
+void StageData::ShrinkWidth(int newWidth)
+{
+	// 0 以下に縮めると、ステージがなくなってしまうので止める
+	if (newWidth < 31) return;
+
+	// 横用:newWidth より長い行は、後ろを削る
+	for (auto& row : sideStage)
+	{
+		if (static_cast<int>(row.size()) > newWidth)
+		{
+			// 短くするときは、後ろが削られるだけなので、埋める値は要らない
+			row.resize(newWidth);
+		}
+	}
+
+	// 見下ろし用:同じく、後ろを削る
+	for (auto& row : topStage)
+	{
+		if (static_cast<int>(row.size()) > newWidth)
+		{
+			row.resize(newWidth);
+		}
+	}
+}
+
 void StageData::SetBlockType(Layer layer, int x, int y, BlockType block)
 {
 	const int width = GetStageSize();

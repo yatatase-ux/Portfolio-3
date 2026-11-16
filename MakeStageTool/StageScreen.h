@@ -11,6 +11,14 @@
 #include "CGoalLine.h"
 #include "VGoalLine.h"
 
+// 今の左クリックの操作が、誰のものか
+enum class LeftAction
+{
+	None,   // 何もしていない
+	Paint,  // ブロックを塗っている(CStage)
+	Goal,   // ゴールをつかんでいる(CGoalLine)
+};
+
 class StageScreen
 {
 	StageData& stage;
@@ -20,6 +28,9 @@ class StageScreen
 	int selectY;
 
 	bool isInScreen;
+
+	LeftAction leftAction;
+	bool prevLeft;
 
 	// ---- スクロール ----
 	// どこを映しているか(ステージの左端から何ピクセル右が、画面の左端に来ているか)
@@ -55,4 +66,6 @@ private:
 	// 画面上の x <--> ワールドの x(描くときと、マウスで指すときで逆向きに使う)
 	int WorldToScreenX(int worldX) const { return worldX - offsetX; }
 	int ScreenToWorldX(int screenX) const { return screenX + offsetX; }
+
+	void InputLeft(FloatXY mouse, BlockType block, Layer layer);
 };

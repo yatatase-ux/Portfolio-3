@@ -8,27 +8,11 @@ CStage::CStage(StageData& s)
 	isPainting = false;
 }
 
-void CStage::Input(int cellX, int cellY, bool onCell, bool inStageArea,
-	BlockType block, Layer layer)
+void CStage::Paint(int cellX, int cellY, bool onCell, BlockType block, Layer layer)
 {
-	const bool inputLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
-	if (inputLeft && !isPainting)
-	{
-		if (!isLeftDown && inStageArea)
-		{
-			isPainting = true;
-		}
-		isLeftDown = true;
-	}
-	else if (!inputLeft)
-	{
-		isLeftDown = false;
-		isPainting = false;
-	}
+	// パネルの上など、置いてはいけない場所を指しているときは何もしない
+	if (!onCell) return;
 
-	if (isPainting && onCell)
-	{
-		stage.SetBlockType(layer, cellX, cellY, block);
-	}
-
+	// 置く(ゴールの列なら、StageData がステージを1列伸ばしてから置く)
+	stage.SetBlockType(layer, cellX, cellY, block);
 }

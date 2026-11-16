@@ -14,12 +14,12 @@ class CStage
 public:
 	CStage(StageData& s);
 
+	// 塗る操作の途中で、毎フレーム呼ばれる
 	// cellX, cellY :マウスが指しているマス
 	// onCell       :置いていいマスを指しているか(ステージの中かゴールの列)
-	// inStageArea  :マウスがステージ枠の中か(押し始めの判定に使う)
 	// block, layer :何を、どのレイヤーに置くか
-	void Input(int cellX, int cellY, bool onCell, bool inStageArea,
-		BlockType block, Layer layer);
+	void Paint(int cellX, int cellY, bool onCell, BlockType block, Layer layer);
+
 
 	// 塗っている途中か(StageScreen が端の自動スクロールに使う)
 	bool IsPainting() const { return isPainting; }
