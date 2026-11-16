@@ -29,6 +29,7 @@ Player::Player(KeyAction& arg_key, Stage& arg_stage, GravityDir gra)
 		4, 2,        // 横に何コマ、縦に何コマ並んでいるか
 		1536 / 4, 1024 / 2,
 		walkImageTop);       // 分けた画像が、ここに順番に入る
+	topDir = TopDir::Right;
 	walkAnim = 0;
 	animCount = 0;
 	jumpImageSide = LoadGraph("Data/image/Player/player_jump_side.png");
@@ -134,18 +135,22 @@ FloatXYZ Player::Move()
 		if (key.Check(UP))
 		{
 			diff.y -= MOVE_SPEED;
+			topDir = TopDir::Up;
 		}
 		if (key.Check(DOWN))
 		{
 			diff.y += MOVE_SPEED;
+			topDir = TopDir::Down;
 		}
 		if (key.Check(RIGHT))
 		{
 			diff.x += MOVE_SPEED;
+			topDir = TopDir::Right;
 		}
 		if (key.Check(LEFT))
 		{
 			diff.x -= MOVE_SPEED;
+			topDir = TopDir::Left;
 		}
 	}
 	else
@@ -461,9 +466,9 @@ void Player::Draw(const Camera& camera)
 			? std::clamp(static_cast<int>(255 + worldPos.z * 1.2f), 0, 255)
 			: 255;
 
-
+		const float angle = static_cast<int>(topDir) * (DX_PI_F / 2.0f);
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);		
-		DrawRotaGraphF(sPos.x, sPos.y, size, 0.0f, image, TRUE, reverseX, isUpGravity);
+		DrawRotaGraphF(sPos.x, sPos.y, size, (angle), image, TRUE, reverseX, isUpGravity);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
 	else

@@ -17,6 +17,14 @@ struct SpriteInfo
 	float charHeight;  // 頭のてっぺんから足の裏までの高さ(ピクセル)
 };
 
+enum class TopDir
+{
+	Down,
+	Left,
+	Up,
+	Right
+};
+
 // 画像ごとの情報(値は仮。実際の画像で測って置き換える)
 static constexpr SpriteInfo WALK_SIDE_INFO = { 67.0f, 390.0f };
 static constexpr SpriteInfo JUMP_SIDE_INFO = { 20.0f, 254.0f };
@@ -29,6 +37,7 @@ class Player
 
 	int walkImageSide[8];
 	int walkImageTop[8];
+	TopDir topDir;
 	int walkAnim;
 	int GraChengeImage[10];
 	bool graAnim = false;
