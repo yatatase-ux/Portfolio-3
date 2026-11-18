@@ -88,6 +88,15 @@
     <ClCompile Include="Common\StringF.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="MPlayer.cpp">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayer.cpp">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="VPLayer.cpp">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -134,6 +143,15 @@
     </ClInclude>
     <ClInclude Include="SceneMainMenu.h">
       <Filter>ソース ファイル\Scene\2-MainMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="MPlayer.h">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayer.h">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="VPLayer.h">
+      <Filter>ソース ファイル\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

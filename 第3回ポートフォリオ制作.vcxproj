@@ -134,9 +134,11 @@
     <ClCompile Include="Common\Shape.cpp" />
     <ClCompile Include="Common\StageData.cpp" />
     <ClCompile Include="Common\StringF.cpp" />
+    <ClCompile Include="CPlayer.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GravityManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MPlayer.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneEnd.cpp" />
     <ClCompile Include="SceneInGame.cpp" />
@@ -144,13 +146,16 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="VPLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="1-SceneInclude.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CPlayer.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GravityDir.h" />
     <ClInclude Include="GravityManager.h" />
+    <ClInclude Include="MPlayer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="SceneBase.h" />
@@ -161,6 +166,7 @@
     <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="ScreenSize.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="VPLayer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
