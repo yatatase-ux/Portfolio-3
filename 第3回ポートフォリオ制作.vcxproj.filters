@@ -94,7 +94,7 @@
     <ClCompile Include="CPlayer.cpp">
       <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
-    <ClCompile Include="VPLayer.cpp">
+    <ClCompile Include="VPlayer.cpp">
       <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
   </ItemGroup>
@@ -150,7 +150,7 @@
     <ClInclude Include="CPlayer.h">
       <Filter>ソース ファイル\Player</Filter>
     </ClInclude>
-    <ClInclude Include="VPLayer.h">
+    <ClInclude Include="VPlayer.h">
       <Filter>ソース ファイル\Player</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,8 +1,10 @@
 #pragma once
-#include "MPlayer.h"
 #include "GravityDir.h"
+#include "FloatXY.h"
 
 class Camera;
+
+class MPlayer;
 
 // ‰¡‹“_‚Ì‰æ‘œ‚Ìî•ñ
 struct SideSpriteInfo

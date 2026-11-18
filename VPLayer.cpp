@@ -1,8 +1,9 @@
-#include "VPLayer.h"
+#include "VPlayer.h"
 #include "Camera.h"
 #include "Shape.h"
 #include "DxLib.h"
 #include <algorithm>
+#include "MPlayer.h"
 
 static constexpr float DEPTH_SCALE_RATE = 0.002f;  // z ‚É‘Î‚·‚é‘å‚«‚³‚Ì•Ï‚í‚è•û
 static constexpr float MIN_DEPTH_SCALE = 0.1f;    // ¬‚³‚­‚È‚è‚·‚¬‚È‚¢‚æ‚¤‚É

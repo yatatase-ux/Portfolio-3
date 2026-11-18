@@ -146,7 +146,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="VPLayer.cpp" />
+    <ClCompile Include="VPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="1-SceneInclude.h" />
@@ -166,7 +166,7 @@
     <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="ScreenSize.h" />
     <ClInclude Include="Stage.h" />
-    <ClInclude Include="VPLayer.h" />
+    <ClInclude Include="VPlayer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
