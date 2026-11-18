@@ -149,7 +149,7 @@
     <ClCompile Include="VPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="1-SceneInclude.h" />
+    <ClInclude Include="SceneInclude.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CPlayer.h" />
     <ClInclude Include="Game.h" />

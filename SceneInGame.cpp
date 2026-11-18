@@ -1,5 +1,5 @@
 #include "SceneInGame.h"
-#include "1-SceneInclude.h"
+#include "SceneInclude.h"
 #include "SceneEnd.h"
 
 // 引数付きのコンストラクタは SCENE_CONST マクロが使えないので普通に書く

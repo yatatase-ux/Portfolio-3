@@ -1,5 +1,5 @@
 #include "SceneTitle.h"
-#include "1-SceneInclude.h"
+#include "SceneInclude.h"
 #include "SceneMainMenu.h"
 
 SCENE_ENTER(SceneTitle)
