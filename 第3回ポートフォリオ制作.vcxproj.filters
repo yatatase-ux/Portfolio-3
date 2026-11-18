@@ -44,6 +44,12 @@
     <Filter Include="ソース ファイル\Scene\40-End">
       <UniqueIdentifier>{bf49a6df-a4a1-4b52-9192-d9b1482bdc8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Player\0-Core">
+      <UniqueIdentifier>{221ef08c-a744-4be8-b61e-83e484f691bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Player\MVC">
+      <UniqueIdentifier>{25dc9bcb-fc92-4f4a-9670-e42142dc3372}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,9 +66,6 @@
     </ClCompile>
     <ClCompile Include="SceneTitle.cpp">
       <Filter>ソース ファイル\Scene\10-Title</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル\Player</Filter>
     </ClCompile>
     <ClCompile Include="Stage.cpp">
       <Filter>ソース ファイル\Stage</Filter>
@@ -88,14 +91,17 @@
     <ClCompile Include="Common\StringF.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="MPlayer.cpp">
-      <Filter>ソース ファイル\Player</Filter>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル\Player\0-Core</Filter>
     </ClCompile>
     <ClCompile Include="CPlayer.cpp">
-      <Filter>ソース ファイル\Player</Filter>
+      <Filter>ソース ファイル\Player\MVC</Filter>
+    </ClCompile>
+    <ClCompile Include="MPlayer.cpp">
+      <Filter>ソース ファイル\Player\MVC</Filter>
     </ClCompile>
     <ClCompile Include="VPlayer.cpp">
-      <Filter>ソース ファイル\Player</Filter>
+      <Filter>ソース ファイル\Player\MVC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,9 +113,6 @@
     </ClInclude>
     <ClInclude Include="SceneInGame.h">
       <Filter>ソース ファイル\Scene\30-InGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ソース ファイル\Player</Filter>
     </ClInclude>
     <ClInclude Include="Stage.h">
       <Filter>ソース ファイル\Stage</Filter>
@@ -138,20 +141,23 @@
     <ClInclude Include="ScreenSize.h">
       <Filter>ソース ファイル\System</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerState.h">
-      <Filter>ソース ファイル\Player</Filter>
-    </ClInclude>
     <ClInclude Include="SceneMainMenu.h">
       <Filter>ソース ファイル\Scene\20-MainMenu</Filter>
     </ClInclude>
-    <ClInclude Include="MPlayer.h">
-      <Filter>ソース ファイル\Player</Filter>
+    <ClInclude Include="Player.h">
+      <Filter>ソース ファイル\Player\0-Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h">
+      <Filter>ソース ファイル\Player\0-Core</Filter>
     </ClInclude>
     <ClInclude Include="CPlayer.h">
-      <Filter>ソース ファイル\Player</Filter>
+      <Filter>ソース ファイル\Player\MVC</Filter>
+    </ClInclude>
+    <ClInclude Include="MPlayer.h">
+      <Filter>ソース ファイル\Player\MVC</Filter>
     </ClInclude>
     <ClInclude Include="VPlayer.h">
-      <Filter>ソース ファイル\Player</Filter>
+      <Filter>ソース ファイル\Player\MVC</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

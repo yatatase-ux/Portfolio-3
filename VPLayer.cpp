@@ -122,13 +122,19 @@ void VPlayer::Draw(const MPlayer& model, const Camera& camera) const
 			MIN_DEPTH_SCALE, MAX_DEPTH_SCALE);
 
 		// 足元(下重力なら下端、上重力なら上端)
-		const bool isUpGravity = (model.GetGravity() == GravityDir::Up);
+		const bool isUpGravity = (model.GetGravity() == GravityDir::Up);	// 上向き重力ならTRUE
 		const float footY = isUpGravity ? pos.y - pSize.y / 2.0f : pos.y + pSize.y / 2.0f;
 		const FloatXY footPos = camera.WorldToScreen({ pos.x, footY });
 
 		// 立ったときの背丈を基準にする(しゃがんでも大きさは変わらない)
 		const float height = model.GetSideSize().y * scale;
 		const bool faceLeft = model.IsFacingLeft();
+
+		const int image = model.IsCrouched() ? crouchImage :
+			model.IsOnGround() ? walkImageSide[walkAnim] : jumpImageSide;
+		const SideSpriteInfo info = model.IsCrouched() ? CROUCH_INFO :
+			model.IsOnGround() ? WALK_SIDE_INFO : JUMP_SIDE_INFO;
+		const double size = model.IsOnGround() ? 0.16 : 0.20;
 
 		if (graAnim)
 			DrawSideSprite(graChangeImage[graAnimCount], GRA_CHANGE_INFO, footPos, height, isUpGravity, faceLeft);
@@ -138,21 +144,37 @@ void VPlayer::Draw(const MPlayer& model, const Camera& camera) const
 			DrawSideSprite(walkImageSide[walkAnim], WALK_SIDE_INFO, footPos, height, isUpGravity, faceLeft);
 		else
 			DrawSideSprite(jumpImageSide, JUMP_SIDE_INFO, footPos, height, isUpGravity, faceLeft);
+
+		if (model.IsOffScreen())
+		{
+			FloatXY icon = camera.WorldToScreen({ pos.x, 50.0f });
+			icon.x = std::clamp(icon.x, 50.0f, 1280 - 50.0f);
+			icon.y = (model.GetGravity() == GravityDir::Down) ? 50.0f : 720.0f - 50.0f;
+			DrawCircle(icon.x, icon.y, 50.0f, GetColor(255, 0, 0), TRUE);
+			DrawCircle(icon.x, icon.y, 45.0f, GetColor(255, 255, 0), TRUE);
+
+			FloatXY pDraw = icon;
+			pDraw.y = isUpGravity ? pDraw.y - height / 2.0f : pDraw.y + height / 2.0f;
+			DrawSideSprite(image, JUMP_SIDE_INFO, pDraw, height, isUpGravity, faceLeft);
+		}
 	}
 
 	// ==== 画面外にいるときの吹き出し ====
 	if (model.IsOffScreen())
 	{
-		FloatXY icon = camera.WorldToScreen({ pos.x, 50.0f });
-		icon.x = std::clamp(icon.x, 50.0f, 1280 - 50.0f);
-		icon.y = (model.GetGravity() == GravityDir::Down) ? 50.0f : 720.0f - 50.0f;
-		DrawCircle(icon.x, icon.y, 50.0f, GetColor(255, 0, 0), TRUE);
-		DrawCircle(icon.x, icon.y, 45.0f, GetColor(255, 255, 0), TRUE);
+		//FloatXY icon = camera.WorldToScreen({ pos.x, 50.0f });
+		//icon.x = std::clamp(icon.x, 50.0f, 1280 - 50.0f);
+		//icon.y = (model.GetGravity() == GravityDir::Down) ? 50.0f : 720.0f - 50.0f;
+		//DrawCircle(icon.x, icon.y, 50.0f, GetColor(255, 0, 0), TRUE);
+		//DrawCircle(icon.x, icon.y, 45.0f, GetColor(255, 255, 0), TRUE);
 
-		const bool isUpGravity = (model.GetGravity() == GravityDir::Up);
-		const int image = model.IsOnGround() ? walkImageSide[walkAnim] : jumpImageSide;
-		const double size = model.IsOnGround() ? 0.16 : 0.20;
-		DrawRotaGraphF(icon.x, icon.y, size, 0.0f, image, TRUE, model.IsFacingLeft(), isUpGravity);
+		//const bool isUpGravity = (model.GetGravity() == GravityDir::Up);
+		//const int image = model.IsCrouched() ? crouchImage :
+		//	              model.IsOnGround() ? walkImageSide[walkAnim] : jumpImageSide;
+		//const SideSpriteInfo info = model.IsCrouched() ? CROUCH_INFO :
+		//	model.IsOnGround() ? WALK_SIDE_INFO : JUMP_SIDE_INFO;
+		//const double size = model.IsOnGround() ? 0.16 : 0.20;
+//		DrawSideSprite(image, JUMP_SIDE_INFO, footPos, height, isUpGravity, faceLeft);
 	}
 
 	DrawFormatString(20, 45, GetColor(255, 255, 255), "%f", pos.z);
