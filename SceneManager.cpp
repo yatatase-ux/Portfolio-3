@@ -2,22 +2,22 @@
 #include "SceneBase.h"
 
 SceneManager::SceneManager(std::unique_ptr<SceneBase> initialState)
-	:currentState(std::move(initialState)), isRunning(true), gameTime(0.0f)
+	:currentScene(std::move(initialState)), isRunning(true), gameTime(0.0f)
 {
-	currentState->Enter(this);
+	currentScene->Enter(this);
 }
 
 void SceneManager::ChangeState(std::unique_ptr<SceneBase> newState)
 {
-	currentState->Exit(this);
-	currentState = std::move(newState);
-	currentState->Enter(this);
+	currentScene->Exit(this);
+	currentScene = std::move(newState);
+	currentScene->Enter(this);
 }
 
 void SceneManager::Update(float deltaTime)
 {
 	gameTime += deltaTime;
 
-	currentState->Update(this, deltaTime, &key);
-	currentState->Draw();
+	currentScene->Update(this, deltaTime, &key);
+	currentScene->Draw();
 }

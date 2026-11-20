@@ -142,6 +142,9 @@
     <ClCompile Include="ControlPanel.cpp" />
     <ClCompile Include="CPalette.cpp" />
     <ClCompile Include="CStage.cpp" />
+    <ClCompile Include="EditStage.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SelectStage.cpp" />
     <ClCompile Include="VGoalLine.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="CGoalLine.cpp" />
@@ -159,8 +162,12 @@
     <ClInclude Include="ControlPanel.h" />
     <ClInclude Include="CPalette.h" />
     <ClInclude Include="CStage.h" />
+    <ClInclude Include="EditStage.h" />
     <ClInclude Include="PaletteLayout.h" />
     <ClInclude Include="PanelLayout.h" />
+    <ClInclude Include="SceneBase.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SelectStage.h" />
     <ClInclude Include="VGoalLine.h" />
     <ClInclude Include="GameLoop.h" />
     <ClInclude Include="CGoalLine.h" />

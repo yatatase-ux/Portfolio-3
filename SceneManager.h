@@ -6,7 +6,7 @@ class SceneBase;
 
 class  SceneManager
 {
-	std::unique_ptr<SceneBase> currentState;
+	std::unique_ptr<SceneBase> currentScene;
 	bool isRunning;
 	float gameTime;
 	KeyAction key;

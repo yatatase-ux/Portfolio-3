@@ -26,6 +26,18 @@
     <Filter Include="ソース ファイル\Panel\Palete">
       <UniqueIdentifier>{0be91dbe-ed03-498e-86b3-00fb10f50031}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{2f3beaa3-d323-48f9-b0bb-7be4ac70669d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\00-Manager/Base">
+      <UniqueIdentifier>{c4b0a0d1-fad7-4802-bb4a-7ba1d0ed726d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\10-SelectStage">
+      <UniqueIdentifier>{f4b15fad-3476-4642-8b7f-f61057f1b78c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene\20-EditStage">
+      <UniqueIdentifier>{f1407b7d-d55a-495b-8df7-cd315bd33f97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -72,6 +84,15 @@
     </ClCompile>
     <ClCompile Include="CPalette.cpp">
       <Filter>ソース ファイル\Panel\Palete</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>ソース ファイル\Scene\00-Manager/Base</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectStage.cpp">
+      <Filter>ソース ファイル\Scene\10-SelectStage</Filter>
+    </ClCompile>
+    <ClCompile Include="EditStage.cpp">
+      <Filter>ソース ファイル\Scene\20-EditStage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +146,18 @@
     </ClInclude>
     <ClInclude Include="PanelLayout.h">
       <Filter>ソース ファイル\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneBase.h">
+      <Filter>ソース ファイル\Scene\00-Manager/Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>ソース ファイル\Scene\00-Manager/Base</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectStage.h">
+      <Filter>ソース ファイル\Scene\10-SelectStage</Filter>
+    </ClInclude>
+    <ClInclude Include="EditStage.h">
+      <Filter>ソース ファイル\Scene\20-EditStage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
