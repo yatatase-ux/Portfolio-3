@@ -1,6 +1,7 @@
 #include "SceneMainMenu.h"
 #include "SceneInclude.h"
 #include "SceneInGame.h"
+#include "StageData.h"
 #include <fstream>
 #include <string>
 #include <algorithm>
@@ -10,25 +11,6 @@ SceneMainMenu::~SceneMainMenu()
 	DeleteGraph(BG);
 }
 
-int SceneMainMenu::CountStages()
-{
-	int count = 0;
-
-	while (true)
-	{
-		// 今の番号のファイル名を組み立てる(Load と同じルール)
-		const std::string path = "StageInfo/CSV/Stage" + std::to_string(count) + "_side.csv";
-
-		// 開けなければ、そこでステージは終わり
-		std::ifstream file(path);
-		if (!file.is_open()) break;
-
-		count++;
-	}
-
-	return count;
-}
-
 SCENE_ENTER(SceneMainMenu)
 {
 	BG = LoadGraph("Data/image/BG/MainMenuBG.jpg");
@@ -36,7 +18,7 @@ SCENE_ENTER(SceneMainMenu)
 	baseX = SCREEN_W / 2.0f;
 
 	currentSelectStage = 0;
-	stageMax = CountStages();
+	stageMax = StageData::CountStages();
 
 	// メニューに戻ってきたときに、前のアイコンが残らないようにする
 	stageIcon.clear();

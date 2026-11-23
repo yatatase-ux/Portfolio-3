@@ -9,6 +9,7 @@
 class EditStage : public SceneBase
 {
 	StageData stage;
+	int stageNum;
 	std::unique_ptr<StageScreen> stageScreen;
 	std::unique_ptr<ControlPanel> controlPanel;
 
@@ -19,6 +20,8 @@ class EditStage : public SceneBase
 	bool prevSaveKey = false;  // ‘O‚ÌƒtƒŒ[ƒ€‚Å Ctrl+S ‚ª‰Ÿ‚³‚ê‚Ä‚¢‚½‚©
 
 public:
+
+	EditStage(int s);
 
 	SCENE_CLASS(EditStage);
 

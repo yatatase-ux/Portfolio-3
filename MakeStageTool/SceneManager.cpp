@@ -20,6 +20,9 @@ void SceneManager::Update(float deltaTime)
 {
 	gameTime += deltaTime;
 
-	currentScene->Update(this, deltaTime, &key);
+	mouse.Update();
+
+	currentScene->Input(this, deltaTime, &key, &mouse);
+	currentScene->Update(this, deltaTime);
 	currentScene->Draw();
 }

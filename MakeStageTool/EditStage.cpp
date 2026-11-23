@@ -1,17 +1,26 @@
 #include "EditStage.h"
+#include "SelectStage.h"
+
 #include <ctime>	
 #include "DxLib.h"
 #include <iostream>
 #include "StringF.h"
 #include "ScreenSize.h"
 #include "PanelLayout.h"
+#include "SceneManager.h"
+
+EditStage::EditStage(int s)
+	:stageNum(s)
+{
+
+}
 
 SCENE_ENTER(EditStage)
 {
 	// =======================================
 	//  初期化処理
 	// =======================================
-	stage.OpenFile(2);
+	stage.OpenFile(stageNum);
 	stageScreen = std::make_unique<StageScreen>(stage);
 	controlPanel = std::make_unique<ControlPanel>();
 	currentLayer = Layer::Side;
@@ -23,12 +32,14 @@ SCENE_INPUT(EditStage)
 	if (CheckHitKey(KEY_INPUT_2)) currentLayer = Layer::Side;
 	if (CheckHitKey(KEY_INPUT_3)) currentLayer = Layer::Top;
 
-	int mouseX;
-	int mouseY;
-	GetMousePoint(&mouseX, &mouseY);
-	FloatXY mouse = { (float)mouseX, (float)mouseY };
-	stageScreen->Input(mouse, controlPanel->GetSelectedBlock(), currentLayer);
-	controlPanel->Input(mouse, currentLayer);
+	if (key->Push(TAB))
+	{
+		manager->ChangeState(std::make_unique<SelectStage>());
+		return;
+	}
+
+	stageScreen->Input(mouse->GetPos(), controlPanel->GetSelectedBlock(), currentLayer);
+	controlPanel->Input(mouse->GetPos(), currentLayer);
 
 	// ---- Ctrl + S で保存 ----
 	const bool ctrl = CheckHitKey(KEY_INPUT_LCONTROL) || CheckHitKey(KEY_INPUT_RCONTROL);
@@ -50,8 +61,6 @@ SCENE_INPUT(EditStage)
 
 SCENE_UPDATE(EditStage)
 {
-	Input();
-
 	// メッセージの残り時間を減らす
 	if (messageTimer > 0)
 	{

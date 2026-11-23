@@ -1,11 +1,12 @@
 #include "GameLoop.h"
 #include "DxLib.h"
 #include <iostream>
+#include "SelectStage.h"
 #include "EditStage.h"
 #include "SceneBase.h"
 
 GameLoop::GameLoop()
-	:SM(std::make_unique<SceneManager>(std::make_unique<EditStage>()))
+	:SM(std::make_unique<SceneManager>(std::make_unique<SelectStage>()))
 {
 	
 }

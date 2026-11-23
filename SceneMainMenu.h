@@ -23,6 +23,6 @@ public:
 	SCENE_CLASS(SceneMainMenu);
 
 private:
-	int CountStages();
+
 };
 

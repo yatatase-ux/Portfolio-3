@@ -4,12 +4,31 @@
 #include <sstream>   // std::stringstream(文字列の分割)
 #include "StageConst.h"
 
+int StageData::CountStages()
+{
+	int count = 0;
+
+	while (true)
+	{
+		// 今の番号のファイル名を組み立てる(Load と同じルール)
+		const std::string path = MakeBasePath(count) + "_side.csv";
+
+		// 開けなければ、そこでステージは終わり
+		std::ifstream file(path);
+		if (!file.is_open()) break;
+
+		count++;
+	}
+
+	return count;
+}
+
 bool StageData::OpenFile(int arg_stageNum)
 {
 	stageNum = arg_stageNum;
 
 	// ファイル名の共通部分(例:"StageInfo/CSV/Stage0")
-	const std::string base = "StageInfo/CSV/Stage" + std::to_string(stageNum);
+	const std::string base = MakeBasePath(stageNum);
 
 	// 横用と見下ろし用を、同じ関数で読み込む
 	return LoadCSV(base + "_side.csv", sideStage) &&
@@ -207,7 +226,7 @@ SaveResult StageData::CanSave() const
 bool StageData::OutPutCSV() const
 {
 	// ファイル名のルールは、OpenFile と同じ(例:"StageInfo/CSV/Stage0")
-	const std::string base = "StageInfo/CSV/Stage" + std::to_string(stageNum);
+	const std::string base = MakeBasePath(stageNum);
 
 	return SaveCSV(base + "_side.csv", sideStage) &&
 		SaveCSV(base + "_top.csv", topStage);

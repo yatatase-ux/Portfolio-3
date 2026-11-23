@@ -3,6 +3,7 @@
 
 class SceneManager;
 class KeyAction;
+class MouseAction;
 
 class SceneBase
 {
@@ -11,7 +12,8 @@ public:
 	// 派生クラス(EditStage など)のデストラクタも正しく呼ばれるように、仮想にする
 	virtual ~SceneBase() = default;
 	virtual void Enter(SceneManager* manager) = 0;
-	virtual void Update(SceneManager* manager, float deltaTime, KeyAction* key) = 0;
+	virtual void Input(SceneManager* manager, float deltaTime, KeyAction* key, MouseAction* mouse) = 0;
+	virtual void Update(SceneManager* manager, float deltaTime) = 0;
 	virtual void Exit(SceneManager* manager) = 0;
 	/*　シーンの切り替わり処理（例：フェードイン・フェードアウトなど）を
 　　実装するのに非常に使える　*/
@@ -22,8 +24,8 @@ public:
 
 #define SCENE_CLASS(className)\
 	void Enter(SceneManager*  manager);\
-	void Input();\
-	void Update(SceneManager* manager, float deltaTime, KeyAction* key);\
+	void Input(SceneManager* manager, float deltaTime, KeyAction* key, MouseAction* mouse);\
+	void Update(SceneManager* manager, float deltaTime);\
 	void Exit(SceneManager*   manager);\
 	const std::string GetName()const { return #className; };\
 	void Draw();
@@ -32,10 +34,10 @@ public:
 void className::Enter(SceneManager* manager)
 
 #define SCENE_INPUT(className)\
-void className::Input()
+void className::Input(SceneManager* manager,float deltaTime, KeyAction* key, MouseAction* mouse)
 
 #define SCENE_UPDATE(className)\
-void className::Update(SceneManager*  manager, float deltaTime, KeyAction* key)
+void className::Update(SceneManager*  manager, float deltaTime)
 
 #define SCENE_EXIT(className)\
 void className::Exit(SceneManager*  manager)

@@ -20,6 +20,8 @@ class StageData
 	
 public:
 
+	static int CountStages();
+
 	/// <summary>
 	/// ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
 	/// </summary>
@@ -81,4 +83,8 @@ private:
 	bool LoadCSV(const std::string& path, std::vector<std::vector<BlockType>>& out);
 	int CountStarts() const;
 	bool SaveCSV(const std::string& path, const std::vector<std::vector<BlockType>>& data) const;
+	static std::string MakeBasePath(int num)
+	{
+		return "StageInfo/CSV/Stage" + std::to_string(num);
+	}
 };
