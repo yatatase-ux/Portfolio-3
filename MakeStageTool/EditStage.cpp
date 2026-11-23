@@ -12,7 +12,6 @@ SCENE_ENTER(EditStage)
 	//  ‰Šú‰»ˆ—
 	// =======================================
 	stage.OpenFile(2);
-	int size = stage.GetStageSize();
 	stageScreen = std::make_unique<StageScreen>(stage);
 	controlPanel = std::make_unique<ControlPanel>();
 	currentLayer = Layer::Side;
