@@ -15,11 +15,14 @@ Stage::Stage()
 	startIndex = { -1, -1 };
 	hasStart = false;
 	BG = -1;
+//	sGroundImage = LoadGraph("Data/image/Block/ground_side.png");
+	LoadDivGraph("Data/image/Block/ground_side.png", 9, 3, 3, 1254 / 3, 1254 / 3, sGroundImage);
 }
 
 Stage::~Stage()
 {
-
+//	DeleteGraph(sGroundImage);
+	DeleteGraph(BG);
 }
 
 bool Stage::Load(const std::string& name)

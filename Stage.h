@@ -27,6 +27,7 @@ class Stage
 	FloatXY goalPos;
 
 	int BG;
+	int sGroundImage[9];
 
 public:
 
