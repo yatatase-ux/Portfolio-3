@@ -2,7 +2,13 @@
 #include "DxLib.h" 
 #include <fstream>   // std::ifstream(ファイル読み込み)
 #include <sstream>   // std::stringstream(文字列の分割)
+#include <filesystem>   // std::filesystem(ファイルのコピーや、あるかどうかの確認)
 #include "StageConst.h"
+
+std::string StageData::MakeBasePath(int num)
+{
+	return "StageInfo/CSV/Stage" + std::to_string(num);
+}
 
 int StageData::CountStages()
 {
@@ -271,4 +277,29 @@ bool StageData::SaveCSV(const std::string& path,
 	}
 
 	return true; // 書き出し成功
+}
+// そのステージの背景画像がなければ、共通の背景画像をコピーして作る
+// (すでにある場合は、自分で差し替えた絵を消さないように何もしない)
+// 戻り値:背景画像が用意できたか(もともとあった場合も true)
+bool StageData::PrepareStageBG(int stageNum)
+{
+	namespace fs = std::filesystem;
+
+	// コピー元:共通の背景画像
+	const fs::path src = "Data/image/BG/Default_BG.jpg";
+
+	// コピー先:ゲームが読み込む名前(Stage::BGLoad と同じルール)
+	const fs::path dst = "Data/image/BG/Stage" + std::to_string(stageNum) + "_BG.jpg";
+
+	// すでに背景がある → 上書きしない
+	if (fs::exists(dst))
+	{
+		return true;
+	}
+
+	// コピーする(失敗しても例外を投げないように、error_code で結果を受け取る)
+	std::error_code ec;
+	fs::copy_file(src, dst, ec);
+
+	return !ec;   // ec に何も入っていなければ成功
 }

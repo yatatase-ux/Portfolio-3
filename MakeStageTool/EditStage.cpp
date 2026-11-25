@@ -112,7 +112,16 @@ void EditStage::Save()
 	{
 	case SaveResult::OK:
 		// Šm”F‚ª’Ê‚Á‚½‚Æ‚«‚¾‚¯‘‚«o‚·B‘‚«o‚µ©‘Ì‚Ì¸”s‚à“`‚¦‚é
-		saveMessage = stage.OutPutCSV() ? "•Û‘¶‚µ‚Ü‚µ‚½" : "•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½";
+		if (stage.OutPutCSV())
+		{
+			// CSV ‚ğ‘‚«o‚¹‚½‚çA”wŒi‰æ‘œ‚à—pˆÓ‚·‚é(‚È‚¯‚ê‚Î‹¤’Ê‚Ì”wŒi‚ğƒRƒs[)
+			saveMessage = stage.PrepareStageBG(stageNum) ? "•Û‘¶‚µ‚Ü‚µ‚½"
+				: "•Û‘¶‚µ‚Ü‚µ‚½(”wŒi‰æ‘œ‚Ì—pˆÓ‚É¸”s)";
+		}
+		else
+		{
+			saveMessage = "•Û‘¶‚É¸”s‚µ‚Ü‚µ‚½";
+		}
 		break;
 
 	case SaveResult::NoStart:

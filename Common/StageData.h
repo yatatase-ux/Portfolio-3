@@ -81,12 +81,11 @@ public:
 	/// <returns>³‚µ‚­‘‚«o‚¹‚½‚çTRUE</returns>
 	bool OutPutCSV() const;
 
+	bool PrepareStageBG(int stageNum);
+
 private:
 	bool LoadCSV(const std::string& path, std::vector<std::vector<BlockType>>& out);
 	int CountStarts() const;
 	bool SaveCSV(const std::string& path, const std::vector<std::vector<BlockType>>& data) const;
-	static std::string MakeBasePath(int num)
-	{
-		return "StageInfo/CSV/Stage" + std::to_string(num);
-	}
+	static std::string MakeBasePath(int num);
 };
