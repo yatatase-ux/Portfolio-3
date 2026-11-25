@@ -20,7 +20,7 @@ public:
 private:
 
 	// マウススクロール処理
-	void MouseScroll();
+	void MouseScroll(MouseAction* mouse);
 
 	FloatXY IndexToBoxPos(int i);
 };

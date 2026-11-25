@@ -34,6 +34,13 @@ bool StageData::OpenFile(int arg_stageNum)
 	return LoadCSV(base + "_side.csv", sideStage) &&
 		   LoadCSV(base + "_top.csv", topStage);
 }
+bool StageData::CreateFromTemplate(int newNum)
+{
+	stageNum = newNum;
+
+	return LoadCSV("StageInfo/CSV/Template_side.csv", sideStage) &&
+		   LoadCSV("StageInfo/CSV/Template_top.csv", topStage);
+}
 bool StageData::LoadCSV(const std::string& path, std::vector<std::vector<BlockType>>& out)
 {
 	// ---- 2. ファイルを開く ----
@@ -221,7 +228,6 @@ SaveResult StageData::CanSave() const
 	if (start > 1) return SaveResult::ManyStart;
 	return SaveResult::OK;
 }
-
 // 今開いているステージを、横用と見下ろし用の CSV に書き出す
 bool StageData::OutPutCSV() const
 {
@@ -231,7 +237,6 @@ bool StageData::OutPutCSV() const
 	return SaveCSV(base + "_side.csv", sideStage) &&
 		SaveCSV(base + "_top.csv", topStage);
 }
-
 bool StageData::SaveCSV(const std::string& path,
 	const std::vector<std::vector<BlockType>>& data) const
 {

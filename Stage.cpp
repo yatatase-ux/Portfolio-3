@@ -226,6 +226,7 @@ bool Stage::BGLoad(const std::string& name)
 	if (BG == -1)
 	{
 		printfDx("”wŒi‰æ‘œ“Ç‚İ‚İ¸”s: %s\n", path.c_str());
+//		BG = LoadGraph("Data/image/BG/Stage1_BG.jpg");
 		return false;
 	}
 	return true;

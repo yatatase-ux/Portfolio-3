@@ -29,6 +29,8 @@ public:
 	/// <returns>成功したらTRUE,失敗したらFALSE</returns>
 	bool OpenFile(int arg_stageNum);
 
+	bool CreateFromTemplate(int newNum);
+
 	/// <summary>
 	/// ステージサイズを得る関数
 	/// </summary>

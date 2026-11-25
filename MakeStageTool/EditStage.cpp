@@ -9,8 +9,8 @@
 #include "PanelLayout.h"
 #include "SceneManager.h"
 
-EditStage::EditStage(int s)
-	:stageNum(s)
+EditStage::EditStage(int s, bool isN)
+	:stageNum(s), isNewData(isN)
 {
 
 }
@@ -20,10 +20,26 @@ SCENE_ENTER(EditStage)
 	// =======================================
 	//  ‰Šú‰»ˆ—
 	// =======================================
-	stage.OpenFile(stageNum);
+	bool isLoaded;
+	if (isNewData)
+	{
+		isLoaded = stage.CreateFromTemplate(stageNum);
+	}
+	else
+	{
+		isLoaded = stage.OpenFile(stageNum);
+	}
+	if (!isLoaded)
+	{
+		manager->ChangeState(std::make_unique<SelectStage>());
+		return;
+	}
+
 	stageScreen = std::make_unique<StageScreen>(stage);
 	controlPanel = std::make_unique<ControlPanel>();
 	currentLayer = Layer::Side;
+	messageTimer = 0;
+	prevSaveKey = false;
 }
 
 SCENE_INPUT(EditStage)

@@ -33,31 +33,33 @@ SCENE_ENTER(SelectStage)
 /// </summary>
 SCENE_INPUT(SelectStage)
 {
-	MouseScroll();
+	MouseScroll(mouse);
 
 	if (mouse->Push(MouseButton::Left))
 	{
+		bool newData;
 		for (int i = 0; i < stageCount + 1; i++)
 		{
 			FloatXY boxPos = IndexToBoxPos(i);
 			if (mouse->CheckInBox(boxPos, boxSize))
 			{
 				selectStage = i;
+			    newData = (i == stageCount);
 			}
 		}
 		// どれかの項目をクリックしたときだけ切り替える
 		if (selectStage >= 0)
 		{
-			manager->ChangeState(std::make_unique<EditStage>(selectStage));
+			manager->ChangeState(std::make_unique<EditStage>(selectStage, newData));
 		}
 	}
 }
-void SelectStage::MouseScroll()
+void SelectStage::MouseScroll(MouseAction* mouse)
 {
 	// 前回この関数を呼んでから、ホイールがどれだけ回ったかを返す
 	// 奥(画面の上の方向)に回すとプラス、手前に回すとマイナス
 	// 1目盛り回すごとに 1 増える(減る)
-	const int wheel = GetMouseWheelRotVol();
+	const int wheel = mouse->GetWheel();
 	// 1目盛りで何ピクセル動かすか
 	const float SCROLL_SPEED = 60.0f;
 	// 奥に回す(プラス)と一覧が下に動いて、上のほうの項目が見えるようにする
