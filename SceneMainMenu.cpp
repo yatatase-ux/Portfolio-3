@@ -9,6 +9,7 @@
 SceneMainMenu::~SceneMainMenu()
 {
 	DeleteGraph(BG);
+	DeleteGraph(noImage);
 }
 
 SCENE_ENTER(SceneMainMenu)

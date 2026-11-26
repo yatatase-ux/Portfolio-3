@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include <algorithm>
+#include <cmath>   // std::round
 
 Camera::Camera()
 {
@@ -13,7 +14,7 @@ Camera::~Camera()
 
 FloatXY Camera::WorldToScreen(FloatXY worldPos) const
 {
-	return worldPos - FloatXY{ offsetX, 0.0f };
+	return { worldPos.x - std::round(offsetX), worldPos.y };
 }
 
 void Camera::Follow(FloatXYZ p_wPos, FloatXY stageSize)

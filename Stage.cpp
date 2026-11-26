@@ -17,11 +17,17 @@ Stage::Stage()
 	BG = -1;
 //	sGroundImage = LoadGraph("Data/image/Block/ground_side.png");
 	LoadDivGraph("Data/image/Block/ground_side.png", 9, 3, 3, 1254 / 3, 1254 / 3, sGroundImage);
+	LoadDivGraph("Data/image/Block/ground_top.png", 9, 3, 3, 1254 / 3, 1254 / 3, tGroundImage);
 }
 
 Stage::~Stage()
 {
-//	DeleteGraph(sGroundImage);
+	for(int i = 0; i < BLOCK_IMAGE_MAX; i++)
+	{
+		DeleteGraph(sGroundImage[i]);
+		DeleteGraph(tGroundImage[i]);
+	}
+
 	DeleteGraph(BG);
 }
 
@@ -219,7 +225,13 @@ bool Stage::TopLoad(const std::string& name)
 }
 
 bool Stage::BGLoad(const std::string& name)
-{
+{	
+	// 前に読み込んだ背景が残っていれば、先に消しておく(読み直したときに残らないように)
+	if (BG != -1)
+	{
+		DeleteGraph(BG);
+		BG = -1;
+	}
 	// ---- 1. ファイルパスを組み立てる ----
 	const std::string path = "Data/image/BG/" + name + "_BG.jpg";
 
@@ -267,7 +279,7 @@ void Stage::SetGravityDir(GravityDir g)
 	currentGravity = g;
 }
 
-void Stage::DrawLayer(const std::vector<std::vector<BlockType>>& layer,
+void Stage::DrawLayer(const std::vector<std::vector<BlockType>>& layer, const int* image,
 	BlockType type, unsigned int color, int alpha, const Camera& camera) const
 {
 	// マスの大きさは全マス共通なので、ループの外で1回だけ作る
@@ -281,13 +293,24 @@ void Stage::DrawLayer(const std::vector<std::vector<BlockType>>& layer,
 			// 描きたい種類以外は飛ばす
 			if (layer[h][w] != type) continue;
 
-			// マスの中心座標
+			int index = (h + w) % BLOCK_IMAGE_MAX;
+
+			// マスの中心座標11
 			const FloatXY worldPos = { CELL_SIZE * w + CELL_SIZE / 2.0f,
 								  CELL_SIZE * h + CELL_SIZE / 2.0f };
 
 			FloatXY screenPos = camera.WorldToScreen( worldPos );
 
-			DrawCenterBox(screenPos, size, color, TRUE);
+			if(image != nullptr)
+			{
+				const double rate = CELL_SIZE / (1254.0 / 3.0);
+				DrawRotaGraphF(screenPos.x, screenPos.y, rate, 0.0, image[index], TRUE);
+			}
+			else
+			{
+
+				DrawCenterBox(screenPos, size, color, TRUE);
+			}
 		}
 	}
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -301,14 +324,14 @@ void Stage::Draw(const Camera& camera)
 	// 下から順に重ねる(あとに描いたものが上に来る)
 //	DrawLayer(topStage,  BlockType::None,   GetColor(185, 255, 255), 255 - alpha, camera);	// 1. 見下ろしの穴
 //	DrawLayer(sideStage, BlockType::None,   GetColor(185, 255, 255), 128 + alpha, camera);	// 2. 横の空白
-	DrawLayer(topStage,  BlockType::Ground, GetColor(  0,   0,   0), 255 - alpha, camera);	// 3. 見下ろしの床
+	DrawLayer(topStage, tGroundImage,  BlockType::Ground, GetColor(  0,   0,   0), 255 - alpha, camera);	// 3. 見下ろしの床
 	
 	// ゴールライン
 	FloatXY g_sPos = camera.WorldToScreen({ goalPos.x, 0.0f });
 	FloatXY g_ePos = camera.WorldToScreen({ goalPos.x + CELL_SIZE / 2.0f, GetStageSize().y });
 	DrawCheckered(g_sPos, g_ePos, GetColor(255, 255, 255), GetColor(0, 0, 0), CELL_SIZE / 4.0f);
 
-	DrawLayer(sideStage, BlockType::Ground, GetColor(165,  42,  42), 128 + alpha, camera);	// 4. 横の地面
+	DrawLayer(sideStage, sGroundImage, BlockType::Ground, GetColor(165,  42,  42), 128 + alpha, camera);	// 4. 横の地面
 
 
 }

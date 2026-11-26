@@ -8,6 +8,7 @@ class SceneBase
 {
 protected:
 public:
+	virtual ~SceneBase() = default;
 	virtual void Enter(SceneManager* manager) = 0;
 	virtual void Update(SceneManager* manager, float deltaTime, KeyAction* key) = 0;
 	virtual void Exit(SceneManager* manager) = 0;

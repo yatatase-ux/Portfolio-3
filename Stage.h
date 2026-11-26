@@ -27,7 +27,10 @@ class Stage
 	FloatXY goalPos;
 
 	int BG;
+
+	const int BLOCK_IMAGE_MAX = 9;
 	int sGroundImage[9];
+	int tGroundImage[9];
 
 public:
 
@@ -113,6 +116,6 @@ private:
 
 	bool IsFloor(int row, int col) const;
 
-	void DrawLayer(const std::vector<std::vector<BlockType>>& layer,
+	void DrawLayer(const std::vector<std::vector<BlockType>>& layer,const int* image,
 		BlockType type, unsigned int color, int alpha, const Camera& camera) const;
 };
