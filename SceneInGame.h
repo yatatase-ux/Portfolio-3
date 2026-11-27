@@ -2,6 +2,16 @@
 #include "SceneBase.h"
 #include <memory>
 #include "GravityManager.h"
+#include "Player.h"
+#include "Stage.h"
+#include "Camera.h"
+
+enum class InGameState
+{
+	Playing,    // 遊んでいる最中(操作できる)
+	Clearing,   // クリアの演出中(自動で歩く、エフェクト、ズーム)
+	Missing,    // ミスの演出中(あとで作るなら)
+};
 
 class SceneInGame : public SceneBase
 {
@@ -9,7 +19,12 @@ class SceneInGame : public SceneBase
 	// コンストラクタで受け取り、Enter で Load に渡す
 	std::string stageName;
 
+	std::unique_ptr<Stage> stage;
 	std::unique_ptr<GravityManager> mGravity;
+	std::unique_ptr<Camera> camera;
+	std::unique_ptr<Player> player;
+
+	InGameState state;
 
 public:
 

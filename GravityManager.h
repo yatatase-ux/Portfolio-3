@@ -15,11 +15,8 @@ static constexpr int COMBO_WINDOW = 1 * SECOND_RATE; // 2‰ñ–Ú‚ğó‚¯•t‚¯‚éŠÔ(1•
 class GravityManager
 {
 	GravityDir gravity;
+	bool isChangeGravity;
 	KeyAction& key;
-
-	Stage stage;
-	std::unique_ptr<Player> player;
-	Camera camera;
 
 	int switchCooldown;			// d—Í‘€ì‚ÌƒN[ƒ‹ƒ_ƒEƒ“
 	int remainingSwitches;		// d—Í‘€ì‚Ìc‚è‰ñ”iÅ‘å‚Q˜A‘±‚Ü‚Åj
@@ -27,12 +24,15 @@ class GravityManager
 
 public:
 
-	GravityManager(const std::string stageNum, KeyAction& arg_key);
+	GravityManager(const std::string stageNum, KeyAction& arg_key, GravityDir sGra);
 	~GravityManager();
 
-	void Input();
-	PlayerState Update();
+	bool Input();
+	void Update();
 	void Draw();
+
+	bool IsChangeGravity() { return isChangeGravity; };
+	GravityDir GetCurrentGravity() { return gravity; };
 
 private:
 	bool CanSwitch() const;				// ¡AØ‚è‘Ö‚¦‚ç‚ê‚é‚©

@@ -50,6 +50,9 @@
     <Filter Include="ソース ファイル\Player\MVC">
       <UniqueIdentifier>{25dc9bcb-fc92-4f4a-9670-e42142dc3372}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Scene\30-InGame\Playing">
+      <UniqueIdentifier>{4a7d0871-f4fd-4acb-872e-4e399914dc71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

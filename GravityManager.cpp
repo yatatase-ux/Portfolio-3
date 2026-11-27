@@ -2,18 +2,11 @@
 #include "Shape.h"
 #include <algorithm>
 
-GravityManager::GravityManager(const std::string stageNum, KeyAction& arg_key)
-	:key(arg_key)
+GravityManager::GravityManager(const std::string stageNum, KeyAction& arg_key, GravityDir sGra)
+	:key(arg_key), gravity(sGra)
 {
-	gravity = GravityDir::Down;
-	if (!stage.Load(stageNum))
-	{
-		// 必要になったら、タイトルに戻すなどの処理をここに書く
-	}
-	gravity = stage.GetStartGravity();
-	stage.SetGravityDir(gravity);
+	isChangeGravity = false;
 
-	player = std::make_unique<Player>(key, stage, gravity);
 	switchCooldown = 0;
 	remainingSwitches = 0;
 	comboTimer = 0;
@@ -24,11 +17,13 @@ GravityManager::~GravityManager()
 
 }
 
-void GravityManager::Input()
+bool GravityManager::Input()
 {
 	// ---- どの重力に切り替えたいか ----
 	// Push は毎フレーム呼んでおく(呼ばないフレームがあると、押した判定がずれるため)
 	GravityDir next = gravity;
+	bool isChangeGra = false;
+
 	if (key.Push(ONE))   next = GravityDir::Down;
 	else if (key.Push(TWO))   next = GravityDir::Up;
 	else if (key.Push(THREE)) next = GravityDir::Back;
@@ -37,28 +32,22 @@ void GravityManager::Input()
 	if (next != gravity && CanSwitch())
 	{
 		ApplySwitch(next);
+		return true;
 	}
 
-	player->Input();
+	return false;
 }
 
-PlayerState GravityManager::Update()
+void GravityManager::Update()
 {
 	// タイマーを減らす(0 で止める)
 	if (switchCooldown > 0) switchCooldown--;
 	if (comboTimer > 0)     comboTimer--;
 
-	player->Update();
-	camera.Follow(player->GetPos(), stage.GetStageSize());
-
-	return player->GetState();
 }
 
 void GravityManager::Draw()
 {
-	stage.Draw(camera);
-	player->Draw(camera);
-
 	DrawFormatString(20, 20, GetColor(244, 255, 255), "%d", switchCooldown);
 	DrawFormatString(100, 20, GetColor(244, 255, 255), "%d", remainingSwitches);
 
@@ -80,10 +69,8 @@ void GravityManager::ApplySwitch(GravityDir next)
 	}
 	remainingSwitches--;
 
-	// 重力を切り替えて、プレイヤーとステージに知らせる
+	// 重力を切り替える
 	gravity = next;
-	player->GravityChange(gravity);
-	stage.SetGravityDir(gravity);
 
 	// 使うたびにクールダウンは3秒から(2回目ならリセットされる)
 	switchCooldown = SWITCH_COOLDOWN;
