@@ -36,48 +36,53 @@ SCENE_ENTER(SceneInGame)
 
 SCENE_UPDATE(SceneInGame)
 {
-	bool changeGra = mGravity->Input();
-	if (changeGra)
+	switch(state)
 	{
-		player->GravityChange(mGravity->GetCurrentGravity());
-		stage->SetGravityDir(mGravity->GetCurrentGravity());
-	}
-	player->Input();
+	case InGameState::Playing:
+	{
+		bool changeGra = mGravity->Input();
+		if (changeGra)
+		{
+			player->GravityChange(mGravity->GetCurrentGravity());
+			stage->SetGravityDir(mGravity->GetCurrentGravity());
+		}
+		mGravity->Update();
 
-	mGravity->Update();
-	player->Update();
+		player->Input();
+		player->Update();
+
+		PlayerState pS = player->GetState();
+
+		if (key->Push(TAB) || player->GetState() == PlayerState::Dead)
+		{
+			state = InGameState::Missing;
+//			manager->ChangeState(std::make_unique<SceneEnd>(pS));
+			return;
+		}
+		if (player->GetState() == PlayerState::Clear)
+		{
+			state = InGameState::Clearing;
+//			manager->ChangeState(std::make_unique<SceneEnd>(pS));
+			return;
+		}
+		break;
+	}
+
+	case InGameState::Clearing:
+	{
+		player->Clear();
+//		player->Clear();
+		break;
+	}
+
+	case InGameState::Missing:
+	{
+//		player->Miss();
+		break;
+	}
+	}
+
 	camera->Follow(player->GetPos(), stage->GetStageSize());
-
-	PlayerState pS = player->GetState();
-
-	if (key->Push(TAB) || player->GetState() == PlayerState::Dead)
-	{
-		manager->ChangeState(std::make_unique<SceneEnd>(pS));
-		return;
-	}
-	if (player->GetState() == PlayerState::Clear)
-	{
-		manager->ChangeState(std::make_unique<SceneEnd>(pS));
-		return;
-	}
-
-	//switch(state)
-	//{
-	//case InGameState::Playing:
-	//{
-	//	break;
-	//}
-
-	//case InGameState::Clearing:
-	//{
-	//	break;
-	//}
-
-	//case InGameState::Missing:
-	//{
-	//	break;
-	//}
-	//}
 }
 
 SCENE_EXIT(SceneInGame)

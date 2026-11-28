@@ -29,6 +29,10 @@ static constexpr SideSpriteInfo GRA_CHANGE_INFO = { 20.0f, 360.0f };
 static constexpr TopSpriteInfo  WALK_TOP_INFO = { 240.0f, 233.0f, 300.0f };
 static constexpr TopSpriteInfo  JUMP_TOP_INFO = { 99.0f, 100.0f, 200.0f };
 
+// 何フレームごとに、歩きのコマを1つ進めるか(大きいほどゆっくり)
+static constexpr int DASH_ANIM_INTERVAL = 5;    // ダッシュ:今までと同じ速さ
+static constexpr int WALK_ANIM_INTERVAL = 10;   // 歩き:ダッシュの半分の速さ
+
 // モデルを読んで、プレイヤーを描く(モデルは書き換えない)
 class VPlayer
 {

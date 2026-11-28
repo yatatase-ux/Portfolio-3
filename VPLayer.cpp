@@ -57,11 +57,14 @@ void VPlayer::Update(const MPlayer& model)
 		}
 	}
 
-	// ---- 歩きのアニメーション ----
+	// ---- 歩き・ダッシュのアニメーション ----
 	if (model.IsMoving())
 	{
+		// ダッシュ中は速く、歩いているときはゆっくりコマを進める
+		const int interval = model.IsDash() ? DASH_ANIM_INTERVAL : WALK_ANIM_INTERVAL;
+
 		animCount++;
-		if (animCount > 5)
+		if (animCount >= interval)
 		{
 			animCount = 0;
 			walkAnim = (walkAnim + 1) % 7;   // 今までと同じく 0～6 で回す

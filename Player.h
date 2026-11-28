@@ -25,4 +25,6 @@ public:
 
 	PlayerState GetState() const { return model.GetState(); }
 	FloatXYZ    GetPos()   const { return model.GetPos(); }
+
+	void Clear();
 };

@@ -18,6 +18,7 @@ MPlayer::MPlayer(Stage& arg_stage, GravityDir gra)
 	velocityY = 0.0f;
 	onGround = false;
 	isCrouched = false;
+	isDash = false;
 	isMoving = false;
 	facingLeft = false;
 	topDir = TopDir::Right;
@@ -83,16 +84,18 @@ void MPlayer::ApplyInput(const PlayerInput& in)
 FloatXYZ MPlayer::Move(const PlayerInput& in)
 {
 	FloatXYZ diff = { 0.0f, 0.0f, 0.0f };
+	isDash = in.dash;
+	float maxSpeed = (isDash) ? MOVE_SPEED * 2.0f : MOVE_SPEED;
 
 	if (currentGravity == GravityDir::Back)
 	{
 		// ---- å©â∫ÇÎÇµ:è„â∫ç∂âEÇ…ìÆÇ≠ÅBå¸Ç´Ç‡ïœÇ¶ÇÈ ----
-		if (!isCrouched)
+		if (!isCrouched )
 		{
-			if (in.up) { diff.y -= MOVE_SPEED; topDir = TopDir::Up; }
-			if (in.down) { diff.y += MOVE_SPEED; topDir = TopDir::Down; }
-			if (in.right) { diff.x += MOVE_SPEED; topDir = TopDir::Right; }
-			if (in.left) { diff.x -= MOVE_SPEED; topDir = TopDir::Left; }
+			if (in.up) { diff.y -= maxSpeed; topDir = TopDir::Up; }
+			if (in.down) { diff.y += maxSpeed; topDir = TopDir::Down; }
+			if (in.right) { diff.x += maxSpeed; topDir = TopDir::Right; }
+			if (in.left) { diff.x -= maxSpeed; topDir = TopDir::Left; }
 		}
 	}
 	else
@@ -101,13 +104,14 @@ FloatXYZ MPlayer::Move(const PlayerInput& in)
 		float targetSpeedX = 0.0f;
 		if (!isCrouched)
 		{
-			if (in.left)  targetSpeedX -= MOVE_SPEED;
-			if (in.right) targetSpeedX += MOVE_SPEED;
+			if (in.left)  targetSpeedX -= maxSpeed;
+			if (in.right) targetSpeedX += maxSpeed;
 		}
 
 		// ÇµÇ·Ç™ÇÒÇ≈Ç¢ÇÈÇ∆Ç´ÇÕÅAå∏ë¨ÇÇ‰ÇÈÇ‚Ç©Ç…Ç∑ÇÈ(è≠ÇµääÇÈ)
 		const float sDownDir = (isCrouched) ? 0.5f : 1.0f;
-		const float step = (targetSpeedX != 0.0f) ? sUP : sDown * sDownDir;
+		const float sUpDir = (isCrouched) ? 0.3f : 1.0f;
+		const float step = (targetSpeedX != 0.0f) ? sUP * sUpDir : sDown * sDownDir;
 		const float diffSpeed = targetSpeedX - moveVelo.x;
 		moveVelo.x += std::clamp(diffSpeed, -step, step);
 
@@ -124,6 +128,12 @@ void MPlayer::Jump(const PlayerInput& in)
 	{
 		velocityY = JUMP_SPEED;
 		onGround = false;
+		if (isCrouched)
+		{
+			float dir = (in.right) ? 1.0f :
+				(in.left) ? -1.0f : 0.0f;
+			moveVelo.x = MOVE_SPEED * dir;
+		}
 	}
 	else if (!in.jumpHeld && velocityY < 0.0f)
 	{

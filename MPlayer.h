@@ -18,13 +18,14 @@ enum class TopDir
 // (キーの種類は知らなくていいように、操作の意味だけを持たせる)
 struct PlayerInput
 {
-	bool left = false;  // 左へ動きたい
-	bool right = false;  // 右へ動きたい
-	bool up = false;  // 上へ動きたい(見下ろしのとき)
-	bool down = false;  // 下へ動きたい(見下ろしのとき)
-	bool jumpPushed = false;  // ジャンプを押した瞬間
-	bool jumpHeld = false;  // ジャンプを押し続けている
-	bool crouch = false;  // しゃがみたい(横視点のとき)
+	bool left = false;			// 左へ動きたい
+	bool right = false;			// 右へ動きたい
+	bool up = false;			// 上へ動きたい(見下ろしのとき)
+	bool down = false;			// 下へ動きたい(見下ろしのとき)
+	bool dash = false;			// ダッシュ
+	bool jumpPushed = false;	// ジャンプを押した瞬間
+	bool jumpHeld = false;		// ジャンプを押し続けている
+	bool crouch = false;		// しゃがみたい(横視点のとき)
 };
 
 // プレイヤーのデータと、動きのルール(画面やキーのことは知らない)
@@ -43,7 +44,7 @@ class MPlayer
 	const float JUMP_SPEED = -20.0f;  // ジャンプの速さ
 	const float GRAVITY = 1.0f;    // 重力のかかり方
 	const float MAX_FALL_SPEED = 50.0f;   // 落下の速さの上限
-	const float MOVE_SPEED = 5.0f;    // 移動の速さ
+	const float MOVE_SPEED = 2.5f;    // 移動の速さ
 	const float sUP = 0.4f;    // 加速の量
 	const float sDown = 0.2f;    // 減速の量
 
@@ -55,6 +56,7 @@ class MPlayer
 	float velocityY;            // 重力の向きに対する速さ
 	bool onGround;              // 地面に乗っているか
 	bool isCrouched;            // しゃがんでいるか
+	bool isDash;
 	bool isMoving;              // このフレームで動いたか(アニメーション用)
 	bool facingLeft;            // 左を向いているか
 	TopDir topDir;              // 見下ろしで向いている方向
@@ -74,6 +76,7 @@ public:
 	PlayerState GetState()      const { return state; }
 	bool  IsOnGround()          const { return onGround; }
 	bool  IsCrouched()          const { return isCrouched; }
+	bool  IsDash()				const { return isDash; };
 	bool  IsMoving()            const { return isMoving; }
 	bool  IsFacingLeft()        const { return facingLeft; }
 	bool  IsOffScreen()         const { return isOffScreen; }

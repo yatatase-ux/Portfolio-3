@@ -24,3 +24,11 @@ void Player::Draw(const Camera& camera) const
 {
 	view.Draw(model, camera);
 }
+
+void Player::Clear()
+{
+	PlayerInput in;
+	in.right = true;
+	model.ApplyInput(in);
+	Update();
+}

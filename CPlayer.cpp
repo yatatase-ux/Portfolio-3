@@ -10,6 +10,7 @@ PlayerInput CPlayer::Read(GravityDir gravity)
 	in.right = key.Check(RIGHT);
 	in.up = key.Check(UP);
 	in.down = key.Check(DOWN);
+	in.dash = key.Check(SHIFT);
 
 	// ---- ジャンプ ----
 	// Push は毎フレーム呼ぶ必要があるので、ここで必ず呼ぶ
